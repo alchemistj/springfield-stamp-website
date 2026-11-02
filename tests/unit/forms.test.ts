@@ -72,7 +72,7 @@ describe("host routing", () => {
   });
   it("uses the same-origin relay on *.vercel.app", () => {
     expect(resolveEndpoint("springfield-stamp-git-build-about-contact-x.vercel.app")).toEqual({ kind: "relay", url: PREVIEW_RELAY_URL });
-    expect(PREVIEW_RELAY_URL).toBe("/api/preview-forms-lead");
+    expect(PREVIEW_RELAY_URL).toBe("/api/preview-forms-lead/");
   });
   it.each(["localhost", "127.0.0.1", "springfieldstamp.com", "www.springfieldstamp.com.evil.test", "evilspringfieldstamp.com", "vercel.app.evil.test", ""])(
     "posts nothing from %j",
@@ -146,7 +146,7 @@ describe("submitLead", () => {
   it("posts to the relay on a preview host", async () => {
     const { fetchImpl, calls } = mk([res(200, { ok: true, id: UUID })]);
     await submitLead(values, deps("x-y.vercel.app", fetchImpl, new SubmissionAttempt(() => UUID)));
-    expect(calls[0]!.url).toBe("/api/preview-forms-lead");
+    expect(calls[0]!.url).toBe("/api/preview-forms-lead/");
   });
 
   it("keeps the same clientSubmissionId across retries until it succeeds, then makes a new one", async () => {

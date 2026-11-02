@@ -4,8 +4,8 @@
 
 /** The production endpoint. Keep this as ONE literal string: the Central Forms watchdog greps the shipped JS for it. */
 export const LEAD_URL = "https://forms.fluidframemarketing.com/api/lead";
-/** Preview-only same-origin relay (src/pages/api/preview-forms-lead.ts). */
-export const PREVIEW_RELAY_URL = "/api/preview-forms-lead";
+/** Preview-only same-origin relay (root api/preview-forms-lead.js). Trailing slash: the site redirects no-slash paths with a 308. */
+export const PREVIEW_RELAY_URL = "/api/preview-forms-lead/";
 /** The only host that posts straight to Central Forms. The apex redirects to www (vercel.json). */
 export const PRODUCTION_HOST = "www.springfieldstamp.com";
 export const SITE_KEY = "springfield-stamp-website";
