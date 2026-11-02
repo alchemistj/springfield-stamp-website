@@ -1,0 +1,99 @@
+---
+// 2 x 2 grid of rounded icon cards ("Why choose Springfield Stamp?"): grey icon, upper-case title, body copy.
+// Desktop: two columns. Mobile: one column.
+//   <WhyCards items={[{ icon, title, parts }]} tones={["grey", "white", "white", "grey"]} />
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import type { Rich } from "../data/types";
+import RichText from "./Rich.astro";
+
+interface Props {
+  items: readonly { icon: ImageMetadata; title: string; body: Rich }[];
+  /** Card shade per item (default: all grey). */
+  tones?: readonly ("grey" | "white")[];
+  /** Icon sizes in px per item (the live icons differ slightly). */
+  iconSizes?: readonly number[];
+  /** Desktop row heights in px (the live rows are fixed heights). */
+  rowHeights?: readonly [number, number];
+}
+const { items, tones = [], iconSizes = [], rowHeights = [0, 0] } = Astro.props;
+---
+
+<div class="cards" style={`--r1:${rowHeights[0]}px;--r2:${rowHeights[1]}px`}>
+  {
+    items.map((it, i) => (
+      <div class:list={["card", tones[i] ?? "grey"]}>
+        <Image class="ico" src={it.icon} alt="" width={iconSizes[i] ?? 44} height={iconSizes[i] ?? 44} densities={[1, 2]} format="webp" style={`width:${iconSizes[i] ?? 44}px;height:${iconSizes[i] ?? 44}px`} />
+        <h3 class="ttl">{it.title}</h3>
+        <p class="txt">
+          <RichText parts={it.body} />
+        </p>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .card {
+    box-sizing: border-box;
+    padding: 28px 22px 26px;
+    border-radius: 20px;
+  }
+  .grey {
+    background: #e4e4e4;
+  }
+  .white {
+    background: #fff;
+  }
+  .ico {
+    display: block;
+    margin: 0 0 22px;
+  }
+  .ttl {
+    margin: 0 0 14px;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 28px;
+    text-transform: uppercase;
+    color: var(--color-ss-ink);
+  }
+  .txt {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 28.5px;
+    color: var(--color-ss-ink);
+  }
+  .txt :global(strong) {
+    font-weight: 600;
+  }
+  @media (min-width: 1024px) {
+    .cards {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: minmax(var(--r1), auto) minmax(var(--r2), auto);
+      gap: 20px 15px;
+      width: 900px;
+      margin: 0 auto;
+    }
+    .card {
+      padding: 50px 51px 50px;
+    }
+    .ico {
+      margin-bottom: 29px;
+    }
+    .ttl {
+      margin-bottom: 22px;
+      font-size: 17px;
+      line-height: 24px;
+    }
+    .txt {
+      line-height: 31.5px;
+    }
+  }
+</style>

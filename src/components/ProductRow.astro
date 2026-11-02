@@ -28,6 +28,11 @@ interface Props {
   ctaLabel?: string;
   ctaWeight?: 600 | 700;
   ctaTight?: boolean;
+  /** "contain" shows the whole picture centred on white (the Custom Stamps rows); default crops to fill. */
+  fit?: "cover" | "contain";
+  /** Upper-case title with a lighter weight (the Custom Stamps and Name Tags rows). */
+  upperTitle?: boolean;
+  titleWeight?: 500 | 600;
 }
 const {
   title,
@@ -42,11 +47,14 @@ const {
   ctaLabel,
   ctaWeight = 700,
   ctaTight = false,
+  fit = "cover",
+  upperTitle = false,
+  titleWeight = 600,
 } = Astro.props;
 const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${padTop}px` : ""].filter(Boolean).join(";");
 ---
 
-<article class:list={["row", { reverse }]} style={style || undefined}>
+<article class:list={["row", { reverse, contain: fit === "contain", upper: upperTitle }]} data-tw={titleWeight} style={style || undefined}>
   <div class="media">
     <Picture
       src={image}
@@ -99,6 +107,9 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
   .row-body :global(strong) {
     font-weight: 600;
   }
+  .upper .row-title {
+    text-transform: uppercase;
+  }
   .copy :global(.row-cta) {
     max-width: 100%;
   }
@@ -117,6 +128,12 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
       inset: 0;
       height: 100%;
       object-fit: cover;
+    }
+    .contain .media :global(img) {
+      object-fit: contain;
+    }
+    .row[data-tw="500"] .row-title {
+      font-weight: 500;
     }
     .reverse .media {
       order: 2;

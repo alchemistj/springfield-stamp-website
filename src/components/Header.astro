@@ -9,12 +9,14 @@ import Icon from "./Icon.astro";
 interface Props {
   /** Current page path, to mark the active link with aria-current. */
   current?: string;
+  /** 1200px content width (live Custom Stamps, Name Tags, About and Contact pages) instead of the default 1080px. */
+  wide?: boolean;
 }
-const { current } = Astro.props;
+const { current, wide = false } = Astro.props;
 const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
 ---
 
-<header class="site-header">
+<header class="site-header" style={wide ? "--w-header:1200px" : undefined}>
   <div class="hd-inner">
     <a class="logo" href="/" aria-label="Springfield Stamp & Engraving: home">
       <img
@@ -241,6 +243,19 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     .nav-desktop a:hover,
     .nav-desktop a[aria-current="page"] {
       color: var(--color-ss-red);
+    }
+    /* Live site: a red bar under the current page's link (not shown on the home page). */
+    .nav-desktop a[aria-current="page"] {
+      position: relative;
+    }
+    .nav-desktop a[aria-current="page"]::after {
+      content: "";
+      position: absolute;
+      left: -10px;
+      right: -10px;
+      bottom: -5px;
+      height: 3px;
+      background: var(--color-ss-red);
     }
   }
 </style>

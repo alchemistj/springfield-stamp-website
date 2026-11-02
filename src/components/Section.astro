@@ -10,12 +10,14 @@ interface Props {
   /** Vertical padding (top / bottom), desktop and mobile. */
   padTop?: [number, number];
   padBottom?: [number, number];
+  /** Background colour override (the live product pages use slightly different greys). */
+  bg?: string;
 }
-const { tone = "white", width = 1000, id, class: className, padTop = [81, 51], padBottom = [80, 70] } = Astro.props;
-const style = `--sec-w:${width}px;--pt:${padTop[0]}px;--pt-m:${padTop[1]}px;--pb:${padBottom[0]}px;--pb-m:${padBottom[1]}px`;
+const { tone = "white", width = 1000, id, class: className, padTop = [81, 51], padBottom = [80, 70], bg } = Astro.props;
+const style = `${bg ? `--sec-bg:${bg};` : ""}--sec-w:${width}px;--pt:${padTop[0]}px;--pt-m:${padTop[1]}px;--pb:${padBottom[0]}px;--pb-m:${padBottom[1]}px`;
 ---
 
-<section id={id} class:list={["section", `tone-${tone}`, className]} style={style}>
+<section id={id} class:list={["section", `tone-${tone}`, { "has-bg": !!bg }, className]} style={style}>
   <div class="inner"><slot /></div>
 </section>
 
@@ -42,6 +44,9 @@ const style = `--sec-w:${width}px;--pt:${padTop[0]}px;--pt-m:${padTop[1]}px;--pb
   }
   .tone-about {
     background: var(--color-ss-about);
+  }
+  .has-bg {
+    background: var(--sec-bg);
   }
   @media (min-width: 1024px) {
     .section {
