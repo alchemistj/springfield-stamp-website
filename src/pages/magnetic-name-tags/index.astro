@@ -1,0 +1,701 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HeroPhoto from "../../components/HeroPhoto.astro";
+import Button from "../../components/Button.astro";
+import Section from "../../components/Section.astro";
+import SectionTitle from "../../components/SectionTitle.astro";
+import ProductRows from "../../components/ProductRows.astro";
+import ProductRow from "../../components/ProductRow.astro";
+import WhyCards from "../../components/WhyCards.astro";
+import Rich from "../../components/Rich.astro";
+import { Picture, Image } from "astro:assets";
+import { routeByKey } from "../../lib/routes";
+import { magneticNameTags as d } from "../../data/magnetic-name-tags";
+import { site } from "../../data/site";
+import classic from "../../assets/springfield-magnetic-tags.jpg";
+import logoTag from "../../assets/springfield-logo-magnetic-tags.jpg";
+import engraved from "../../assets/springfield-engraved-magnetic-tags.jpg";
+import fullColor from "../../assets/springfield-full-color-magnetic-tags3.jpg";
+import photoTag from "../../assets/photo-name-tags.png";
+import designTags from "../../assets/magnetic-tags-4.png";
+import strip from "../../assets/springfield-prof-nametags2.png";
+import wall from "../../assets/springfield-stamp-name-tags.jpg";
+import breakTheIce from "../../assets/break-the-ice.png";
+import boostBrand from "../../assets/boost-brand.png";
+import promote from "../../assets/promote.png";
+import improve from "../../assets/improve.png";
+import enhance from "../../assets/enhance.png";
+import stampGrey from "../../assets/stamp-grey.png";
+import turnaround from "../../assets/springfield-turnaround.png";
+import csGrey from "../../assets/springfield-cs-grey.png";
+import community from "../../assets/community-1.png";
+
+const route = routeByKey("magnetic-name-tags");
+const rowImages = { classic, logo: logoTag, engraved, fullColor, photo: photoTag };
+const rowHeights = [350, 370, 350, 350, 350];
+const benefitIcons = { breakTheIce, boostBrand, promote, improve, enhance };
+const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, community };
+---
+
+<BaseLayout route={route} heroHeight={{ desktop: 476, mobile: 309 }} headerWide>
+  <HeroPhoto
+    slot="hero-photo"
+    desktop={{ file: "springfield-stamp-nametags2.jpg", width: 1440, cropAspect: 1440 / 476, cropX: 0.5, quality: 50 }}
+    mobile={{ file: "springfield-stamp-nametags2.jpg", width: 780, cropAspect: 390 / 309, cropX: 0.8, quality: 50 }}
+  />
+
+  <section slot="hero" class="hero" aria-labelledby="hero-title">
+    <div class="hero-body">
+      <div class="hero-in">
+        <p class="brand">{d.hero.brand}</p>
+        <h1 id="hero-title" class="h1">{d.hero.lead}<br class="db" /> <span class="cap">{d.hero.rest}</span></h1>
+      </div>
+    </div>
+  </section>
+
+  <div class="mag-pg">
+    <Section tone="white" class="intro-sec" padTop={[53, 37]} padBottom={[70, 0]}>
+      <p class="p intro-p"><Rich parts={d.intro.hello} /></p>
+      <p class="p intro-p"><Rich parts={d.intro.pride} /></p>
+      <div class="callbox">
+        <p class="call-h">{d.intro.callHeading}</p>
+        <div class="call-btn"><Button href={d.intro.callCta.href} size="xl" weight={600} width={232} shadow>{d.intro.callCta.label}</Button></div>
+      </div>
+      <p class="p intro-p"><Rich parts={d.intro.whether} /></p>
+    </Section>
+
+    <Section tone="surface" bg="#f9f9f9" class="find-sec" padTop={[76, 0]} padBottom={[79, 42]}>
+      <SectionTitle as="h2">{d.find.title}</SectionTitle>
+      <p class="p centered find-lead">{d.find.lead}</p>
+      <div class="rows">
+        <ProductRows>
+          {
+            d.find.rows.map((r, i) => (
+              <ProductRow title={r.title} image={rowImages[r.image]} reverse={i % 2 === 1} minHeight={rowHeights[i]} fit="contain" upperTitle titleWeight={500}>
+                {r.body}
+              </ProductRow>
+            ))
+          }
+        </ProductRows>
+      </div>
+    </Section>
+
+    <Section tone="maroon" class="unique-sec" padTop={[58, 51]} padBottom={[50, 50]}>
+      <SectionTitle as="h2" tone="white">{d.unique.title}</SectionTitle>
+      <p class="u-text"><Rich parts={d.unique.body} /></p>
+      <p class="u-text">{d.unique.contact}</p>
+      <p class="u-call">{d.unique.callLine}</p>
+      <div class="u-btn"><Button href={d.unique.cta.href} weight={700} width={160}>{d.unique.cta.label}</Button></div>
+    </Section>
+
+    <Section tone="white" class="design-sec" padTop={[62, 51]} padBottom={[75, 77]}>
+      <SectionTitle as="h2" class="grey-title">{d.design.title}</SectionTitle>
+      <div class="design">
+        <p class="p"><Rich parts={d.design.body} /></p>
+        <div class="design-img"><Image src={designTags} alt="" width={285} height={274} densities={[1, 2]} format="webp" /></div>
+      </div>
+      <div class="strip"><Picture src={strip} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[642, 1283]} sizes="(min-width: 1290px) 1283px, 100vw" quality={75} /></div>
+      <SectionTitle as="h2" class="grey-title power-title">{d.power.title}</SectionTitle>
+      <p class="p centered power-lead">{d.power.lead}</p>
+      <div class="benefits">
+        {
+          d.power.benefits.map((b) => (
+            <div class="benefit">
+              <Image class="b-ico" src={benefitIcons[b.icon]} alt="" width={100} height={100} densities={[1, 2]} format="webp" />
+              <div>
+                <h3 class="b-title">{b.title}</h3>
+                <p class="b-body"><Rich parts={b.body} /></p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </Section>
+
+    <Section tone="surface" bg="#f8f8f8" class="more-sec" padTop={[67, 61]} padBottom={[59, 59]}>
+      <SectionTitle as="h2">{d.more.title.split(": ")[0]}: <br />{d.more.title.split(": ")[1]}</SectionTitle>
+      <div class="more">
+        <div class="more-copy">
+          <p class="p"><Rich parts={d.more.body} /></p>
+          <ul class="bullets">
+            {d.more.bullets.map((t) => <li>{t}</li>)}
+          </ul>
+        </div>
+        <div class="more-img"><Picture src={wall} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[329, 658]} sizes="329px" quality={75} /></div>
+      </div>
+    </Section>
+
+    <Section tone="white" class="why-sec" padTop={[67, 51]} padBottom={[121, 101]}>
+      <SectionTitle as="h2">{d.why.title}</SectionTitle>
+      <p class="p centered why-lead"><Rich parts={d.why.lead} /></p>
+      <WhyCards items={d.why.items.map((it) => ({ icon: whyIcons[it.icon], title: it.title, body: it.body }))} iconSizes={[44, 38, 44, 44]} rowHeights={[397, 375]} />
+    </Section>
+
+    <Section tone="maroon" class="ready-sec" padTop={[57, 51]} padBottom={[85, 58]}>
+      <SectionTitle as="h2" tone="white">{d.ready.title}</SectionTitle>
+      <p class="r-text">{d.ready.before}<a href={site.phone.tel}>{site.phone.display}</a>{d.ready.after}</p>
+    </Section>
+  </div>
+</BaseLayout>
+
+<style>
+  .mag-pg {
+    --gutter: 25px;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding-top: var(--hero-h);
+  }
+  .hero-body {
+    background: #fff;
+    padding: 33px 24px 0;
+    text-align: center;
+  }
+  .brand {
+    display: none;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 45px;
+    line-height: 56px;
+    text-transform: uppercase;
+    color: var(--color-ss-red);
+  }
+  .h1 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 37px;
+    color: var(--color-ss-ink);
+  }
+  .db {
+    display: none;
+  }
+
+  /* ---- Shared text ---- */
+  .p {
+    margin: 0 0 25px;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 31.5px;
+    color: #151515;
+  }
+  .p :global(strong) {
+    font-weight: 600;
+  }
+  .centered {
+    text-align: center;
+  }
+  .intro-p {
+    text-align: center;
+  }
+  .callbox {
+    margin: 0 0 31px;
+    padding: 30px 20px 20px;
+    background: #f0f0f0;
+    border-radius: 20px;
+    text-align: center;
+  }
+  .call-h {
+    margin: 0;
+    padding-bottom: 20px;
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height: 30px;
+    text-transform: uppercase;
+    color: var(--color-ss-red);
+  }
+  .call-btn {
+    display: flex;
+    justify-content: center;
+  }
+  .call-btn :global(.btn) {
+    width: auto;
+    padding: 12px 24px;
+    font-size: 20px;
+    line-height: 21.6px;
+  }
+
+  /* ---- Find ---- */
+  .find-lead {
+    margin-bottom: 34px;
+  }
+  .rows {
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .rows :global(.rows) {
+    gap: 20px;
+  }
+  .rows :global(.copy) {
+    padding: 0;
+  }
+  .rows :global(.row-title) {
+    margin: 30px 0 14px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .mag-pg :global(.find-sec.has-bg) {
+    background: #fff;
+  }
+  .rows :global(.row-body) {
+    text-align: center;
+  }
+
+  /* ---- Unique band ---- */
+  .u-text,
+  .u-call,
+  .r-text {
+    margin: 0 0 26px;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 32.5px;
+    color: #fff;
+  }
+  .u-text :global(strong) {
+    font-weight: 600;
+  }
+  .u-call {
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 28px;
+  }
+  .u-btn {
+    display: flex;
+    justify-content: center;
+  }
+  .u-btn :global(.btn) {
+    max-width: 160px;
+    padding: 14px 20px;
+    font-size: 20px;
+    line-height: 25px;
+  }
+
+  /* ---- Design / power ---- */
+  .mag-pg :global(.design-sec .grey-title) {
+    color: #585858;
+  }
+  .design {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .mag-pg :global(.section-title) {
+    font-size: 28px;
+    line-height: 33.6px;
+  }
+  .design-img {
+    order: -1;
+  }
+  .u-text,
+  .u-call {
+    padding: 0 14px;
+  }
+  .design-img :global(img) {
+    display: block;
+    width: 285px;
+    height: auto;
+  }
+  .strip {
+    margin: 30px -25px 40px;
+    overflow: hidden;
+  }
+  .strip :global(img) {
+    display: block;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: 50% 50%;
+  }
+  .power-lead {
+    margin-bottom: 30px;
+  }
+  .benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  .benefit {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+  }
+  .b-ico {
+    align-self: center;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 14px;
+  }
+  .b-title {
+    margin: 0 0 14px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 28px;
+    text-transform: uppercase;
+    color: var(--color-ss-ink);
+  }
+  .b-body {
+    margin: 0;
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 31.5px;
+    color: #151515;
+  }
+  .b-body :global(strong) {
+    font-weight: 600;
+  }
+
+  /* ---- More ---- */
+  .more {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .more-img :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+  }
+  .bullets {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .bullets li {
+    position: relative;
+    margin: 0 0 16px;
+    padding-left: 38px;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 29px;
+    color: #151515;
+  }
+  .bullets li::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 7px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-ss-red);
+  }
+
+  /* ---- Why / ready ---- */
+  .why-lead {
+    margin-bottom: 30px;
+  }
+  .r-text a {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-ss-yellow);
+  }
+  .r-text {
+    margin: 0;
+  }
+
+  /* ---- Mobile parity (below 1024px): live paddings, type sizes and spacing at 390px ---- */
+  @media (max-width: 1023px) {
+    .mag-pg :global(.intro-sec),
+    .mag-pg :global(.unique-sec),
+    .mag-pg :global(.design-sec),
+    .mag-pg :global(.more-sec) {
+      --gutter: 26px;
+    }
+    .mag-pg :global(.find-sec) {
+      --gutter: 21px;
+    }
+    .mag-pg :global(.ready-sec) {
+      --gutter: 27px;
+    }
+    .mag-pg :global(.why-sec) {
+      --gutter: 35px;
+    }
+    .mag-pg :global(.why-sec .section-title) {
+      padding-bottom: 32px;
+    }
+    .why-lead {
+      margin-bottom: 40px;
+    }
+    .mag-pg :global(.ready-sec .section-title) {
+      padding-bottom: 23px;
+    }
+    .more-img :global(img) {
+      height: 343px;
+      object-fit: cover;
+    }
+    .more-img {
+      margin: 0 -1px;
+    }
+    .mag-pg :global(.why-sec .card) {
+      padding: 21px 31px 30px;
+    }
+    .mag-pg :global(.why-sec .card:first-child) {
+      padding: 21px 26px 30px;
+    }
+    .mag-pg :global(.why-sec .card:nth-child(2)) {
+      min-height: 360px;
+    }
+    .mag-pg :global(.find-sec .section-title),
+    .mag-pg :global(.unique-sec .section-title),
+    .mag-pg :global(.ready-sec .section-title) {
+      line-height: 36.4px;
+    }
+    .mag-pg :global(.design-sec .section-title),
+    .mag-pg :global(.more-sec .section-title),
+    .mag-pg :global(.why-sec .section-title) {
+      line-height: 35px;
+    }
+    .strip :global(img) {
+      height: 305px;
+    }
+    .mag-pg :global(.more-sec .section-title) {
+      padding-bottom: 32px;
+    }
+    .more {
+      gap: 32px;
+    }
+    .more-copy .p {
+      margin-bottom: 28px;
+    }
+    .bullets li {
+      margin-bottom: 10px;
+      padding-left: 35px;
+      font-size: 17px;
+      line-height: 27.2px;
+    }
+    .bullets li:last-child {
+      margin-bottom: 0;
+    }
+    .bullets li::before {
+      left: 9px;
+      top: 6px;
+    }
+    .benefits {
+      gap: 67px;
+    }
+    .b-ico {
+      margin-bottom: 18px;
+    }
+    .b-title {
+      margin-bottom: 9px;
+    }
+    .u-text {
+      margin-bottom: 32px;
+      font-size: 19px;
+      line-height: 33.25px;
+    }
+    .u-call {
+      margin-bottom: 23px;
+      padding: 0 40px;
+      line-height: 29.7px;
+    }
+    .intro-p {
+      margin-bottom: 21px;
+    }
+    .intro-sec .intro-p:last-child {
+      margin-bottom: 19px;
+    }
+    .callbox {
+      padding: 17px 20px 19px;
+    }
+    .call-h {
+      padding-bottom: 25px;
+      font-size: 23px;
+    }
+    .call-btn :global(.btn) {
+      padding: 13px 24px;
+    }
+    .rows :global(.copy) {
+      padding: 0 1px;
+    }
+    .rows :global(.row-title) {
+      margin: 20px 0 12.5px;
+      font-size: 18px;
+      line-height: 25.2px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      height: var(--hero-h);
+      padding-top: 0;
+    }
+    .hero-body {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 0 20px 20px;
+      background: transparent;
+      text-align: left;
+    }
+    .hero-in {
+      width: var(--w-hero);
+      margin: 0 auto;
+      padding-left: 21px;
+      box-sizing: border-box;
+    }
+    .brand {
+      display: block;
+      padding-bottom: 24px;
+    }
+    .h1 {
+      font-size: 34.5px;
+      line-height: 44px;
+      color: #fff;
+    }
+    .db {
+      display: inline;
+    }
+    .cap {
+      text-transform: capitalize;
+    }
+    .intro-p {
+      text-align: left;
+    }
+    .callbox {
+      width: 800px;
+      box-sizing: border-box;
+      margin: 0 auto 36px;
+      padding: 30px 20px 31px;
+    }
+    .call-btn :global(.btn) {
+      width: 232px;
+      padding: 18px;
+      font-size: 24px;
+      line-height: 21.6px;
+    }
+    .call-h {
+      padding-bottom: 20px;
+      font-size: 23px;
+      line-height: 32px;
+    }
+    .mag-pg :global(.section-title) {
+      font-size: 33px;
+      line-height: 41.25px;
+      text-wrap: balance;
+    }
+    .design-img {
+      order: 0;
+    }
+    .u-text,
+    .u-call {
+      padding: 0;
+    }
+    .find-lead {
+      margin-bottom: 40px;
+    }
+    .rows :global(.rows) {
+      gap: 0;
+    }
+    .rows :global(.copy) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 30px 41px;
+    }
+    .rows :global(.row-title) {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 30px;
+    }
+    .mag-pg :global(.find-sec.has-bg) {
+      background: #f9f9f9;
+    }
+    .rows :global(.row-body) {
+      margin: 0;
+      text-align: left;
+    }
+    .u-text {
+      max-width: 930px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 32.5px;
+    }
+    .u-text + .u-text {
+      margin-bottom: 26px;
+    }
+    .design {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 40px 0 0;
+    }
+    .design .p {
+      flex: none;
+      width: 620px;
+      margin: 0;
+    }
+    .strip {
+      margin: 22px -140px 62px;
+    }
+    .strip :global(img) {
+      width: 1283px;
+      max-width: none;
+      height: 323px;
+      margin: 0 auto;
+    }
+    .benefits {
+      width: 1000px;
+      gap: 47px;
+      padding-top: 42px;
+    }
+    .benefit {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 27px;
+      text-align: left;
+      padding-left: 10px;
+    }
+    .b-ico {
+      align-self: flex-start;
+      flex: none;
+      margin: 0;
+    }
+    .b-title {
+      margin: 0 0 14px;
+      padding-top: 0;
+      font-size: 17px;
+    }
+    .more {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+    }
+    .more {
+      width: 1021px;
+    }
+    .more-copy {
+      flex: none;
+      width: 690px;
+    }
+    .more-img {
+      flex: none;
+      width: 329px;
+    }
+    .more-img :global(img) {
+      height: 342px;
+      object-fit: cover;
+    }
+    .why-lead {
+      margin-bottom: 38px;
+    }
+    .r-text {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+  }
+</style>

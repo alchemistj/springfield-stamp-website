@@ -1,0 +1,50 @@
+---
+// The red (or white) display-font section title: "HOW WE CAN HELP...", "WHY DO BUSINESS WITH US?".
+// Pass `as` to pick the heading level (the live site used plain <p>; the rebuild uses real headings).
+interface Props {
+  as?: "h2" | "h3" | "p";
+  tone?: "red" | "white";
+  align?: "center" | "left";
+  class?: string;
+}
+const { as: Tag = "h2", tone = "red", align = "center", class: className } = Astro.props;
+---
+
+<Tag class:list={["section-title", `tone-${tone}`, `align-${align}`, className]}><slot /></Tag>
+
+<style>
+  .section-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 30px;
+    padding-bottom: 20px;
+  }
+  .tone-red {
+    color: var(--color-ss-red);
+  }
+  .tone-white {
+    color: #fff;
+    line-height: 33.6px;
+  }
+  .align-center {
+    text-align: center;
+  }
+  .align-left {
+    text-align: center;
+  }
+  @media (min-width: 1024px) {
+    .section-title {
+      font-size: 33px;
+      line-height: 41.25px;
+      padding-bottom: 24px;
+    }
+    .tone-white {
+      line-height: 41.25px;
+    }
+    .align-left {
+      text-align: left;
+    }
+  }
+</style>

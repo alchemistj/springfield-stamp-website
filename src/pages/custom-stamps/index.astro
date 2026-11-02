@@ -1,0 +1,584 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HeroPhoto from "../../components/HeroPhoto.astro";
+import Button from "../../components/Button.astro";
+import Section from "../../components/Section.astro";
+import SectionTitle from "../../components/SectionTitle.astro";
+import ProductRows from "../../components/ProductRows.astro";
+import ProductRow from "../../components/ProductRow.astro";
+import WhyCards from "../../components/WhyCards.astro";
+import Rich from "../../components/Rich.astro";
+import { Picture } from "astro:assets";
+import { routeByKey } from "../../lib/routes";
+import { customStamps as d } from "../../data/custom-stamps";
+import { site } from "../../data/site";
+import idealLine from "../../assets/springfield-stamp-ideal-line.jpg";
+import maxlight from "../../assets/springfield-stamp-maxlight.jpg";
+import logoStamp from "../../assets/springfield-stamp-logo-stamp-2.png";
+import datersInks from "../../assets/springfield-stamp-daters-inks.jpg";
+import notary4913 from "../../assets/springfield-stamp-4913.jpg";
+import premium from "../../assets/springfield-stamps-premium.png";
+import makeYourMark from "../../assets/make-your-mark-2.jpg";
+import stampGrey from "../../assets/stamp-grey.png";
+import turnaround from "../../assets/springfield-turnaround.png";
+import csGrey from "../../assets/springfield-cs-grey.png";
+import community from "../../assets/community-1.png";
+
+const route = routeByKey("custom-stamps");
+const rowImages = { selfInking: idealLine, signature: maxlight, logo: logoStamp, daters: datersInks, notary: notary4913 };
+const rowHeights = [350, 351, 352, 414, 439];
+// The live mobile title breaks after "for" (a <br> in the original). Same words, break shown below 1024px only.
+const findTitle = d.find.title.split(/(?<=\bfor) /) as [string, string];
+const readyTitle = d.ready.title.split(/(?<=\bown) /) as [string, string];
+const icons = { detail: stampGrey, turnaround, service: csGrey, community };
+---
+
+<BaseLayout route={route} heroHeight={{ desktop: 503, mobile: 309 }} headerWide>
+  <HeroPhoto
+    slot="hero-photo"
+    desktop={{ file: "springfield-stamp-custom-stamps-2.jpg", width: 1440, cropAspect: 1440 / 503, cropX: 0.5, quality: 50 }}
+    mobile={{ file: "springfield-hero-2.png", width: 780, cropAspect: 390 / 309, cropX: 0.92, quality: 50 }}
+  />
+
+  <section slot="hero" class="hero" aria-labelledby="hero-title">
+    <div class="hero-body">
+      <div class="hero-in">
+        <p class="brand">{d.hero.brand}</p>
+        <h1 id="hero-title" class="h1">{d.hero.h1}</h1>
+      </div>
+    </div>
+  </section>
+
+  <div class="custom-pg">
+  <Section tone="white" class="intro-sec" padTop={[60, 91]} padBottom={[85, 90]}>
+    <p class="intro"><Rich parts={d.intro} /></p>
+  </Section>
+
+  <Section tone="surface" bg="#f4f4f4" class="find-sec" padTop={[69, 57]} padBottom={[92, 45]}>
+    <SectionTitle as="h2" class="bal">{findTitle[0]}{" "}<br class="mbr" />{findTitle[1]}</SectionTitle>
+    <div class="find-intro">
+      <p class="find-text"><Rich parts={d.find.body} /></p>
+      <div class="find-img">
+        <Picture src={premium} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[214, 428]} sizes="214px" quality={80} />
+      </div>
+    </div>
+    <div class="rows">
+      <ProductRows>
+        {
+          d.find.rows.map((r, i) => (
+            <ProductRow
+              title={r.title}
+              image={rowImages[r.image]}
+              reverse={i % 2 === 1}
+              minHeight={rowHeights[i]}
+              ctaWeight={600}
+              upperTitle
+              titleWeight={500}
+              ctaHref={r.cta?.href}
+              ctaLabel={r.cta?.label}
+            >
+              <Rich parts={r.body} />
+            </ProductRow>
+          ))
+        }
+      </ProductRows>
+    </div>
+  </Section>
+
+  <Section tone="maroon" class="ready-sec" padTop={[81, 56]} padBottom={[60, 49]}>
+    <SectionTitle as="h2" tone="white" class="bal">{readyTitle[0]}{" "}<br class="mbr" />{readyTitle[1]}</SectionTitle>
+    <p class="ready-text">{d.ready.body}</p>
+    <p class="call-h">{d.ready.callHeading}</p>
+    <div class="ready-cta">
+      <Button href={d.ready.cta.href} size="lg" weight={600} width={384}>{d.ready.cta.label}</Button>
+    </div>
+  </Section>
+
+  <Section tone="surface" bg="#f6f6f6" class="why-sec" padTop={[69, 51]} padBottom={[90, 76]}>
+    <SectionTitle as="h2">{d.why.title}</SectionTitle>
+    <p class="why-intro"><Rich parts={d.why.intro} /></p>
+    <p class="why-lead">{d.why.lead}</p>
+    <WhyCards
+      items={d.why.items.map((it) => ({ icon: icons[it.icon], title: it.title, body: it.body }))}
+      tones={["grey", "white", "white", "grey"]}
+      iconSizes={[44, 38, 44, 44]}
+      rowHeights={[343, 375]}
+    />
+  </Section>
+
+  <Section tone="white" class="mark-sec" padTop={[70, 51]} padBottom={[50, 50]}>
+    <SectionTitle as="h2">{d.mark.title}</SectionTitle>
+    <div class="mark">
+      <div class="mark-copy">
+        <p class="mark-lead">{d.mark.lead}</p>
+        <p class="mark-p">
+          <span class="ph" aria-hidden="true">{d.mark.contactLabel.slice(0, 2)}</span><strong>{d.mark.contactLabel.slice(3)}</strong>{d.mark.contactBody}
+        </p>
+        <p class="mark-p">
+          {d.mark.callPrefix}<a href={site.phone.tel}>{site.phone.display}</a>{d.mark.callMiddle}<a href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+      </div>
+      <div class="mark-img">
+        <Picture src={makeYourMark} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[354, 490, 980]} sizes="(min-width: 1024px) 490px, 100vw" quality={75} />
+      </div>
+    </div>
+  </Section>
+  </div>
+</BaseLayout>
+
+<style>
+  /* ---- Hero ---- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding-top: var(--hero-h);
+  }
+  .hero-body {
+    background: #fff;
+    padding: 33px 24px 0;
+    text-align: center;
+  }
+  .brand {
+    margin: 0;
+    padding-bottom: 31px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 35px;
+    text-transform: uppercase;
+    color: var(--color-ss-red);
+  }
+  .h1 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 36.5px;
+    color: var(--color-ss-ink);
+  }
+
+  /* ---- Intro ---- */
+  .intro {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 31.5px;
+    text-align: center;
+    color: #151515;
+  }
+  .intro :global(strong),
+  .find-text :global(strong) {
+    font-weight: 600;
+  }
+
+  /* ---- Find the perfect stamp ---- */
+  .custom-pg :global(.ready-sec .section-title) {
+    text-wrap: balance;
+  }
+  .find-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 30px;
+  }
+  .find-text {
+    margin: 0;
+    padding: 0 29px;
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 31.5px;
+    color: #151515;
+  }
+  .find-img {
+    order: -1;
+    width: 190px;
+    padding: 0 0 30px;
+  }
+  .find-img :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .mbr {
+    display: inline;
+  }
+  .rows {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .custom-pg :global(.find-sec.has-bg) {
+    background: #fff;
+  }
+  .rows > :global(.rows) {
+    gap: 20px;
+  }
+  .rows :global(.row-title) {
+    margin: 36px 0 17px;
+  }
+  .rows :global(.copy) {
+    padding: 0 3px;
+  }
+  .rows :global(.row-body) {
+    text-align: center;
+    line-height: 31.5px;
+  }
+  .rows :global(.row-cta) {
+    width: 262px;
+    margin: 0 auto;
+    padding: 18px 20px;
+    font-size: 18px;
+    line-height: 22px;
+  }
+  .rows :global(.row-cta) {
+    text-transform: uppercase;
+  }
+
+  /* ---- Ready band ---- */
+  .ready-text {
+    margin: 0;
+    padding-bottom: 28px;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 28.5px;
+  }
+  .call-h {
+    margin: 0;
+    padding-bottom: 20px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 24px;
+    line-height: 30px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .ready-cta {
+    display: flex;
+    justify-content: center;
+  }
+  .ready-cta :global(.btn) {
+    width: 262px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 22px;
+    text-transform: uppercase;
+  }
+  .custom-pg :global(.ready-sec .section-title),
+  .custom-pg :global(.why-sec .section-title),
+  .custom-pg :global(.mark-sec .section-title),
+  .custom-pg :global(.find-sec .section-title) {
+    font-size: 32px;
+    line-height: 35px;
+  }
+  .custom-pg :global(.ready-sec .section-title) {
+    line-height: 39.5px;
+  }
+  .custom-pg {
+    --gutter: 25px;
+  }
+
+  /* ---- Why choose ---- */
+  .why-intro,
+  .why-lead {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 28.5px;
+    color: #151515;
+  }
+  .why-intro {
+    padding-bottom: 28px;
+  }
+  .why-lead {
+    padding-bottom: 28px;
+  }
+  .why-intro :global(strong) {
+    font-weight: 600;
+  }
+  .custom-pg :global(.why-sec .section-title),
+  .custom-pg :global(.find-sec .section-title) {
+    text-transform: uppercase;
+  }
+  .custom-pg :global(.ready-sec .section-title),
+  .custom-pg :global(.mark-sec .section-title) {
+    text-transform: uppercase;
+  }
+
+  /* ---- Make your mark ---- */
+  .mark {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .mark-lead,
+  .mark-p {
+    margin: 0 0 20px;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 26px;
+    text-align: center;
+    color: #151515;
+  }
+  .mark-p a {
+    color: #1975e0; /* live #1e7be6 darkened just enough for 4.5:1 on white (delta E 2.4) */
+    text-decoration: none;
+  }
+  .mark-p strong {
+    font-weight: 600;
+  }
+  .ph {
+    margin-right: 6px;
+  }
+  .mark-img {
+    order: -1;
+  }
+  .mark-img :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ---- Mobile parity (below 1024px): live paddings, type sizes and spacing at 390px ---- */
+  @media (max-width: 1023px) {
+    .custom-pg {
+      --gutter: 26px;
+    }
+    .custom-pg :global(.ready-sec) {
+      --gutter: 32px;
+    }
+    .custom-pg :global(.mark-sec) {
+      --gutter: 21px;
+    }
+    .custom-pg :global(.why-sec .section-title),
+    .custom-pg :global(.find-sec .section-title),
+    .custom-pg :global(.mark-sec .section-title) {
+      font-size: 28px;
+      line-height: 36.4px;
+    }
+    .custom-pg :global(.ready-sec .section-title) {
+      font-size: 30px;
+      line-height: 39px;
+    }
+    .find-intro {
+      margin-top: -10px;
+      padding-bottom: 51px;
+    }
+    .find-img {
+      align-self: flex-start;
+      width: 248px;
+      margin-left: 29px;
+      padding-bottom: 22px;
+    }
+    .find-text {
+      margin: 0 22px 0 30px;
+      padding: 0;
+    }
+    .rows {
+      margin: 0 -1px;
+    }
+    .find-text :global(strong) {
+      font-weight: 400;
+    }
+    .rows :global(.copy) {
+      padding: 0 1px;
+    }
+    .rows :global(.row-title) {
+      margin: 20px 0 13px;
+      line-height: 35px;
+    }
+    .rows :global(.row-cta) {
+      font-size: 20px;
+      line-height: 23.4px;
+    }
+    .custom-pg :global(.ready-sec .section-title) {
+      text-wrap: wrap;
+    }
+    .custom-pg :global(.ready-sec .section-title) {
+      padding-bottom: 32px;
+    }
+    .call-h {
+      margin-top: 12px;
+    }
+    .custom-pg :global(.mark-sec .section-title) {
+      padding-bottom: 38px;
+    }
+    .ready-text {
+      padding-bottom: 20px;
+      font-size: 19px;
+      line-height: 30.4px;
+    }
+    .ready-cta :global(.btn) {
+      padding: 18px 20px;
+      line-height: 23.4px;
+    }
+    .call-h {
+      font-size: 21px;
+      line-height: 26.25px;
+    }
+    .why-intro,
+    .why-lead {
+      line-height: 31.5px;
+    }
+    .custom-pg :global(.why-sec .card:nth-child(1)) {
+      min-height: 260px;
+    }
+    .custom-pg :global(.why-sec .card:nth-child(2)) {
+      min-height: 271px;
+    }
+    .custom-pg :global(.why-sec .card:nth-child(4)) {
+      min-height: 321px;
+    }
+    .mark-lead,
+    .mark-p {
+      margin-bottom: 28.8px;
+      line-height: 28.8px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      height: var(--hero-h);
+      padding-top: 0;
+    }
+    .hero-body {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 0 20px 22px;
+      background: transparent;
+      text-align: left;
+    }
+    .hero-in {
+      width: var(--w-hero);
+      margin: 0 auto;
+      padding-left: 21px;
+      box-sizing: border-box;
+    }
+    .brand {
+      padding-bottom: 24px;
+      font-size: 45px;
+      line-height: 56px;
+    }
+    .h1 {
+      max-width: 520px;
+      font-size: 34.5px;
+      line-height: 45px;
+      color: #fff;
+    }
+    .intro {
+      text-align: left;
+    }
+    .custom-pg :global(.find-sec.has-bg) {
+      background: #f4f4f4;
+    }
+    .mbr {
+      display: none;
+    }
+    .rows > :global(.rows) {
+      gap: 0;
+    }
+    .rows :global(.row-title) {
+      margin: 4px 0 16px;
+    }
+    .rows :global(.copy) {
+      padding: 50px 56px 50px 51px;
+    }
+    .rows :global(.row-body) {
+      text-align: left;
+    }
+    .rows :global(.row-cta) {
+      width: 380px;
+      margin: 0;
+      padding: 14px 22px;
+      font-size: 20px;
+      line-height: 28.8px;
+    }
+    .ready-cta :global(.btn) {
+      width: 384px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .find-text {
+      padding: 0;
+    }
+    .find-intro {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: -20px;
+      padding: 0 30px 36px 20px;
+    }
+    .find-text {
+      width: 700px;
+      text-align: left;
+      line-height: 31.5px;
+    }
+    .find-img {
+      order: 0;
+      width: 214px;
+      padding: 0;
+    }
+    .call-h {
+      padding-bottom: 24px;
+      font-size: 24px;
+    }
+    .custom-pg :global(.find-sec .section-title) {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .custom-pg :global(.ready-sec .section-title) {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .ready-text {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .ready-cta :global(.btn) {
+      padding: 12px 22px;
+    }
+    .why-intro,
+    .why-lead {
+      line-height: 31.5px;
+    }
+    .why-intro {
+      padding: 6px 0 30px;
+    }
+    .why-lead {
+      padding-bottom: 38px;
+    }
+    .sec-title-d :global(.section-title),
+    .custom-pg :global(.find-sec .section-title),
+    .custom-pg :global(.ready-sec .section-title),
+    .custom-pg :global(.why-sec .section-title),
+    .custom-pg :global(.mark-sec .section-title) {
+      font-size: 36px;
+      line-height: 45px;
+    }
+    .mark {
+      flex-direction: row;
+      align-items: center;
+      gap: 40px;
+      padding-top: 13px;
+    }
+    .mark-copy {
+      flex: 0 0 480px;
+    }
+    .mark-lead,
+    .mark-p {
+      margin-bottom: 32px;
+    }
+    .mark-lead,
+    .mark-p {
+      text-align: left;
+      line-height: 29px;
+    }
+    .mark-img {
+      order: 0;
+      flex: 0 0 470px;
+    }
+  }
+</style>

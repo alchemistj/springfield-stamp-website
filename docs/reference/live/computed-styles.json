@@ -1,0 +1,352 @@
+{
+  "home": {
+    "body": {
+      "text": "document.addEventListener(\"DOMContentLoaded\", function() {\n ",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "27px",
+      "color": "rgb(106, 107, 108)",
+      "background": "rgb(255, 255, 255)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h1": null,
+    "h2": null,
+    "h3": {
+      "text": "Make a Lasting Impression…",
+      "fontFamily": "Poppins",
+      "fontSize": "24px",
+      "fontWeight": "500",
+      "lineHeight": "33.6px",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "p": {
+      "text": "1-Day Service!",
+      "fontFamily": "Poppins",
+      "fontSize": "21px",
+      "fontWeight": "600",
+      "lineHeight": "36.75px",
+      "color": "rgb(116, 107, 106)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "button": {
+      "text": "(417) 881-8828",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "21.6px",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "2px",
+      "textTransform": "none"
+    },
+    "header": {
+      "text": ".thrv_widget_menu{position: relative;z-index: 10;}.thrv_widg",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "27px",
+      "color": "rgb(106, 107, 108)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "footer": {
+      "text": ".tve_s_fb_share{--tcb-social-color-style-6: #3569b4;}.tve_s_",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "27px",
+      "color": "rgb(106, 107, 108)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    }
+  },
+  "custom-stamps": {
+    "body": {
+      "text": ".thrv_widget_menu{position: relative;z-index: 10;}.thrv_widg",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "27px",
+      "color": "rgb(106, 107, 108)",
+      "background": "rgb(255, 255, 255)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h1": null,
+    "h2": {
+      "text": "Your Friendly Neighborhood CUSTOM STAMP Experts!",
+      "fontFamily": "Poppins",
+      "fontSize": "34px",
+      "fontWeight": "600",
+      "lineHeight": "44.2px",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h3": null,
+    "p": {
+      "text": "1-Day Service!",
+      "fontFamily": "Poppins",
+      "fontSize": "21px",
+      "fontWeight": "600",
+      "lineHeight": "36.75px",
+      "color": "rgb(116, 107, 106)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "button": {
+      "text": "(417) 881-8828",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "21.6px",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "2px",
+      "textTransform": "none"
+    },
+    "header": null,
+    "footer": null
+  },
+  "missouri-notary-stamp": {
+    "body": {
+      "text": ".thrv_widget_menu{position: relative;z-index: 10;}.thrv_widg",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "27px",
+      "color": "rgb(106, 107, 108)",
+      "background": "rgb(255, 255, 255)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h1": {
+      "text": "Your One-Stop Spotfor MissouriNotary Stamps",
+      "fontFamily": "\"Hoarse Rough 02\"",
+      "fontSize": "41px",
+      "fontWeight": "400",
+      "lineHeight": "53.3px",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h2": {
+      "text": "Notary Stamps",
+      "fontFamily": "\"Hoarse Rough 02\"",
+      "fontSize": "33px",
+      "fontWeight": "600",
+      "lineHeight": "46.2px",
+      "color": "rgb(200, 22, 38)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h3": {
+      "text": "Rectangle Stamp",
+      "fontFamily": "Poppins",
+      "fontSize": "23px",
+      "fontWeight": "600",
+      "lineHeight": "32.2px",
+      "color": "rgb(200, 22, 38)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "p": {
+      "text": "1-Day Service!",
+      "fontFamily": "Poppins",
+      "fontSize": "21px",
+      "fontWeight": "600",
+      "lineHeight": "36.75px",
+      "color": "rgb(116, 107, 106)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "button": {
+      "text": "(417) 881-8828",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "21.6px",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "2px",
+      "textTransform": "none"
+    },
+    "header": null,
+    "footer": null
+  },
+  "magnetic-name-tags": {
+    "body": {
+      "text": ".thrv_widget_menu{position: relative;z-index: 10;}.thrv_widg",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "27px",
+      "color": "rgb(106, 107, 108)",
+      "background": "rgb(255, 255, 255)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h1": {
+      "text": "Springfield Stamp",
+      "fontFamily": "\"Hoarse Rough 02\"",
+      "fontSize": "45px",
+      "fontWeight": "600",
+      "lineHeight": "58.5px",
+      "color": "rgb(250, 27, 47)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h2": {
+      "text": "MAGNETIC NAME TAGSthat Make Connections Count!",
+      "fontFamily": "Poppins",
+      "fontSize": "34px",
+      "fontWeight": "600",
+      "lineHeight": "47.6px",
+      "color": "rgb(33, 33, 33)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h3": null,
+    "p": {
+      "text": "1-Day Service!",
+      "fontFamily": "Poppins",
+      "fontSize": "21px",
+      "fontWeight": "600",
+      "lineHeight": "36.75px",
+      "color": "rgb(116, 107, 106)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "button": {
+      "text": "(417) 881-8828",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "21.6px",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "2px",
+      "textTransform": "none"
+    },
+    "header": null,
+    "footer": null
+  },
+  "about": {
+    "body": {
+      "text": ".thrv_widget_menu{position: relative;z-index: 10;}.thrv_widg",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "27px",
+      "color": "rgb(106, 107, 108)",
+      "background": "rgb(255, 255, 255)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h1": null,
+    "h2": {
+      "text": "Why Choose Springfield Stamp?",
+      "fontFamily": "\"Hoarse Rough 02\"",
+      "fontSize": "36px",
+      "fontWeight": "400",
+      "lineHeight": "46.8px",
+      "color": "rgb(250, 27, 47)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h3": null,
+    "p": {
+      "text": "1-Day Service!",
+      "fontFamily": "Poppins",
+      "fontSize": "21px",
+      "fontWeight": "600",
+      "lineHeight": "36.75px",
+      "color": "rgb(116, 107, 106)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "button": {
+      "text": "(417) 881-8828",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "21.6px",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "2px",
+      "textTransform": "none"
+    },
+    "header": null,
+    "footer": null
+  },
+  "contact": {
+    "body": {
+      "text": "@import url(\"//fonts.googleapis.com/css?family=Poppins:400,5",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "27px",
+      "color": "rgb(106, 107, 108)",
+      "background": "rgb(255, 255, 255)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h1": {
+      "text": "CONTACT US",
+      "fontFamily": "\"Hoarse Rough 02\"",
+      "fontSize": "40px",
+      "fontWeight": "400",
+      "lineHeight": "52px",
+      "color": "rgb(250, 27, 47)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "h2": null,
+    "h3": null,
+    "p": {
+      "text": "1-Day Service!",
+      "fontFamily": "Poppins",
+      "fontSize": "21px",
+      "fontWeight": "600",
+      "lineHeight": "36.75px",
+      "color": "rgb(116, 107, 106)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "normal",
+      "textTransform": "none"
+    },
+    "button": {
+      "text": "(417) 881-8828",
+      "fontFamily": "Muli",
+      "fontSize": "18px",
+      "fontWeight": "400",
+      "lineHeight": "21.6px",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgba(0, 0, 0, 0)",
+      "letterSpacing": "2px",
+      "textTransform": "none"
+    },
+    "header": null,
+    "footer": null
+  }
+}
