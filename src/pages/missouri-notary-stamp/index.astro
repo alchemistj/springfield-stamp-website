@@ -37,11 +37,11 @@ const images = { rectangle, circular, embosser, journal };
   </section>
 
   <div class="notary-pg">
-    <Section tone="white" class="intro-sec" width={1080} padTop={[61, 33]} padBottom={[0, 0]}>
+    <Section tone="white" class="intro-sec" width={1080} padTop={[61, 17]} padBottom={[0, 20]}>
       <p class="intro">{d.intro}</p>
     </Section>
 
-    <Section tone="white" class="cards-sec" width={1080} padTop={[44, 31]} padBottom={[84, 50]}>
+    <Section tone="white" class="cards-sec" width={1080} padTop={[44, 26]} padBottom={[84, 45]}>
       <SectionTitle as="h2">{d.products.title}</SectionTitle>
       <div class="cards">
         {
@@ -65,7 +65,7 @@ const images = { rectangle, circular, embosser, journal };
       </div>
     </Section>
 
-    <Section tone="surface" bg="#f7f7f7" class="req-sec" width={1080} padTop={[62, 55]} padBottom={[75, 50]}>
+    <Section tone="surface" bg="#f7f7f7" class="req-sec" width={1080} padTop={[62, 41]} padBottom={[75, 17]}>
       <SectionTitle as="h2">{d.requirements.title}</SectionTitle>
       <p class="req-intro">{d.requirements.intro}</p>
       <ul class="req-list">
@@ -74,7 +74,7 @@ const images = { rectangle, circular, embosser, journal };
       <p id="buy" class="req-outro">{d.requirements.outro}</p>
     </Section>
 
-    <Section tone="maroon" class="buy-sec" width={1080} padTop={[56, 51]} padBottom={[78, 50]}>
+    <Section tone="maroon" class="buy-sec" width={1080} padTop={[56, 51]} padBottom={[78, 62]}>
       <SectionTitle as="h2" tone="white">{d.buy.title}</SectionTitle>
       <p class="buy-text">{d.buy.body}</p>
       <div class="contact-lines">
@@ -290,6 +290,88 @@ const images = { rectangle, circular, embosser, journal };
     font-size: 20px;
     line-height: 22px;
     text-transform: uppercase;
+  }
+
+  /* Mobile parity (below 1024px): live type sizes and spacing at 390px. */
+  @media (max-width: 1023px) {
+    .h1 {
+      font-size: 30px;
+    }
+    .cards {
+      gap: 50px;
+      padding-top: 16px;
+    }
+    .info {
+      padding: 43px 21px 52px;
+    }
+    .price {
+      padding-bottom: 18px;
+    }
+    .desc {
+      padding-bottom: 20px;
+      line-height: 30.6px;
+    }
+    .card:nth-child(1) .desc {
+      padding-bottom: 30px;
+    }
+    .card.m-only {
+      margin-top: -20px;
+    }
+    .card.m-only .info {
+      padding-top: 23px;
+    }
+    .notary-pg :global(.req-sec .section-title) {
+      max-width: 277px;
+      margin: 0 auto;
+      text-wrap: wrap;
+    }
+    .card:nth-child(2) .desc {
+      font-size: 17px;
+      line-height: 28.9px;
+    }
+    .req-list {
+      padding-bottom: 30px;
+    }
+    .buy-text {
+      padding-bottom: 20px;
+    }
+    .contact-lines {
+      gap: 53px;
+      margin: 27px auto 56px;
+    }
+    .cl {
+      gap: 20px;
+      font-size: 18px;
+    }
+    .buy-ctas :global(.cta) {
+      width: 204px;
+      padding: 18px 20px;
+      line-height: 21.6px;
+    }
+    .req-list li {
+      margin-bottom: 15px;
+      padding-left: 38px;
+      font-size: 18px;
+      line-height: 28.8px;
+    }
+    .req-list li::before {
+      top: 6px;
+    }
+    .notary-pg :global(.cards-sec .section-title) {
+      font-size: 25px;
+      line-height: 32.5px;
+    }
+    .notary-pg :global(.req-sec .section-title) {
+      font-size: 25px;
+      line-height: 35px;
+    }
+    .notary-pg :global(.buy-sec) {
+      --gutter: 26px;
+    }
+    .notary-pg :global(.buy-sec .section-title) {
+      font-size: 28px;
+      line-height: 36.4px;
+    }
   }
 
   @media (min-width: 1024px) {

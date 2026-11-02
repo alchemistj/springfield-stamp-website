@@ -54,7 +54,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   </section>
 
   <div class="mag-pg">
-    <Section tone="white" class="intro-sec" padTop={[53, 37]} padBottom={[70, 30]}>
+    <Section tone="white" class="intro-sec" padTop={[53, 37]} padBottom={[70, 0]}>
       <p class="p intro-p"><Rich parts={d.intro.hello} /></p>
       <p class="p intro-p"><Rich parts={d.intro.pride} /></p>
       <div class="callbox">
@@ -64,7 +64,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       <p class="p intro-p"><Rich parts={d.intro.whether} /></p>
     </Section>
 
-    <Section tone="surface" bg="#f9f9f9" class="find-sec" padTop={[76, 40]} padBottom={[79, 50]}>
+    <Section tone="surface" bg="#f9f9f9" class="find-sec" padTop={[76, 0]} padBottom={[79, 42]}>
       <SectionTitle as="h2">{d.find.title}</SectionTitle>
       <p class="p centered find-lead">{d.find.lead}</p>
       <div class="rows">
@@ -88,7 +88,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       <div class="u-btn"><Button href={d.unique.cta.href} weight={700} width={160}>{d.unique.cta.label}</Button></div>
     </Section>
 
-    <Section tone="white" class="design-sec" padTop={[62, 51]} padBottom={[75, 50]}>
+    <Section tone="white" class="design-sec" padTop={[62, 51]} padBottom={[75, 77]}>
       <SectionTitle as="h2" class="grey-title">{d.design.title}</SectionTitle>
       <div class="design">
         <p class="p"><Rich parts={d.design.body} /></p>
@@ -112,7 +112,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       </div>
     </Section>
 
-    <Section tone="surface" bg="#f8f8f8" class="more-sec" padTop={[67, 51]} padBottom={[59, 50]}>
+    <Section tone="surface" bg="#f8f8f8" class="more-sec" padTop={[67, 61]} padBottom={[59, 59]}>
       <SectionTitle as="h2">{d.more.title.split(": ")[0]}: <br />{d.more.title.split(": ")[1]}</SectionTitle>
       <div class="more">
         <div class="more-copy">
@@ -125,13 +125,13 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       </div>
     </Section>
 
-    <Section tone="white" class="why-sec" padTop={[67, 51]} padBottom={[121, 50]}>
+    <Section tone="white" class="why-sec" padTop={[67, 51]} padBottom={[121, 101]}>
       <SectionTitle as="h2">{d.why.title}</SectionTitle>
       <p class="p centered why-lead"><Rich parts={d.why.lead} /></p>
       <WhyCards items={d.why.items.map((it) => ({ icon: whyIcons[it.icon], title: it.title, body: it.body }))} iconSizes={[44, 38, 44, 44]} rowHeights={[397, 375]} />
     </Section>
 
-    <Section tone="maroon" class="ready-sec" padTop={[57, 51]} padBottom={[85, 50]}>
+    <Section tone="maroon" class="ready-sec" padTop={[57, 51]} padBottom={[85, 58]}>
       <SectionTitle as="h2" tone="white">{d.ready.title}</SectionTitle>
       <p class="r-text">{d.ready.before}<a href={site.phone.tel}>{site.phone.display}</a>{d.ready.after}</p>
     </Section>
@@ -403,6 +403,128 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   }
   .r-text {
     margin: 0;
+  }
+
+  /* ---- Mobile parity (below 1024px): live paddings, type sizes and spacing at 390px ---- */
+  @media (max-width: 1023px) {
+    .mag-pg :global(.intro-sec),
+    .mag-pg :global(.unique-sec),
+    .mag-pg :global(.design-sec),
+    .mag-pg :global(.more-sec) {
+      --gutter: 26px;
+    }
+    .mag-pg :global(.find-sec) {
+      --gutter: 21px;
+    }
+    .mag-pg :global(.ready-sec) {
+      --gutter: 27px;
+    }
+    .mag-pg :global(.why-sec) {
+      --gutter: 35px;
+    }
+    .mag-pg :global(.why-sec .section-title) {
+      padding-bottom: 32px;
+    }
+    .why-lead {
+      margin-bottom: 40px;
+    }
+    .mag-pg :global(.ready-sec .section-title) {
+      padding-bottom: 23px;
+    }
+    .more-img :global(img) {
+      height: 343px;
+      object-fit: cover;
+    }
+    .more-img {
+      margin: 0 -1px;
+    }
+    .mag-pg :global(.why-sec .card) {
+      padding: 21px 31px 30px;
+    }
+    .mag-pg :global(.why-sec .card:first-child) {
+      padding: 21px 26px 30px;
+    }
+    .mag-pg :global(.why-sec .card:nth-child(2)) {
+      min-height: 360px;
+    }
+    .mag-pg :global(.find-sec .section-title),
+    .mag-pg :global(.unique-sec .section-title),
+    .mag-pg :global(.ready-sec .section-title) {
+      line-height: 36.4px;
+    }
+    .mag-pg :global(.design-sec .section-title),
+    .mag-pg :global(.more-sec .section-title),
+    .mag-pg :global(.why-sec .section-title) {
+      line-height: 35px;
+    }
+    .strip :global(img) {
+      height: 305px;
+    }
+    .mag-pg :global(.more-sec .section-title) {
+      padding-bottom: 32px;
+    }
+    .more {
+      gap: 32px;
+    }
+    .more-copy .p {
+      margin-bottom: 28px;
+    }
+    .bullets li {
+      margin-bottom: 10px;
+      padding-left: 35px;
+      font-size: 17px;
+      line-height: 27.2px;
+    }
+    .bullets li:last-child {
+      margin-bottom: 0;
+    }
+    .bullets li::before {
+      left: 9px;
+      top: 6px;
+    }
+    .benefits {
+      gap: 67px;
+    }
+    .b-ico {
+      margin-bottom: 18px;
+    }
+    .b-title {
+      margin-bottom: 9px;
+    }
+    .u-text {
+      margin-bottom: 32px;
+      font-size: 19px;
+      line-height: 33.25px;
+    }
+    .u-call {
+      margin-bottom: 23px;
+      padding: 0 40px;
+      line-height: 29.7px;
+    }
+    .intro-p {
+      margin-bottom: 21px;
+    }
+    .intro-sec .intro-p:last-child {
+      margin-bottom: 19px;
+    }
+    .callbox {
+      padding: 17px 20px 19px;
+    }
+    .call-h {
+      padding-bottom: 25px;
+      font-size: 23px;
+    }
+    .call-btn :global(.btn) {
+      padding: 13px 24px;
+    }
+    .rows :global(.copy) {
+      padding: 0 1px;
+    }
+    .rows :global(.row-title) {
+      margin: 20px 0 12.5px;
+      font-size: 18px;
+      line-height: 25.2px;
+    }
   }
 
   @media (min-width: 1024px) {

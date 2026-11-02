@@ -27,6 +27,9 @@ import community from "../../assets/community-1.png";
 const route = routeByKey("custom-stamps");
 const rowImages = { selfInking: idealLine, signature: maxlight, logo: logoStamp, daters: datersInks, notary: notary4913 };
 const rowHeights = [350, 351, 352, 414, 439];
+// The live mobile title breaks after "for" (a <br> in the original). Same words, break shown below 1024px only.
+const findTitle = d.find.title.split(/(?<=\bfor) /) as [string, string];
+const readyTitle = d.ready.title.split(/(?<=\bown) /) as [string, string];
 const icons = { detail: stampGrey, turnaround, service: csGrey, community };
 ---
 
@@ -51,8 +54,8 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     <p class="intro"><Rich parts={d.intro} /></p>
   </Section>
 
-  <Section tone="surface" bg="#f4f4f4" class="find-sec" padTop={[69, 0]} padBottom={[92, 60]}>
-    <SectionTitle as="h2" class="bal">{d.find.title}</SectionTitle>
+  <Section tone="surface" bg="#f4f4f4" class="find-sec" padTop={[69, 57]} padBottom={[92, 45]}>
+    <SectionTitle as="h2" class="bal">{findTitle[0]}{" "}<br class="mbr" />{findTitle[1]}</SectionTitle>
     <div class="find-intro">
       <p class="find-text"><Rich parts={d.find.body} /></p>
       <div class="find-img">
@@ -82,8 +85,8 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     </div>
   </Section>
 
-  <Section tone="maroon" class="ready-sec" padTop={[81, 51]} padBottom={[60, 50]}>
-    <SectionTitle as="h2" tone="white" class="bal">{d.ready.title}</SectionTitle>
+  <Section tone="maroon" class="ready-sec" padTop={[81, 56]} padBottom={[60, 49]}>
+    <SectionTitle as="h2" tone="white" class="bal">{readyTitle[0]}{" "}<br class="mbr" />{readyTitle[1]}</SectionTitle>
     <p class="ready-text">{d.ready.body}</p>
     <p class="call-h">{d.ready.callHeading}</p>
     <div class="ready-cta">
@@ -91,7 +94,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     </div>
   </Section>
 
-  <Section tone="surface" bg="#f6f6f6" class="why-sec" padTop={[69, 51]} padBottom={[90, 52]}>
+  <Section tone="surface" bg="#f6f6f6" class="why-sec" padTop={[69, 51]} padBottom={[90, 76]}>
     <SectionTitle as="h2">{d.why.title}</SectionTitle>
     <p class="why-intro"><Rich parts={d.why.intro} /></p>
     <p class="why-lead">{d.why.lead}</p>
@@ -196,6 +199,9 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     display: block;
     width: 100%;
     height: auto;
+  }
+  .mbr {
+    display: inline;
   }
   .rows {
     max-width: 960px;
@@ -316,7 +322,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     color: #151515;
   }
   .mark-p a {
-    color: #1e7be6;
+    color: #1975e0; /* live #1e7be6 darkened just enough for 4.5:1 on white (delta E 2.4) */
     text-decoration: none;
   }
   .mark-p strong {
@@ -332,6 +338,103 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     display: block;
     width: 100%;
     height: auto;
+  }
+
+  /* ---- Mobile parity (below 1024px): live paddings, type sizes and spacing at 390px ---- */
+  @media (max-width: 1023px) {
+    .custom-pg {
+      --gutter: 26px;
+    }
+    .custom-pg :global(.ready-sec) {
+      --gutter: 32px;
+    }
+    .custom-pg :global(.mark-sec) {
+      --gutter: 21px;
+    }
+    .custom-pg :global(.why-sec .section-title),
+    .custom-pg :global(.find-sec .section-title),
+    .custom-pg :global(.mark-sec .section-title) {
+      font-size: 28px;
+      line-height: 36.4px;
+    }
+    .custom-pg :global(.ready-sec .section-title) {
+      font-size: 30px;
+      line-height: 39px;
+    }
+    .find-intro {
+      margin-top: -10px;
+      padding-bottom: 51px;
+    }
+    .find-img {
+      align-self: flex-start;
+      width: 248px;
+      margin-left: 29px;
+      padding-bottom: 22px;
+    }
+    .find-text {
+      margin: 0 22px 0 30px;
+      padding: 0;
+    }
+    .rows {
+      margin: 0 -1px;
+    }
+    .find-text :global(strong) {
+      font-weight: 400;
+    }
+    .rows :global(.copy) {
+      padding: 0 1px;
+    }
+    .rows :global(.row-title) {
+      margin: 20px 0 13px;
+      line-height: 35px;
+    }
+    .rows :global(.row-cta) {
+      font-size: 20px;
+      line-height: 23.4px;
+    }
+    .custom-pg :global(.ready-sec .section-title) {
+      text-wrap: wrap;
+    }
+    .custom-pg :global(.ready-sec .section-title) {
+      padding-bottom: 32px;
+    }
+    .call-h {
+      margin-top: 12px;
+    }
+    .custom-pg :global(.mark-sec .section-title) {
+      padding-bottom: 38px;
+    }
+    .ready-text {
+      padding-bottom: 20px;
+      font-size: 19px;
+      line-height: 30.4px;
+    }
+    .ready-cta :global(.btn) {
+      padding: 18px 20px;
+      line-height: 23.4px;
+    }
+    .call-h {
+      font-size: 21px;
+      line-height: 26.25px;
+    }
+    .why-intro,
+    .why-lead {
+      line-height: 31.5px;
+    }
+    .custom-pg :global(.why-sec .card:nth-child(1)) {
+      min-height: 260px;
+    }
+    .custom-pg :global(.why-sec .card:nth-child(2)) {
+      min-height: 271px;
+    }
+    .custom-pg :global(.why-sec .card:nth-child(4)) {
+      min-height: 321px;
+    }
+    .mark-lead,
+    .mark-p {
+      margin-bottom: 28.8px;
+      line-height: 28.8px;
+    }
   }
 
   @media (min-width: 1024px) {
@@ -370,6 +473,9 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     }
     .custom-pg :global(.find-sec.has-bg) {
       background: #f4f4f4;
+    }
+    .mbr {
+      display: none;
     }
     .rows > :global(.rows) {
       gap: 0;
