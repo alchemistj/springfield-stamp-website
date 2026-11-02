@@ -92,10 +92,16 @@ Anything else that looks wrong: leave it and list it in the PR description for J
   its timing. That's the Ads manager's call.
 - Contact form: Central Forms per `docs/sop/central-forms-contact-form.md` §4. Fields as on the
   live form (Name, Email, Phone, Message) + hidden honeypot. `siteKey: "springfield-stamp-website"`,
-  `formKey: "main-contact"`. **Gate on the exact production host `www.springfieldstamp.com`.**
-  Everywhere else (localhost, previews) the submit shows a clear "Preview: form not sent" message
-  and posts nothing. No reCAPTCHA. The form is not registered in Central Forms yet. Josh approves that
-  separately, so it is expected not to work in production until then.
+  `formKey: "main-contact"`. Follow SOP v1.0 (ff-architect `main`, `docs/sop/central-forms-contact-form.md`;
+  refresh the copy in `docs/sop/`). **Production host gate:** only `www.springfieldstamp.com` posts
+  directly to `https://forms.fluidframemarketing.com/api/lead`. Keep that URL as one literal string
+  in the shipped JS (the watchdog greps for it). **Preview:** on `*.vercel.app` preview hosts the
+  form posts to a preview-only same-origin relay `api/preview-forms-lead` (a Vercel function that
+  forwards to `FORMS_PREVIEW_LEAD_URL` and refuses to run when `VERCEL_ENV === "production"`), mirroring
+  `alchemistj/window-dudes`. localhost posts nothing and shows "Preview: form not sent". No reCAPTCHA.
+  Registered in Central Forms (PR #55, merged); production destination inactive; Postmark token pending.
+  **Test rule (Josh, 2 Nov):** test submissions go only to josh@fluidframemarketing.com and
+  support@fluidframemarketing.com, never to the client. Registration: Central Forms PR #55.
 - No Supabase, no external image hosts. Grep `dist` for `wp-content`, `springfieldstamp.com/wp-`,
   `supabase.co`, `fonts.googleapis`: zero hits.
 

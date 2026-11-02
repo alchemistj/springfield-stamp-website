@@ -1,9 +1,8 @@
 # SOP: Client website contact form on Central Forms
 
-Status: draft v0.1, 20 Oct 2026, for Josh's review. Written after taking Window Dudes through
-the full path on Oct 20. Checked against Central Forms `origin/main` at `510a84f` (PR #44), Window
-Dudes `cursor/wd-central-forms-only` (`8773255`) and SRA `cursor/sra-central-forms-only`
-(`d3c4900`). Anything marked "(verify)" was not provable from code.
+Status: v1.0, 2 Nov 2026. Approved by Josh. Built from taking Window Dudes, Greene Planet, SRA,
+Luecke's and Ben Davis through Central Forms in Oct 2026. Checked against Central Forms `main` at
+`d607b90` (PR #54). Window Dudes (Oct 26) and SRA (Oct 26) launched their Astro sites on it.
 
 Who uses it: an agent (Cursor or Claude) building a new Astro client site, and the architect
 writing its build card. Hand the agent this file. Central Forms is the shared lead intake at
@@ -16,11 +15,13 @@ writing its build card. Hand the agent this file. Central Forms is the shared le
   The website never talks to the CRM.
 - A retry or double-click with the same `clientSubmissionId` creates nothing new: no second
   row, email, CRM record or conversion.
-- Spam is never dropped. It is stored and sent to the review inbox
-  (`support@fluidframemarketing.com`), never to the client (`src/filter/route.ts`,
-  `docs/quarantine-review-delivery.md`).
-- Stuck or failed deliveries page Slack (`FORMS_ALERT_SLACK_WEBHOOK_URL`; kinds
-  `delivery_failed`, `delivery_interrupted`, `delivery_ambiguous` in `src/lib/exceptionCases.ts`).
+- Spam is never dropped. It is stored and sent **only** to the review inbox
+  `josh@fluidframemarketing.com` (no CC/BCC, no reply-to), never to the client
+  (`DEFAULT_REVIEW_TO` in `src/filter/config.ts`, env `SUPPORT_REVIEW_TO`, `src/filter/route.ts`).
+- The visitor sees "thank you" as soon as the row is stored. Email and CRM work that takes longer
+  runs after the response (`waitUntil`); recovery jobs are the backstop.
+- Failures page Slack (`FORMS_ALERT_SLACK_WEBHOOK_URL`): per-lead delivery failures
+  (`src/lib/exceptionCases.ts`) and the watchdog (§8).
 - **No client-owned Supabase or other client database.** The site stores nothing itself.
 
 ## 2. Architecture
@@ -30,7 +31,7 @@ Browser on https://www.client.com
                      ├─ Origin check (exact match, per destination)
                      ├─ validate, classify (deliver_client | quarantine_review)
                      ├─ store row (contact_form_submissions)  ← before any reply
-                     ├─ Postmark email (client, or support@ for review)
+                     ├─ Postmark email (client, or josh@ for review)
                      └─ CRM adapter, if the client has one
 ```
 - The browser posts **directly** to Central Forms. CORS allows only `POST, OPTIONS` and the
@@ -50,6 +51,8 @@ Browser on https://www.client.com
   (`docs/forms-admin.md` "Isolated safety", `docs/forms-env-contract.md` "Not-live intake rule").
 - An **inactive production destination refuses new leads** (400, reason `inactive`) and
   stores nothing (`docs/window-dudes-production-sender.md`).
+- Refused requests (bad origin, inactive form, invalid body, rate limit, server error) are logged
+  in `forms_intake_rejections` (no PII) so the watchdog can alert on them.
 
 ## 3. Registering the client in Central Forms
 **Every database write and every Central Forms production env change needs Josh's explicit
@@ -78,15 +81,17 @@ Order:
    destination must have a recipient (DB check).
 4. After any destination or origin edit, run `select public.forms_bump_registry_epoch();`.
    The registry cache otherwise holds old values for up to 15 s per instance.
-5. Postmark token. Two paths exist today:
-   - Generic database client: token stored encrypted in `forms_secrets` and pointed to by
-     `forms_mail_profiles`. BCC = `INTERNAL_LEAD_BCC_EMAIL` env **plus** `notification_bcc`
-     (`databaseMailProfile` / `resolveLeadEmailRecipients`).
-   - Dedicated env token `POSTMARK_TOKEN_<CLIENT>` (Ben Davis, Window Dudes, Greene): needs a
-     Central Forms code change (`src/lib/dedicatedClientMail.ts`, `MAIL_PROFILES` in
-     `src/config/forms.ts`, `src/lib/envContract.ts`) and a Vercel env var. BCC comes from
-     `notification_bcc` only.
-   Which path a new client gets is Josh's call (verify).
+5. Postmark token. **The standard is the dedicated env token** `POSTMARK_TOKEN_<CLIENT>`
+   (Window Dudes, Greene, Ben Davis; Josh chose it on Oct 21). It needs a Central Forms code
+   change (`src/lib/dedicatedClientMail.ts`, `MAIL_PROFILES` in `src/config/forms.ts`,
+   `src/lib/envContract.ts`) and a Vercel env var. BCC comes from `notification_bcc` only; set it
+   to `josh@fluidframemarketing.com` unless Josh says otherwise. BCC is preferred over CC.
+   The older generic path (token encrypted in `forms_secrets`) still exists; don't use it for
+   new clients without Josh.
+6. Activating or deactivating: `forms_set_destination_activation(...)` refuses env-token clients
+   ("Cannot activate without a connected Postmark token"). For those, with Josh's yes, update
+   `forms_form_destinations.activation_status` directly for the one production row, then bump the
+   epoch.
 
 ## 4. Form code requirements
 ### 4a. Request body (`src/lib/validate.ts`)
@@ -200,33 +205,46 @@ once per id (Window Dudes also remembers fired ids in `sessionStorage`). Central
 - **localhost, preview and any other host never post to production Central Forms.** Gate on
   an exact production-host list (Window Dudes `astroLeadSubmitUrl`). Never put `localhost` on a
   production destination.
-- Preview builds test against the Central Forms preview runtime. Window Dudes and Ben Davis
-  do this through a preview-only same-origin relay (`api/preview-forms-lead`) that must never
-  run in production (verify the pattern with Josh for each new site).
+- Preview builds test against the Central Forms preview runtime through a preview-only
+  same-origin relay (`api/preview-forms-lead`) that must never run in production. The relay's
+  target (`FORMS_PREVIEW_LEAD_URL` on the site's Vercel project) only accepts origins registered on
+  that preview destination, so a new preview URL gets `403 origin not allowed` until it is added.
+  That is not a production bug (trap 11).
+- The production bundle must contain the literal `https://forms.fluidframemarketing.com/api/lead`
+  (in any same-origin script or lazily imported chunk). The watchdog's daily page check looks for
+  it; don't build the URL from pieces.
 
 ## 5. Optional: unfinished-inquiry capture
-Per-client opt-in (`unfinished_inquiry_capture` on the destination, off by default). The form
-posts name/phone/email (never the message) to `/api/lead-draft` on blur, with the same
-`clientSubmissionId`. If no real submit arrives within 30 minutes, the client gets an
-"Unfinished website inquiry" email telling them to call, not text. Fire-and-forget; never
-delay the real submit. Show a one-line notice near the form. Spec:
-`ff-contact-and-forms-filtering/docs/unfinished-inquiry-client.md`. Greene Planet's
-`cursor/unfinished-inquiry` branch is the reference.
+Per-client opt-in (`unfinished_inquiry_capture` on the destination). **Off for every client until
+that client approves it** (Josh's rule). On each page load the site calls
+`GET /api/lead-draft?siteKey=…&formKey=…` once and does nothing unless the answer is exactly
+`{"ok":true,"capture":true}`: no notice, no draft requests, no listeners. When it is on, the form
+posts name/phone/email (never the message) to `POST /api/lead-draft` on blur or page hide, with the
+same `clientSubmissionId`. If no real submit arrives within 30 minutes, the client gets an
+"Unfinished website inquiry" email telling them to call, not text. Fire-and-forget; never delay the
+real submit. Spec: `ff-contact-and-forms-filtering/docs/unfinished-inquiry-client.md`. Reference:
+Greene Planet PR #101 (`src/lib/unfinishedInquiry.ts`).
 
 ## 6. CRM
-- Window Dudes → JobNimbus, inside Central Forms. Runs only when
-  `JOBNIMBUS_ENABLED_WINDOW_DUDES` is exactly `true` and `JOBNIMBUS_API_KEY_WINDOW_DUDES` is
-  set (`docs/window-dudes-jobnimbus-parity.md`).
-- SRA and Luecke's → ServiceTitan (`crmProvider: "servicetitan"` in `src/config/forms.ts`,
-  `docs/sra-servicetitan-lead-delivery.md`). Production enablement status: (verify).
-- CRM runs only after the client email is sent, and never for quarantined, preview-test or
-  acceptance rows.
+- **Ask the client first.** Some don't want it: SRA (Bailey, Oct 26) wants email only, no
+  ServiceTitan. Match what the old site did, nothing more.
+- Window Dudes → JobNimbus only, inside Central Forms. Runs only when
+  `JOBNIMBUS_ENABLED_WINDOW_DUDES` is exactly `true` and `JOBNIMBUS_API_KEY_WINDOW_DUDES` is set
+  (`docs/window-dudes-jobnimbus-parity.md`). Existing contacts are updated, not duplicated. A CRM
+  family with no credentials (GoHighLevel there) is marked `skipped_not_configured` and does not
+  hold the email.
+- ServiceTitan: the adapter exists (`docs/sra-servicetitan-lead-delivery.md`) but is **off** for
+  SRA and Luecke's.
+- CRM never runs for quarantined, preview-test or acceptance rows.
 - **A new client's CRM needs a Central Forms code change** (new adapter + env names). Never
   wire a CRM from the website.
 
 ## 7. Test order (mandatory, in this order)
 Test emails go only to `josh@fluidframemarketing.com` or `support@fluidframemarketing.com`.
-**Never to the client.**
+**Never to the client.** Test leads must look real enough for the spam filter: "Test" in the
+name, a real-looking phone (a fake like 573-111-2222 is quarantined as an invalid number), and a
+homeowner job in the message (e.g. "Test – roof inspection, please ignore"). Avoid "quote",
+"pricing" or "scope of work" wording.
 
 1. **Site tests.** Unit and e2e on the site: body shape, labels, host gate, retry keeps the
    id, success/failure UX, conversion fires once.
@@ -240,18 +258,38 @@ Test emails go only to `josh@fluidframemarketing.com` or `support@fluidframemark
    does). Open the email yourself and check every line: subject (§4c format, with the
    visitor's name), Name/Phone/Email, Message,
    Additional details labels, no audit or debug text. Resubmit the same body: expect
-   `duplicate:true` and **no** second email. For a generic database client the
-   `INTERNAL_LEAD_BCC_EMAIL` copy still goes out (verify its value is Josh's address).
+   `duplicate:true` and **no** second email.
 4. **Josh's inbox.** Switch the recipient to `josh@fluidframemarketing.com`, send one more, and
    ask Josh to check it on his phone. Wait for his reply.
 5. **CRM** (if any). Only after Josh says yes: enable the CRM switch, send one lead, ask Josh to
    find the record in the CRM and delete it.
 6. **Restore.** Real `inquiry_recipient` and `notification_bcc` back, destination **inactive**,
-   epoch bumped. Clean up test rows (section 8, trap 6).
+   epoch bumped. Clean up test rows (section 9, trap 6).
 7. **Flip.** Josh merges the site PR and changes DNS. Activate the production destination at
-   that moment, bump the epoch, send nothing to the client, and watch the first real lead.
+   that moment, bump the epoch, and watch the first real lead. If the current live site does not
+   post to Central Forms (check its built JS), the destination can be activated early so the
+   client's inbox is ready before launch (Window Dudes, Oct 22).
+8. **Live test.** After launch Josh may send one real-site test with the client's OK; the client
+   receives it. Confirm in the database that it was stored, delivered and (if CRM) synced.
+9. **After launch.** Add the contact page to `src/config/liveContactPages.ts` in Central Forms (a
+   small PR) so the daily page check covers it. A few days after the flip, remove the client's old
+   Supabase env vars from the site's Vercel project. Don't delete the client's old Supabase project
+   until its content and images are backed up and the new site no longer refreshes from it.
 
-## 8. Traps from Window Dudes (symptom → cause → rule)
+## 8. Monitoring after launch
+Central Forms watches itself (`api/forms-watchdog.ts`, every 15 minutes, Slack):
+- **Silence**: a client's form (spam included) quiet much longer than usual for that client.
+- **Blocked submissions**: refused requests from a client's production origin.
+- **Server-error spike** and **health `ok:false`**.
+- **Daily page check** (after 13:00 UTC): each page in `liveContactPages.ts` loads and its JS
+  references the Central Forms endpoint. GET only, never submits.
+- **Monday digest** (8:00 America/Chicago): real leads, held leads and days since the last real
+  lead per client.
+Uptime of Central Forms itself is watched from outside by FF Reports (UptimeRobot keyword monitor on
+`https://forms.fluidframemarketing.com/api/health`). That page returns only `{"ok":true}` (200) or
+`{"ok":false}` (503) in production; preview deployments keep the detailed body.
+
+## 9. Traps (symptom → cause → rule)
 1. **Relay rejected.** 403 from production → the site's server relayed the POST without an
    `Origin` header → browser posts direct; no production relay.
 2. **Site read its own Supabase.** Site code looked for an `intake_mode` column in the client's
@@ -285,10 +323,25 @@ Test emails go only to `josh@fluidframemarketing.com` or `support@fluidframemark
    → before the support@ test, confirm the client's Postmark path works in production (env token or
    connected `forms_mail_profiles` row); decide it with Josh in §3 step 5.
 10. **Deploy not live.** A merged Central Forms PR built on Vercel production but didn't serve
-   → production deploy on merge was not auto-promoted → request the promote, then check
-   `buildSha` at `https://forms.fluidframemarketing.com/api/health` equals the merge SHA.
+   → production deploy on merge is not auto-promoted → request the promote, then confirm in Vercel
+   that the `forms.fluidframemarketing.com` alias points at the merge deployment and `/api/health`
+   returns `{"ok":true}`. (Health no longer shows `buildSha` in production.)
+11. **Preview test refused.** `403 origin not allowed` from a site preview → the preview relay
+   target doesn't list that preview URL → add the origin to the preview destination, or test on
+   production after launch. Don't change production to make a preview pass.
+12. **Test lead quarantined.** Josh's test with 573-111-2222 went to review → the filter treats
+   impossible phone numbers as spam → use realistic test data (§7).
+13. **Slow "thank you".** Window Dudes took ~13 s → the response waited for CRM plus a 12 s hold for
+   an unconfigured CRM → fixed in PRs #51 (respond first, skip unconfigured CRM). Keep slow work
+   after the response.
+14. **Schema drift.** `/api/health` went `ok:false` because live migrations weren't in the repo →
+   every live DB change goes through a repo migration, wired into `docs/schema.sql` and the
+   manifest, with the fingerprint pin updated in the same PR.
+15. **Bot with random-string names.** A bot filled the honeypot and used names like
+   `sAdcfzlBeOUQbrWmGUR`; 3 reached Luecke's → honeypot plus a one-token random name now goes to
+   review (PR #54). Forward any spam a client receives to Josh so the filter can learn it.
 
-## 9. Never
+## 10. Never
 - Never send a test to a client inbox. Only josh@ or support@.
 - Never point a site at a client database, or add Supabase to a site.
 - Never commit secrets, tokens, or `.env` files. siteKey/formKey are not secrets.
@@ -298,9 +351,11 @@ Test emails go only to `josh@fluidframemarketing.com` or `support@fluidframemark
 - Never change Central Forms code from a website task. Open a separate Central Forms PR.
 - Never write to the Forms database or Central Forms production env without Josh's yes.
 - Never put `localhost` or a preview URL on a production destination.
-- Never activate a production destination before the flip, except for the test in §7.3.
+- Never activate a production destination before the flip, except for the §7.3 test or when the
+  current live site doesn't post to Central Forms (§7.7).
+- Never send review/spam mail anywhere but josh@, and never CC a client on it.
 
-## 10. Launch checklist
+## 11. Launch checklist
 - [ ] Client, site, form registered; keys match the site code
 - [ ] Preview destination active with `.test` recipient; production destination inactive
 - [ ] Production origins exact (www, and apex if not redirected); epoch bumped
@@ -319,5 +374,6 @@ Test emails go only to `josh@fluidframemarketing.com` or `support@fluidframemark
 - [ ] CRM test record verified and deleted by Josh (if CRM)
 - [ ] Test rows marked done; no open Slack exception
 - [ ] Real recipient and BCC restored; destination inactive
-- [ ] Central Forms `/api/health` `buildSha` matches the expected merge
+- [ ] Central Forms alias points at the expected deployment; `/api/health` returns `{"ok":true}`
 - [ ] At the flip: destination activated, epoch bumped, first real lead watched
+- [ ] Contact page added to `liveContactPages.ts`; client's old Supabase env vars removed after a few days
