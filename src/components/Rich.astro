@@ -1,0 +1,10 @@
+---
+// Renders copy parts from src/data (plain strings and `{ strong }` runs) without reflowing any text.
+import type { Rich } from "../data/types";
+interface Props {
+  parts: Rich;
+}
+const { parts } = Astro.props;
+---
+
+{parts.map((part) => (typeof part === "string" ? part : <strong>{part.strong}</strong>))}

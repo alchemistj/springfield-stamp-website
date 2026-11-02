@@ -1,0 +1,36 @@
+---
+// TODO(page helpers): temporary placeholder. Each page helper replaces its stub page with the real
+// page built from src/data/<page>.ts and the shared components. Delete this file when the last
+// stub is gone.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import type { Route } from "../lib/routes";
+
+interface Props {
+  route: Route;
+}
+const { route } = Astro.props;
+---
+
+<BaseLayout route={route}>
+  <section class="stub">
+    <h1>{route.h1}</h1>
+    <p>TODO: this page is not built yet.</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .stub {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 80px 20px;
+    text-align: center;
+  }
+  h1 {
+    margin: 0 0 24px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 33px;
+    line-height: 41.25px;
+    color: var(--color-ss-red);
+  }
+</style>

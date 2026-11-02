@@ -1,0 +1,21 @@
+---
+// Wrapper for a stack of <ProductRow>s. Desktop: one rounded card (20px corners) with the rows
+// butted together. Mobile: separate blocks with 40px between them.
+---
+
+<div class="rows"><slot /></div>
+
+<style>
+  .rows {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  @media (min-width: 1024px) {
+    .rows {
+      gap: 0;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+  }
+</style>

@@ -1,0 +1,144 @@
+---
+// Alternating image / text product row (the home "How We Can Help..." rows, and the product
+// rows on the other pages). Put several inside <ProductRows>. Pass `reverse` on every second row
+// so the picture alternates left/right on desktop; on mobile the picture is always on top.
+//
+//   <ProductRow title="Custom Stamps" image={img} imageAlt="" ctaHref="/custom-stamps/" ctaLabel="See Our Custom Stamp Options" minHeight={399}>
+//     body copy (slot)
+//   </ProductRow>
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import Button from "./Button.astro";
+
+interface Props {
+  title: string;
+  image: ImageMetadata;
+  /** Decorative by default: the title names the product. */
+  imageAlt?: string;
+  headingLevel?: "h2" | "h3" | "h4";
+  /** Picture on the right (desktop). */
+  reverse?: boolean;
+  /** Desktop row height in px (the live rows are fixed heights between 350 and 433). */
+  minHeight?: number;
+  /** Text panel shade: the live site uses #e0e0e0 for most rows and #e4e4e4 for the last two. */
+  tone?: "card" | "card-alt";
+  /** Extra top padding override (px) for the text panel on desktop (first live row uses 30). */
+  padTop?: number;
+  ctaHref?: string;
+  ctaLabel?: string;
+  ctaWeight?: 600 | 700;
+  ctaTight?: boolean;
+}
+const {
+  title,
+  image,
+  imageAlt = "",
+  headingLevel: Heading = "h3",
+  reverse = false,
+  minHeight,
+  tone = "card",
+  padTop,
+  ctaHref,
+  ctaLabel,
+  ctaWeight = 700,
+  ctaTight = false,
+} = Astro.props;
+const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${padTop}px` : ""].filter(Boolean).join(";");
+---
+
+<article class:list={["row", { reverse }]} style={style || undefined}>
+  <div class="media">
+    <Picture
+      src={image}
+      alt={imageAlt}
+      formats={["avif", "webp"]}
+      fallbackFormat="webp"
+      widths={[303, 500, 606, 1000]}
+      sizes="(min-width: 1024px) 500px, (min-width: 400px) 303px, 90vw"
+      quality={75}
+    />
+  </div>
+  <div class:list={["copy", `tone-${tone}`]}>
+    <Heading class="row-title">{title}</Heading>
+    <p class="row-body"><slot /></p>
+    {ctaHref && ctaLabel && <Button href={ctaHref} weight={ctaWeight} tight={ctaTight} class="row-cta">{ctaLabel}</Button>}
+  </div>
+</article>
+
+<style>
+  .row {
+    display: block;
+  }
+  .media {
+    background: #fff;
+  }
+  .media :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .copy {
+    text-align: center;
+  }
+  .row-title {
+    margin: 21px 0 22px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 28px;
+    color: #000;
+  }
+  .row-body {
+    margin: 0 0 21px;
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 31.5px;
+    color: var(--color-ss-ink);
+  }
+  .row-body :global(strong) {
+    font-weight: 600;
+  }
+  .copy :global(.row-cta) {
+    max-width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: var(--row-h, 0);
+    }
+    .media {
+      position: relative;
+    }
+    .media :global(img) {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+      object-fit: cover;
+    }
+    .reverse .media {
+      order: 2;
+    }
+    .copy {
+      box-sizing: border-box;
+      padding: var(--pad-top, 50px) 50px 50px;
+      text-align: left;
+    }
+    .tone-card {
+      background: var(--color-ss-card);
+    }
+    .tone-card-alt {
+      background: var(--color-ss-card-alt);
+    }
+    .row-title {
+      margin: 4px 0 16px;
+      font-size: 24px;
+      line-height: 33.6px;
+    }
+    .row-body {
+      margin-bottom: 24px;
+    }
+  }
+</style>

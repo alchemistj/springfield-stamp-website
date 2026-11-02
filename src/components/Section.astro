@@ -1,0 +1,55 @@
+---
+// Full-width page section with the live site's background tones and vertical rhythm.
+//   tone "surface" = light grey (#f2f2f2), "maroon" = the red workflow band, "white", "about" = grey (#efefef).
+// `width` is the desktop content width in px (the live site uses 1000 for most sections).
+interface Props {
+  tone?: "surface" | "maroon" | "white" | "about";
+  width?: number;
+  id?: string;
+  class?: string;
+  /** Vertical padding (top / bottom), desktop and mobile. */
+  padTop?: [number, number];
+  padBottom?: [number, number];
+}
+const { tone = "white", width = 1000, id, class: className, padTop = [81, 51], padBottom = [80, 70] } = Astro.props;
+const style = `--sec-w:${width}px;--pt:${padTop[0]}px;--pt-m:${padTop[1]}px;--pb:${padBottom[0]}px;--pb-m:${padBottom[1]}px`;
+---
+
+<section id={id} class:list={["section", `tone-${tone}`, className]} style={style}>
+  <div class="inner"><slot /></div>
+</section>
+
+<style>
+  .section {
+    padding: var(--pt-m) 0 var(--pb-m);
+  }
+  .inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: calc(var(--sec-w) + 2 * var(--gutter));
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  .tone-surface {
+    background: var(--color-ss-surface);
+  }
+  .tone-maroon {
+    background: var(--color-ss-maroon);
+    color: #fff;
+  }
+  .tone-white {
+    background: #fff;
+  }
+  .tone-about {
+    background: var(--color-ss-about);
+  }
+  @media (min-width: 1024px) {
+    .section {
+      padding: var(--pt) 0 var(--pb);
+    }
+    .inner {
+      max-width: var(--sec-w);
+      padding: 0;
+    }
+  }
+</style>
