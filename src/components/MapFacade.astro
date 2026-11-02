@@ -1,0 +1,109 @@
+---
+// Static map facade (SOP: no third-party iframe in the first paint). A local screenshot of the live embed's
+// view plus a "View on Google Maps" link. The real Google Maps iframe (same place and coordinates as the live
+// embed) is created in the browser on the first interaction (scroll, pointer, key, touch) or when the facade
+// scrolls into view. The iframe `src` is NOT in the server HTML (it lives in the script bundle). Height is reserved.
+import { Image } from "astro:assets";
+import mapImage from "../assets/map-facade.jpg";
+import { contact } from "../data/contact";
+
+const m = contact.map;
+---
+
+<div class="map" data-map-facade>
+  <button type="button" class="facade" data-map-load aria-label="Load the interactive map">
+    <Image src={mapImage} alt="Map showing Springfield Stamp & Engraving, 1416 S. Glenstone Ave., Springfield, MO" width={460} height={450} format="webp" quality={78} loading="lazy" decoding="async" />
+  </button>
+  <a class="map-link" href={m.linkHref} target="_blank" rel="noopener">{m.linkLabel}</a>
+</div>
+
+<script>
+  import { contact } from "../data/contact";
+
+  const root = document.querySelector<HTMLElement>("[data-map-facade]");
+  if (root) {
+    let loaded = false;
+    const events = ["scroll", "pointerdown", "keydown", "touchstart", "wheel"] as const;
+    const load = () => {
+      if (loaded) return;
+      loaded = true;
+      for (const ev of events) window.removeEventListener(ev, load);
+      io?.disconnect();
+      const frame = document.createElement("iframe");
+      frame.title = contact.map.title;
+      frame.src = contact.map.embedSrc;
+      frame.loading = "lazy";
+      frame.referrerPolicy = "no-referrer-when-downgrade";
+      frame.allowFullscreen = true;
+      frame.className = "map-frame";
+      root.querySelector("[data-map-load]")?.replaceWith(frame);
+      root.dataset["loaded"] = "true";
+    };
+    const io = "IntersectionObserver" in window ? new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && load(), { rootMargin: "0px" }) : null;
+    io?.observe(root);
+    if (!io) window.addEventListener("scroll", load, { passive: true, once: true });
+    for (const ev of events) window.addEventListener(ev, load, { passive: true, once: true });
+    root.querySelector("[data-map-load]")?.addEventListener("click", load);
+  }
+</script>
+
+<style>
+  .map {
+    position: relative;
+    width: 280px;
+    max-width: 100%;
+    /* Reserved height: the facade and the iframe are both 450px tall, so nothing shifts when the iframe loads. */
+    height: 450px;
+    overflow: hidden;
+    background: #e8eaed;
+  }
+  .facade {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .facade :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+  }
+  .map :global(.map-frame) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .map-link {
+    position: absolute;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    padding: 8px 14px;
+    font: 600 14px/1.2 var(--font-heading);
+    color: #1a1a1a;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .map[data-loaded] .map-link {
+    bottom: auto;
+    top: 8px;
+    left: auto;
+    right: 60px;
+    transform: none;
+    opacity: 0.9;
+  }
+  @media (min-width: 768px) {
+    .map {
+      width: 460px;
+    }
+  }
+</style>

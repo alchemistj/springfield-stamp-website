@@ -96,7 +96,7 @@ export const routes: readonly Route[] = [
     name: "Contact Us",
     ogType: "article",
     priority: 0.6,
-    photoHero: false,
+    photoHero: true,
   },
 ];
 

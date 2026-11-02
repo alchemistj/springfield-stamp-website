@@ -1,7 +1,225 @@
 ---
-// TODO(page helper): replace this stub with the real page.
-import PageStub from "../../components/PageStub.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HeroPhoto from "../../components/HeroPhoto.astro";
+import Button from "../../components/Button.astro";
+import Rich from "../../components/Rich.astro";
 import { routeByKey } from "../../lib/routes";
+import { about } from "../../data/about";
+
+const route = routeByKey("about");
 ---
 
-<PageStub route={routeByKey("about")} />
+<BaseLayout route={route} headerWide heroHeight={{ desktop: 411, mobile: 219 }}>
+  <HeroPhoto
+    slot="hero-photo"
+    desktop={{ file: "springfield-stamp-hero-about3.jpg", width: 1920, quality: 45, position: "100% 50%" }}
+    mobile={{ file: "springfield-stamp-about.jpeg", width: 780, quality: 45, position: "50% 39%" }}
+  />
+
+  <section slot="hero" class="hero" aria-labelledby="about-title">
+    <div class="hero-in">
+      <p class="kicker">{about.kicker}</p>
+      <h1 id="about-title" class="h1">{about.h1}</h1>
+    </div>
+  </section>
+
+  <section class="story">
+    <div class="story-in">
+      <div class="story-desktop">
+        {about.story.map((p, i) => <p class:list={["p", { first: i === 0 }]}><Rich parts={p} /></p>)}
+      </div>
+      <p class="p story-mobile"><Rich parts={about.storyMobile} /></p>
+    </div>
+  </section>
+
+  <section class="why">
+    <div class="why-in">
+      <h2 class="why-title">{about.why.title}</h2>
+      {about.why.paragraphs.map((p) => <p class="p"><Rich parts={p} /></p>)}
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="closing-in">
+      <p class="closing-text"><Rich parts={about.closing.body} /></p>
+      <div class="closing-cta">
+        <Button href={about.closing.cta.href} size="lg" weight={600} width={313} shadow>{about.closing.cta.label}</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---- Hero: photo is absolute (HeroPhoto); the title block sits on top on desktop and below the photo on mobile ---- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding-top: var(--hero-h);
+    text-align: center;
+  }
+  .hero-in {
+    padding: 33px 0 0;
+    background: #fff;
+  }
+  .kicker,
+  .h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 33px;
+    color: var(--color-ss-red);
+    text-transform: uppercase;
+  }
+
+  /* ---- Story ---- */
+  .story {
+    background: #fff;
+    padding: 65px 0 67px;
+  }
+  .story-in,
+  .why-in,
+  .closing-in {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+  .p {
+    margin: 0 0 25.5px;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 31.5px;
+    color: #161a1d;
+  }
+  .p :global(strong) {
+    font-weight: 600;
+  }
+  .story-desktop {
+    display: none;
+  }
+  .story-mobile {
+    margin: 0;
+  }
+
+  /* ---- Why choose ---- */
+  .why {
+    background: var(--color-ss-surface);
+    padding: 40px 0 50px;
+  }
+  .why-title {
+    margin: 0;
+    padding-bottom: 32px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 39px;
+    color: var(--color-ss-red);
+  }
+  .why .p {
+    margin-bottom: 22px;
+  }
+  .why .p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- Closing band ---- */
+  .closing {
+    background: var(--color-ss-maroon);
+    color: #fff;
+    padding: 37px 0 20px;
+  }
+  .closing-text {
+    margin: 0;
+    padding-bottom: 35px;
+    font-family: var(--font-heading);
+    font-size: 24px;
+    line-height: 34.8px;
+  }
+  .closing-text :global(strong) {
+    font-weight: 600;
+  }
+  .closing-text :global(strong:first-child) {
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+  .closing-cta {
+    max-width: 313px;
+    margin: 0 auto;
+  }
+  .closing-cta :global(.btn) {
+    font-size: 20px;
+    padding: 13px 12px;
+    line-height: 28px;
+  }
+
+  @media (min-width: 768px) {
+    .story-desktop {
+      display: block;
+    }
+    .story-mobile {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      height: var(--hero-h);
+      padding-top: 0;
+      text-align: left;
+    }
+    .hero-in {
+      background: transparent;
+      width: 100%;
+      max-width: 1212px;
+      margin: 0 auto;
+      padding: 149px 20px 0 0;
+      box-sizing: border-box;
+    }
+    .kicker,
+    .h1 {
+      font-size: 40px;
+      line-height: 56px;
+    }
+    .story {
+      padding: 63px 0 67px;
+    }
+    .p.first {
+      margin-bottom: 35.5px;
+    }
+    .story-in,
+    .why-in,
+    .closing-in {
+      padding: 0;
+    }
+    .p {
+      line-height: 31.5px;
+    }
+    .why-title {
+      font-size: 36px;
+      line-height: 46.8px;
+      padding-bottom: 36px;
+    }
+    .why .p {
+      margin-bottom: 26px;
+    }
+    .why .p:nth-last-child(2) {
+      margin-bottom: 36px;
+    }
+    .why {
+      padding: 40px 0 65px;
+    }
+    .closing {
+      padding: 47px 0 51px;
+    }
+    .closing-text {
+      max-width: 820px;
+      margin: 0 auto;
+      font-size: 27px;
+      line-height: 43.2px;
+      padding-bottom: 39px;
+    }
+  }
+</style>
