@@ -45,6 +45,13 @@ export const headerNav = [
   { label: "Contact", path: "/contact/" },
 ] as const;
 
+/** Sticky mobile bottom bar (StickyCallBar.astro). Labels only, no digits (Rule 7.2); edit the wording here. */
+export const stickyBar = {
+  callLabel: "Call Now",
+  emailLabel: "Email Us",
+  regionLabel: "Call or email Springfield Stamp",
+} as const;
+
 export const footer = {
   informationHeading: "INFORMATION",
   contactHeading: "CONTACT US",

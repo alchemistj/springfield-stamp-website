@@ -77,13 +77,22 @@
   --w-content: 1000px;
   --w-about: 1040px;
   /* Above-the-fold geometry, per breakpoint. Pages may override --hero-h on .atf. */
-  --header-h: 225px;
+  --header-h: 96px;
   --gutter: 44px;
+  /* Sticky mobile call bar: 8px + 48px buttons + 8px + 1px border. Footer gets this much room below. */
+  --callbar-h: 65px;
 }
 
 @media (min-width: 1024px) {
   :root {
     --header-h: 134px;
+  }
+}
+
+/* Keep the fixed call bar (phones only) from covering the footer's last lines. */
+@media (max-width: 1023.98px) {
+  .site-footer {
+    padding-bottom: calc(var(--callbar-h) + env(safe-area-inset-bottom, 0px));
   }
 }
 
