@@ -19,5 +19,10 @@ export default [
   ...tseslint.configs.recommended,
   ...astro.configs.recommended,
   { languageOptions: { globals: nodeGlobals } },
+  {
+    // The Vercel Node function in api/ uses the Web Fetch API globals.
+    files: ["api/**/*.js"],
+    languageOptions: { globals: { Request: "readonly", Response: "readonly", Headers: "readonly", fetch: "readonly", AbortController: "readonly", TextDecoder: "readonly", clearTimeout: "readonly" } },
+  },
   { rules: { "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }] } },
 ];
