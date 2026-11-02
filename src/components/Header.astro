@@ -1,7 +1,8 @@
 ---
 // Site header: logo (inline palette PNG, 600x195, about 3.9 KB, so it is in the first frame),
-// "1-Day Service!" banner, phone pill, nav. Desktop shows the nav in a row; below 1024px a
-// <details> hamburger opens the same links as a dropdown (no JS).
+// "1-Day Service!" banner, phone pill, nav. Desktop shows the nav in a row. Below 1024px the header
+// is one row (logo left, hamburger right) with no phone pill; the number lives in the sticky call
+// bar (StickyCallBar.astro). The <details> hamburger opens the page links as a dropdown (no JS).
 import { headerNav, site } from "../data/site";
 import { logoImage } from "../lib/inline-image";
 import Icon from "./Icon.astro";
@@ -78,16 +79,19 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
   }
   .hd-inner {
     position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     height: 100%;
     margin: 0 auto;
+    padding: 0 20px;
     max-width: var(--w-header);
   }
   .logo {
-    position: absolute;
-    top: 25px;
-    left: 50%;
-    width: 301px;
-    margin-left: -150.5px;
+    display: block;
+    flex: none;
+    width: 220px;
   }
   .logo img {
     display: block;
@@ -103,7 +107,7 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     top: 143px;
     left: 20px;
     box-sizing: border-box;
-    display: flex;
+    display: none;
     align-items: center;
     gap: 16px;
     width: 235px;
@@ -140,14 +144,12 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
 
   /* Mobile menu */
   .nav-mobile summary {
-    position: absolute;
-    top: 143px;
-    right: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 41px;
-    height: 41px;
+    width: 48px;
+    height: 48px;
+    margin-right: -7px;
     list-style: none;
     cursor: pointer;
     color: #111;
@@ -192,6 +194,8 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
 
   @media (min-width: 1024px) {
     .hd-inner {
+      display: block;
+      padding: 0;
       width: min(var(--w-header), calc(100% - 40px));
       max-width: none;
     }
@@ -202,8 +206,9 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
       width: 278px;
     }
     .logo {
+      position: absolute;
+      top: 25px;
       left: 0;
-      margin-left: 0;
       width: 249px;
     }
     .banner {
@@ -219,6 +224,7 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
       white-space: nowrap;
     }
     .phone-btn {
+      display: flex;
       top: 22px;
       right: 0;
       left: auto;
