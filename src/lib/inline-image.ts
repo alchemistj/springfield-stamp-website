@@ -25,6 +25,8 @@ export interface HeroOptions {
   cropAspect?: number;
   /** Vertical position of the crop window when `cropAspect` is set: 0 = top, 1 = bottom (default 0.5). */
   cropY?: number;
+  /** Horizontal position of the crop window when `cropAspect` is narrower than the source: 0 = left, 1 = right (default 0.5). */
+  cropX?: number;
 }
 
 /** AVIF data URI for a hero photo. One format only (AVIF), no fallback, per the SOP. */
@@ -43,6 +45,10 @@ export function heroImage(file: string, opts: HeroOptions): Promise<InlineImage>
         if (wantH < srcH) {
           const top = Math.round((srcH - wantH) * (opts.cropY ?? 0.5));
           img = img.extract({ left: 0, top, width: srcW, height: wantH });
+        } else if (wantH > srcH) {
+          const wantW = Math.round(srcH * opts.cropAspect);
+          const left = Math.round((srcW - wantW) * (opts.cropX ?? 0.5));
+          img = img.extract({ left, top: 0, width: wantW, height: srcH });
         }
       }
       const out = await img
