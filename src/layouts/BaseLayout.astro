@@ -23,8 +23,10 @@ interface Props {
   route: Route;
   /** Hero heights in px per breakpoint (default 562 desktop, 196 mobile). Sets --hero-h-d / --hero-h-m on .atf. */
   heroHeight?: { desktop?: number; mobile?: number };
+  /** 1200px-wide header (About, Contact, Custom Stamps, Magnetic Name Tags on the live site). Default 1080px. */
+  wideHeader?: boolean;
 }
-const { route, heroHeight } = Astro.props;
+const { route, heroHeight, wideHeader = false } = Astro.props;
 
 const canonical = canonicalUrl(route.path);
 const og = await getImage({ src: ogImages[route.key], format: "jpeg", quality: 80 });
@@ -68,7 +70,7 @@ const gtagInline = `window.dataLayer=window.dataLayer||[];function gtag(){dataLa
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="atf" style={atfStyle || undefined}>
       <slot name="hero-photo" />
-      <Header current={route.path} />
+      <Header current={route.path} wide={wideHeader} />
       <slot name="hero" />
       <span class="atf-ready" hidden></span>
     </div>

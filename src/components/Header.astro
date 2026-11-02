@@ -9,12 +9,14 @@ import Icon from "./Icon.astro";
 interface Props {
   /** Current page path, to mark the active link with aria-current. */
   current?: string;
+  /** The live About, Contact, Custom Stamps and Magnetic Name Tags pages use a 1200px header (Home and Notary use 1080px). */
+  wide?: boolean;
 }
-const { current } = Astro.props;
+const { current, wide = false } = Astro.props;
 const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
 ---
 
-<header class="site-header">
+<header class:list={["site-header", { wide }]}>
   <div class="hd-inner">
     <a class="logo" href="/" aria-label="Springfield Stamp & Engraving: home">
       <img
@@ -193,6 +195,12 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
       width: min(var(--w-header), calc(100% - 40px));
       max-width: none;
     }
+    .wide .hd-inner {
+      width: min(1200px, calc(100% - 40px));
+    }
+    .wide .logo {
+      width: 278px;
+    }
     .logo {
       left: 0;
       margin-left: 0;
@@ -241,6 +249,19 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     .nav-desktop a:hover,
     .nav-desktop a[aria-current="page"] {
       color: var(--color-ss-red);
+    }
+    /* The live site underlines the current page's link (3px red bar). The home page has no current link. */
+    .nav-desktop a[aria-current="page"] {
+      position: relative;
+    }
+    .nav-desktop a[aria-current="page"]::after {
+      content: "";
+      position: absolute;
+      left: -10px;
+      right: -10px;
+      top: 34px;
+      height: 3px;
+      background: var(--color-ss-red);
     }
   }
 </style>
