@@ -1,42 +1,8 @@
 @import "tailwindcss";
 
-/* Self-hosted fonts (Latin subsets, WOFF2). No preload, no Google Fonts. See docs/ for sizes. */
-@font-face {
-  font-family: "Hoarse Rough 02";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("../assets/fonts/hoarse-rough-02.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("../assets/fonts/poppins-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("../assets/fonts/poppins-500.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("../assets/fonts/poppins-600.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("../assets/fonts/poppins-700.woff2") format("woff2");
-}
-/* Muli (now Mulish) is a variable font: one file covers 400 to 800. */
+/* Muli (now Mulish) stays a self-hosted file with swap. The display font and the Poppins
+   weights used above the fold are inlined in the document head (src/lib/atf-fonts.ts)
+   with font-display: block. No preload, no Google Fonts. */
 @font-face {
   font-family: "Muli";
   font-style: normal;
@@ -162,6 +128,30 @@ a {
 }
 .atf:not(:has(> .atf-ready)) {
   visibility: hidden;
+}
+
+/* Early use of the inlined faces. See the note in BaseLayout. */
+.atf-font {
+  position: absolute;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-heading);
+  white-space: nowrap;
+}
+.atf-font-display {
+  font-family: var(--font-display);
+}
+.atf-font-500 {
+  font-weight: 500;
+}
+.atf-font-600 {
+  font-weight: 600;
+}
+.atf-font-700 {
+  font-weight: 700;
 }
 
 :focus-visible {

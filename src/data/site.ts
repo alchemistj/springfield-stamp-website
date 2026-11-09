@@ -36,6 +36,16 @@ export const site = {
   banner: "1-Day Service!",
 } as const;
 
+/**
+ * Trust bar under the hero on every page. Wording approved by Josh on 2 Nov 2026.
+ * The phone number is `site.phone` (the only number on the site).
+ */
+export const trustBar = {
+  line1: ["Family-Owned for Over 50 Years", "1-Day Service", "Shipping Nationwide"],
+  place: "Local Shop at 1416 S. Glenstone, Springfield, MO",
+  call: "Call",
+} as const;
+
 /** Header nav, in live-site order. Paths come from the route registry (`src/lib/routes.ts`). */
 export const headerNav = [
   { label: "Custom Stamps", path: "/custom-stamps/" },
