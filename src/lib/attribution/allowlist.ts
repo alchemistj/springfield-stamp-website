@@ -4,8 +4,12 @@
 export const SITE_KEY = "springfield-stamp-website";
 export const CONTRACT_VERSION = "ff-measure.v1" as const;
 
-/** Same-origin beacon. The server forwards it to FF Reports. */
-export const COLLECT_PATH = "/api/site-events";
+/**
+ * Same-origin beacon. The server forwards it to FF Reports.
+ * The trailing slash is required: the static host 308s `/api/site-events` (no slash)
+ * before the function runs. `/api/site-events/` is the URL the function answers.
+ */
+export const COLLECT_PATH = "/api/site-events/";
 
 export const EVENTS = ["page_view", "click_to_call", "contact_click", "lead_form_success"] as const;
 export type JourneyEventName = (typeof EVENTS)[number];

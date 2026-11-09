@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   BOT_COOKIE,
   BOT_MAX_AGE_SECONDS,
+  COLLECT_PATH,
   ENTRY_COOKIE,
   ENTRY_MAX_AGE_SECONDS,
   ENTRY_VALUE,
@@ -72,6 +73,10 @@ describe("what the deployed middleware ships", () => {
     expect(SHIPPED_SID_AGE).toBe(SID_MAX_AGE_SECONDS);
     expect(SHIPPED_BOT_AGE).toBe(BOT_MAX_AGE_SECONDS);
     expect(SHIPPED_ENTRY_AGE).toBe(ENTRY_MAX_AGE_SECONDS);
+  });
+
+  it("posts the beacon to the slashed function URL the static host does not 308", () => {
+    expect(COLLECT_PATH).toBe("/api/site-events/");
   });
 
   it("reads an existing visitor cookie the same way the browser does", () => {

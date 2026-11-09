@@ -2,6 +2,8 @@
 // /api/site-events crashes with ERR_MODULE_NOT_FOUND (the same failure middleware had).
 // On Vercel, fold the collector and the forwarder into one api/site-events.js and remove the
 // .ts entry so the deployed function has no local .ts imports. Tests keep importing the .ts source.
+// Do not rewrite .vercel/output/config.json here. A negative lookahead in a route src fails the
+// deployment (Vercel rejects it). The beacon posts to /api/site-events/, which the function serves.
 import * as esbuild from "esbuild";
 import fs from "node:fs";
 import path from "node:path";
@@ -65,15 +67,4 @@ if (check) {
 }
 
 fs.rmSync(path.join(process.cwd(), "api", "site-events.ts"));
-
-// Astro's trailing-slash route 308s /api/site-events before the function runs.
-// Skip /api so the beacon POST is answered by the function itself.
-const configPath = path.join(process.cwd(), ".vercel", "output", "config.json");
-const cfg = JSON.parse(fs.readFileSync(configPath, "utf8"));
-for (const route of cfg.routes ?? []) {
-  if (route.status === 308 && route.headers?.Location === "/$1/" && typeof route.src === "string" && !route.src.includes("api/")) {
-    route.src = route.src.replace("^/", "^/(?!api/)");
-  }
-}
-fs.writeFileSync(configPath, JSON.stringify(cfg, null, "\t") + "\n");
 console.log("bundle-vercel-functions: wrote api/site-events.js");

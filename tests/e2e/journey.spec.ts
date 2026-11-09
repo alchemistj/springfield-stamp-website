@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const COLLECT = "**/api/site-events";
+const COLLECT = /\/api\/site-events\/?$/;
 
 type EventBody = {
   event: string;

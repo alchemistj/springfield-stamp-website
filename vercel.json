@@ -13,6 +13,9 @@
     { "source": "/about", "destination": "/about/", "statusCode": 301 },
     { "source": "/contact", "destination": "/contact/", "statusCode": 301 }
   ],
+  "rewrites": [
+    { "source": "/api/site-events", "destination": "/api/site-events/" }
+  ],
   "headers": [
     {
       "source": "/_astro/(.*)",
