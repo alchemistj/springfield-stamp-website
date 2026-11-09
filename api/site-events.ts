@@ -35,8 +35,10 @@ export async function handleSiteEvent(request: Request, fetchImpl: typeof fetch 
   const origin = request.headers.get("origin");
   try {
     const upstream = await forwardMeasurementCollect(JSON.stringify(payload), request.headers.get("user-agent") ?? "", origin, fetchImpl);
-    if (upstream.ok) return new Response(null, { status: 204, headers: { "Cache-Control": "private, no-store" } });
-    return json(upstream.status, { ok: false });
+    // The beacon is accepted once FF Reports answered. A 403 (site key not registered yet)
+    // must not become the browser status: the page cannot fix that, and a beacon is fire-and-forget.
+    if (!upstream.ok) console.error(`FF Reports collect responded ${upstream.status}`);
+    return new Response(null, { status: 204, headers: { "Cache-Control": "private, no-store" } });
   } catch {
     return json(502, { ok: false, error: "Unable to reach FF Reports" });
   }

@@ -1,12 +1,35 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   BOT_COOKIE,
+  BOT_MAX_AGE_SECONDS,
   ENTRY_COOKIE,
+  ENTRY_MAX_AGE_SECONDS,
   ENTRY_VALUE,
   SID_COOKIE,
+  SID_MAX_AGE_SECONDS,
+  VANITY_PATH,
   VID_COOKIE,
+  VID_MAX_AGE_SECONDS,
 } from "../../src/lib/attribution/allowlist";
-import { decideIdentity, isBotUserAgent, isTrackedPage, middleware, serializeCookie } from "../../middleware";
+import { readCookie } from "../../src/lib/attribution/storage";
+import {
+  BOT_COOKIE as SHIPPED_BOT,
+  BOT_MAX_AGE_SECONDS as SHIPPED_BOT_AGE,
+  ENTRY_COOKIE as SHIPPED_ENTRY,
+  ENTRY_MAX_AGE_SECONDS as SHIPPED_ENTRY_AGE,
+  ENTRY_VALUE as SHIPPED_ENTRY_VALUE,
+  SID_COOKIE as SHIPPED_SID,
+  SID_MAX_AGE_SECONDS as SHIPPED_SID_AGE,
+  VANITY_PATH as SHIPPED_VANITY,
+  VID_COOKIE as SHIPPED_VID,
+  VID_MAX_AGE_SECONDS as SHIPPED_VID_AGE,
+  decideIdentity,
+  isBotUserAgent,
+  isTrackedPage,
+  middleware,
+  serializeCookie,
+} from "../../middleware";
 
 const VID = "11111111-1111-4111-8111-111111111111";
 const SID = "22222222-2222-4222-8222-222222222222";
@@ -30,6 +53,37 @@ const page = (path: string, init?: { ua?: string; cookie?: string }) =>
   });
 
 const cookieNamed = (cookies: string[], name: string) => cookies.find((c) => c.startsWith(`${name}=`));
+
+describe("what the deployed middleware ships", () => {
+  it("imports nothing but @vercel/functions, so the function has no missing .ts files", () => {
+    const src = readFileSync(new URL("../../middleware.ts", import.meta.url), "utf8");
+    const specifiers = [...src.matchAll(/from\s+["']([^"']+)["']/g)].map((match) => match[1]);
+    expect(specifiers).toEqual(["@vercel/functions"]);
+  });
+
+  it("uses the same cookie names, ages, and entry tag as the browser allowlist", () => {
+    expect(SHIPPED_VID).toBe(VID_COOKIE);
+    expect(SHIPPED_SID).toBe(SID_COOKIE);
+    expect(SHIPPED_BOT).toBe(BOT_COOKIE);
+    expect(SHIPPED_ENTRY).toBe(ENTRY_COOKIE);
+    expect(SHIPPED_ENTRY_VALUE).toBe(ENTRY_VALUE);
+    expect(SHIPPED_VANITY).toBe(VANITY_PATH);
+    expect(SHIPPED_VID_AGE).toBe(VID_MAX_AGE_SECONDS);
+    expect(SHIPPED_SID_AGE).toBe(SID_MAX_AGE_SECONDS);
+    expect(SHIPPED_BOT_AGE).toBe(BOT_MAX_AGE_SECONDS);
+    expect(SHIPPED_ENTRY_AGE).toBe(ENTRY_MAX_AGE_SECONDS);
+  });
+
+  it("reads an existing visitor cookie the same way the browser does", () => {
+    const header = `${VID_COOKIE}=${VID}; ${SID_COOKIE}=${encodeURIComponent(SID)}`;
+    const decision = decideIdentity(page("/", { cookie: header }), ids());
+    expect(decision.kind).toBe("next");
+    if (decision.kind !== "next") return;
+    expect(decision.cookies.some((cookie) => cookie.startsWith(`${VID_COOKIE}=`))).toBe(false);
+    expect(readCookie(header, VID_COOKIE)).toBe(VID);
+    expect(readCookie(header, SID_COOKIE)).toBe(SID);
+  });
+});
 
 describe("bot detection", () => {
   it("treats an empty user agent and known crawlers as bots", () => {

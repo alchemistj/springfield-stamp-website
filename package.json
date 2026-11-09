@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/bundle-vercel-functions.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",

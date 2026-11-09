@@ -59,6 +59,19 @@ describe("api/site-events", () => {
     expect(forwarded).not.toHaveProperty("ff_sid");
   });
 
+  it("still answers 204 when FF Reports rejects the site key", async () => {
+    const fetchImpl = (async () => new Response(JSON.stringify({ error: "Unknown site" }), { status: 403 })) as unknown as typeof fetch;
+    const res = await handleSiteEvent(
+      new Request("https://www.springfieldstamp.com/api/site-events", {
+        method: "POST",
+        headers: { "content-type": "application/json", "user-agent": "Mozilla/5.0" },
+        body: JSON.stringify(event),
+      }),
+      fetchImpl,
+    );
+    expect(res.status).toBe(204);
+  });
+
   it("does not forward an invalid event and sets no identity cookie", async () => {
     const fetchImpl = vi.fn() as unknown as typeof fetch;
     const res = await handleSiteEvent(

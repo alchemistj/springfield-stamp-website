@@ -7,20 +7,42 @@
 // (`x-vercel-cache: HIT`). The vanity redirect is `private, no-store` so one visitor's
 // ff_entry cookie is never cached for the next visitor.
 import { next } from "@vercel/functions";
-import {
-  BOT_COOKIE,
-  BOT_MAX_AGE_SECONDS,
-  ENTRY_COOKIE,
-  ENTRY_MAX_AGE_SECONDS,
-  ENTRY_VALUE,
-  SID_COOKIE,
-  SID_MAX_AGE_SECONDS,
-  VANITY_PATH,
-  VID_COOKIE,
-  VID_MAX_AGE_SECONDS,
-  isUuid,
-} from "./src/lib/attribution/allowlist.ts";
-import { readCookie } from "./src/lib/attribution/storage.ts";
+
+// Inlined on purpose. Vercel type-strips this file to middleware.js and does not bundle
+// relative .ts imports, so a `./src/.../*.ts` import crashes the deployed function
+// (ERR_MODULE_NOT_FOUND). These values match src/lib/attribution/allowlist.ts.
+// identity-cookies.test.ts fails if the two copies drift.
+export const VID_COOKIE = "ff_vid";
+export const SID_COOKIE = "ff_sid";
+export const BOT_COOKIE = "ff_bot";
+export const ENTRY_COOKIE = "ff_entry";
+export const ENTRY_VALUE = "gbp-springfield";
+export const VANITY_PATH = "/Springfield";
+export const VID_MAX_AGE_SECONDS = 180 * 24 * 60 * 60;
+export const SID_MAX_AGE_SECONDS = 30 * 60;
+export const BOT_MAX_AGE_SECONDS = 2 * 60;
+export const ENTRY_MAX_AGE_SECONDS = 30 * 60;
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isUuid(value: string): boolean {
+  return UUID_RE.test(value);
+}
+
+/** One cookie value from a `Cookie` request header. Same parser as storage.ts. */
+function readCookie(header: string, name: string): string | null {
+  const prefix = `${name}=`;
+  for (const part of header.split(/; */)) {
+    if (!part.startsWith(prefix)) continue;
+    const raw = part.slice(prefix.length);
+    try {
+      return decodeURIComponent(raw);
+    } catch {
+      return raw;
+    }
+  }
+  return null;
+}
 
 /** Crawlers only. HeadlessChrome is not included: Playwright and Lighthouse still get cookies,
  *  and the browser flags those runs with `automation: true`. */
