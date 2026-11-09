@@ -48,6 +48,8 @@ const phone = site.phone;
 
 <script>
   import { SubmissionAttempt, hasContactMethod, resolveEndpoint, submitLead, type FormValues } from "../lib/forms";
+  import { trackLeadFormSuccess } from "../lib/attribution/bootstrap";
+  import { attributionEnvelope } from "../lib/attribution/storage";
   import { formMessages } from "../data/contact";
   import { site } from "../data/site";
 
@@ -115,7 +117,15 @@ const phone = site.phone;
         hostname: location.hostname,
         fetchImpl: (input, init) => fetch(input, init),
         attempt,
-        ctx: { formStartedAt: startedAt, now: Date.now(), pageUrl: location.href, search: location.search, referrer: document.referrer },
+        ctx: {
+          formStartedAt: startedAt,
+          now: Date.now(),
+          pageUrl: location.href,
+          search: location.search,
+          referrer: document.referrer,
+          attribution: attributionEnvelope(document.cookie),
+        },
+        onLeadAccepted: (id) => trackLeadFormSuccess(id),
       });
       submit.disabled = false;
       switch (result.kind) {

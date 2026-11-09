@@ -24,7 +24,18 @@ import Icon from "./Icon.astro";
     <p class="trust-line">
       <span class="item place">
         <Icon name="pin" class="trust-ico" />
-        <span class="place-text">{trustBar.place}</span>
+        <span class="place-text">
+          {
+            trustBar.place.endsWith("Springfield, MO") ? (
+              <>
+                {trustBar.place.slice(0, -"Springfield, MO".length)}
+                <span class="place-city">Springfield, MO</span>
+              </>
+            ) : (
+              trustBar.place
+            )
+          }
+        </span>
       </span>
       <span class="sep" aria-hidden="true">·</span>
       <span class="item call">
@@ -81,6 +92,10 @@ import Icon from "./Icon.astro";
   }
   .place-text {
     min-width: 0;
+  }
+  /* Keep the city and state on one line at 390px. "MO" was wrapping onto a line by itself. */
+  .place-city {
+    white-space: nowrap;
   }
   .call {
     display: inline-flex;

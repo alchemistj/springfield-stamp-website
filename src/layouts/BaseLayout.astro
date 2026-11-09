@@ -98,5 +98,10 @@ const fontCss = atfFontCss();
     <Footer />
     <!-- Fixed to the bottom on phones. After .atf and the page content, so it never delays the first frame. -->
     <StickyCallBar />
+    <!-- Journey beacons. A deferred module after the page, so it is not part of the first frame. -->
+    <script>
+      import { bootJourney } from "../lib/attribution/bootstrap";
+      bootJourney();
+    </script>
   </body>
 </html>
