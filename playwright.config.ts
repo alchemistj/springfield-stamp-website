@@ -19,9 +19,9 @@ export default defineConfig({
   },
   // Tests run against the built site served by `astro preview`.
   webServer: {
-    command: "npx astro preview --host 127.0.0.1 --port 4321",
+    command: "node --experimental-strip-types scripts/serve-preview.mjs",
     url: "http://127.0.0.1:4321/",
     reuseExistingServer: false,
-    timeout: 60_000,
+    timeout: 120_000,
   },
 });

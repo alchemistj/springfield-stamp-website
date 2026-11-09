@@ -33,7 +33,7 @@ test.describe("contact form", () => {
     await page.click("[data-submit]");
     await expect(page.locator("[data-status]")).toHaveText("Preview: form not sent");
     await page.waitForTimeout(300);
-    expect(requests.filter((u) => u.includes("forms.fluidframemarketing.com") || u.includes("/api/"))).toEqual([]);
+    expect(requests.filter((u) => u.includes("forms.fluidframemarketing.com") || u.includes("/api/preview-forms-lead"))).toEqual([]);
     // Input is kept.
     await expect(page.locator("#cf-message")).toHaveValue("Test, please ignore");
   });

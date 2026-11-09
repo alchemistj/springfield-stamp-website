@@ -11,6 +11,10 @@ const nodeGlobals = {
   window: "readonly",
   document: "readonly",
   getComputedStyle: "readonly",
+  fetch: "readonly",
+  Headers: "readonly",
+  Request: "readonly",
+  Response: "readonly",
 };
 
 export default [
@@ -21,8 +25,8 @@ export default [
   { languageOptions: { globals: nodeGlobals } },
   {
     // The Vercel Node function in api/ uses the Web Fetch API globals.
-    files: ["api/**/*.js"],
-    languageOptions: { globals: { Request: "readonly", Response: "readonly", Headers: "readonly", fetch: "readonly", AbortController: "readonly", TextDecoder: "readonly", clearTimeout: "readonly" } },
+    files: ["api/**/*.{js,ts}", "middleware.ts", "server/**/*.ts", "scripts/**/*.mjs"],
+    languageOptions: { globals: { Request: "readonly", Response: "readonly", Headers: "readonly", fetch: "readonly", AbortController: "readonly", TextDecoder: "readonly", clearTimeout: "readonly", crypto: "readonly" } },
   },
   { rules: { "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }] } },
 ];

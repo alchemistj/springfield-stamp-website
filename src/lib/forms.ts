@@ -40,6 +40,8 @@ export interface LeadContext {
   pageUrl: string;
   search: string;
   referrer: string;
+  /** Rule 14: ff_vid and ff_sid, when the middleware has set both. */
+  attribution?: { ff_vid: string; ff_sid: string } | null;
 }
 
 export interface LeadBody {
@@ -57,6 +59,7 @@ export interface LeadBody {
   referrer: string | null;
   utm: { source: string; medium: string; campaign: string; term: string; content: string };
   customFields: Record<string, { label: string; value: string; type: "text" }>;
+  attribution?: { ff_vid: string; ff_sid: string };
 }
 
 const clip = (s: string, max: number) => s.trim().slice(0, max);
@@ -65,7 +68,7 @@ const clip = (s: string, max: number) => s.trim().slice(0, max);
 export function buildBody(v: FormValues, ctx: LeadContext): LeadBody {
   const q = new URLSearchParams(ctx.search);
   const utm = (k: string) => q.get(`utm_${k}`) ?? "";
-  return {
+  const body: LeadBody = {
     siteKey: SITE_KEY,
     formKey: FORM_KEY,
     clientSubmissionId: ctx.clientSubmissionId,
@@ -81,6 +84,10 @@ export function buildBody(v: FormValues, ctx: LeadContext): LeadBody {
     utm: { source: utm("source"), medium: utm("medium"), campaign: utm("campaign"), term: utm("term"), content: utm("content") },
     customFields: {},
   };
+  if (ctx.attribution?.ff_vid && ctx.attribution.ff_sid) {
+    body.attribution = { ff_vid: ctx.attribution.ff_vid, ff_sid: ctx.attribution.ff_sid };
+  }
+  return body;
 }
 
 /** Central Forms needs a phone or an email. */
@@ -139,6 +146,8 @@ export interface SubmitDeps {
   attempt: SubmissionAttempt;
   ctx: Omit<LeadContext, "clientSubmissionId">;
   timeoutMs?: number;
+  /** Fires once Central Forms has accepted the lead (success, including duplicates). */
+  onLeadAccepted?: (id: string) => void;
 }
 
 /** Posts one inquiry. Never throws. */
@@ -162,6 +171,7 @@ export async function submitLead(values: FormValues, deps: SubmitDeps): Promise<
     if (outcome.kind === "success") {
       deps.attempt.reset();
       if (outcome.conversion) fireConversion(outcome.id);
+      deps.onLeadAccepted?.(outcome.id);
     } else if (outcome.kind === "invalid") {
       deps.attempt.reset(); // nothing was stored; the next attempt is a new inquiry
     }
