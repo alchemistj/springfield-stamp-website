@@ -92,6 +92,8 @@ describe("api/site-events", () => {
       fetchImpl,
     );
     expect(res.status).toBe(204);
+    expect(res.headers.get("x-ff-collect-status")).toBe("403");
+    expect(res.headers.get("x-ff-collect-body")).toContain("Unknown site");
   });
 
   it("does not forward an invalid event and sets no identity cookie", async () => {

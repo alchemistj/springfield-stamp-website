@@ -161,8 +161,16 @@ async function handleSiteEvent(request, fetchImpl = fetch) {
   const origin = request.headers.get("origin");
   try {
     const upstream = await forwardMeasurementCollect(JSON.stringify(payload), request.headers.get("user-agent") ?? "", origin, fetchImpl);
-    if (!upstream.ok) console.error(`FF Reports collect responded ${upstream.status}`);
-    return new Response(null, { status: 204, headers: { "Cache-Control": "private, no-store" } });
+    const upstreamBody = (await upstream.text()).slice(0, 180).replace(/[\r\n]+/g, " ");
+    if (!upstream.ok) console.error(`FF Reports collect responded ${upstream.status} ${upstreamBody}`);
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Cache-Control": "private, no-store",
+        "x-ff-collect-status": String(upstream.status),
+        "x-ff-collect-body": upstreamBody
+      }
+    });
   } catch {
     return json(502, { ok: false, error: "Unable to reach FF Reports" });
   }
