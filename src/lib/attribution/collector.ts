@@ -9,7 +9,7 @@ import {
   isEnvironment,
   isEventName,
   isUuid,
-} from "./allowlist.ts";
+} from "./allowlist";
 
 export interface ClientEvent {
   contractVersion: typeof CONTRACT_VERSION;

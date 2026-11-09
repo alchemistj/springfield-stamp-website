@@ -1,8 +1,11 @@
 // Same-origin beacon receiver. Validates the journey event, then forwards the ff-measure.v1
 // body to FF Reports. Does not set identity cookies (middleware skips api/*).
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { normalizeClientPayload } from "../src/lib/attribution/collector.ts";
-import { forwardMeasurementCollect } from "../server/lib/forwardMeasurementCollect.ts";
+// No `.ts` suffix. Vercel bundles this function and resolves extensionless imports.
+// A `.ts` suffix is left as a runtime path and the deployed function crashes. Do not
+// rename or delete this file during the build: Vercel has already recorded the path.
+import { normalizeClientPayload } from "../src/lib/attribution/collector";
+import { forwardMeasurementCollect } from "../server/lib/forwardMeasurementCollect";
 
 export const MAX_BODY_BYTES = 20_000;
 

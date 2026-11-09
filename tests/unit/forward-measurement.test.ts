@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
 import { CLIENT_UA_HEADER, MEASUREMENT_COLLECT_URL, forwardMeasurementCollect } from "../../server/lib/forwardMeasurementCollect";
 import { handleSiteEvent } from "../../api/site-events";
@@ -37,6 +38,16 @@ describe("forwardMeasurementCollect", () => {
 });
 
 describe("api/site-events", () => {
+  it("imports local modules without a .ts suffix and stays in place for the Vercel builder", () => {
+    const src = readFileSync(new URL("../../api/site-events.ts", import.meta.url), "utf8");
+    const specifiers = [...src.matchAll(/from\s+["']([^"']+)["']/g)].flatMap((match) => (match[1] ? [match[1]] : []));
+    expect(specifiers.filter((specifier) => specifier.startsWith("."))).toEqual([
+      "../src/lib/attribution/collector",
+      "../server/lib/forwardMeasurementCollect",
+    ]);
+    expect(src).not.toMatch(/site-events\.js/);
+  });
+
   it("forwards a valid event and strips the cookie-key aliases", async () => {
     const seen: string[] = [];
     const fetchImpl = (async (_url: string, init?: RequestInit) => {
