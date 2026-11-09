@@ -18,7 +18,7 @@ const nodeGlobals = {
 };
 
 export default [
-  { ignores: ["dist/**", ".astro/**", ".vercel/**", "node_modules/**", "test-results/**", "playwright-report/**", "docs/**", "scripts/perf/**", ".lighthouse/**"] },
+  { ignores: ["dist/**", ".astro/**", ".vercel/**", "node_modules/**", "test-results/**", "playwright-report/**", "docs/**", "scripts/perf/**", ".lighthouse/**", "api/site-events.js"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...astro.configs.recommended,

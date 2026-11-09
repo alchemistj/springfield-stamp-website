@@ -1,11 +1,10 @@
-// Same-origin beacon receiver. Validates the journey event, then forwards the ff-measure.v1
-// body to FF Reports. Does not set identity cookies (middleware skips api/*).
+// Source for the beacon function. The file Vercel runs is the committed bundle
+// `api/site-events.js` (no local imports). Regenerating that bundle is a unit test:
+// edit this file, then update the bundle so the test matches. The build must not
+// move or delete anything under `api/`.
 import type { IncomingMessage, ServerResponse } from "node:http";
-// No `.ts` suffix. Vercel bundles this function and resolves extensionless imports.
-// A `.ts` suffix is left as a runtime path and the deployed function crashes. Do not
-// rename or delete this file during the build: Vercel has already recorded the path.
-import { normalizeClientPayload } from "../src/lib/attribution/collector";
-import { forwardMeasurementCollect } from "../server/lib/forwardMeasurementCollect";
+import { normalizeClientPayload } from "../../src/lib/attribution/collector.ts";
+import { forwardMeasurementCollect } from "./forwardMeasurementCollect.ts";
 
 export const MAX_BODY_BYTES = 20_000;
 
@@ -68,7 +67,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
   const host = typeof req.headers.host === "string" ? req.headers.host : "invalid";
   const method = req.method ?? "GET";
   const raw = method === "GET" || method === "HEAD" ? undefined : await readBody(req);
-  const request = new Request(`https://${host}${req.url ?? "/api/site-events"}`, {
+  const request = new Request(`https://${host}${req.url ?? "/api/site-events/"}`, {
     method,
     headers: nodeHeaders(req.headers),
     body: raw && raw.byteLength > 0 ? new TextDecoder().decode(raw) : undefined,

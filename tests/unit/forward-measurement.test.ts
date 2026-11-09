@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
+import * as esbuild from "esbuild";
 import { CLIENT_UA_HEADER, MEASUREMENT_COLLECT_URL, forwardMeasurementCollect } from "../../server/lib/forwardMeasurementCollect";
-import { handleSiteEvent } from "../../api/site-events";
+import { handleSiteEvent } from "../../api/site-events.js";
 
 const VID = "11111111-1111-4111-8111-111111111111";
 const SID = "22222222-2222-4222-8222-222222222222";
@@ -38,14 +39,24 @@ describe("forwardMeasurementCollect", () => {
 });
 
 describe("api/site-events", () => {
-  it("imports local modules without a .ts suffix and stays in place for the Vercel builder", () => {
-    const src = readFileSync(new URL("../../api/site-events.ts", import.meta.url), "utf8");
-    const specifiers = [...src.matchAll(/from\s+["']([^"']+)["']/g)].flatMap((match) => (match[1] ? [match[1]] : []));
-    expect(specifiers.filter((specifier) => specifier.startsWith("."))).toEqual([
-      "../src/lib/attribution/collector",
-      "../server/lib/forwardMeasurementCollect",
-    ]);
-    expect(src).not.toMatch(/site-events\.js/);
+  it("ships the bundled handler, with no local imports Vercel would leave unresolved", async () => {
+    const shipped = readFileSync(new URL("../../api/site-events.js", import.meta.url), "utf8");
+    expect(shipped).not.toMatch(/from\s+["']/);
+    const result = await esbuild.build({
+      entryPoints: ["server/lib/siteEventHandler.ts"],
+      bundle: true,
+      platform: "node",
+      format: "esm",
+      target: "node22",
+      legalComments: "none",
+      banner: {
+        js: "// Committed bundle of server/lib/siteEventHandler.ts. Vercel runs this file and does not bundle .ts imports.",
+      },
+      write: false,
+    });
+    const built = result.outputFiles[0]?.text;
+    expect(built).toBeTruthy();
+    expect(shipped).toBe(built);
   });
 
   it("forwards a valid event and strips the cookie-key aliases", async () => {
