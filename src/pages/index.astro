@@ -12,11 +12,13 @@ import Rich from "../components/Rich.astro";
 import { Picture } from "astro:assets";
 import { routeByKey } from "../lib/routes";
 import { home } from "../data/home";
+import { site } from "../data/site";
 import { aboutStorefront, homeIcons, homeProductImages } from "../lib/home-images";
 
 const route = routeByKey("home");
 // Live desktop row heights (px) and the text-panel shade of each row.
-const rowHeights = [399, 420, 409, 378, 378, 350, 433];
+const rowHeights = [399, 420, 400, 378, 350, 433];
+const [callLead = ""] = home.hero.callCta.label.split(site.phone.display);
 const iconFor = homeIcons;
 ---
 
@@ -40,7 +42,7 @@ const iconFor = homeIcons;
           {home.hero.sub[1]}
         </p>
         <div class="ctas">
-          <Button href={home.hero.callCta.href} size="hero" compact width={380}>{home.hero.callCta.label}</Button>
+          <Button href={home.hero.callCta.href} size="hero" compact width={380}>{callLead}<span class="nowrap">{site.phone.display}</span></Button>
           <Button href={home.hero.emailCta.href} size="hero" width={450}>{home.hero.emailCta.label}</Button>
         </div>
       </div>
@@ -55,10 +57,11 @@ const iconFor = homeIcons;
         home.help.products.map((p, i) => (
           <ProductRow
             title={p.title}
-            image={homeProductImages[p.image]}
+            image={p.image ? homeProductImages[p.image] : undefined}
+            placeholder={p.placeholder}
             reverse={i % 2 === 1}
             minHeight={rowHeights[i]}
-            tone={i >= 5 ? "card-alt" : "card"}
+            tone={i >= 4 ? "card-alt" : "card"}
             padTop={i === 0 ? 30 : undefined}
             ctaHref={p.cta?.href}
             ctaLabel={p.cta?.label}
@@ -168,6 +171,10 @@ const iconFor = homeIcons;
   }
   .db {
     display: none;
+  }
+  /* Keep the phone number on one line; the label before it may wrap. */
+  .nowrap {
+    white-space: nowrap;
   }
   .ctas {
     display: flex;

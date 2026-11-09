@@ -103,8 +103,24 @@ describe("build output", () => {
       home.about.cta.label,
     ];
     for (const n of needles) expect(text, n.slice(0, 40)).toContain(norm(n));
+    expect(text).toContain("High-quality stamps, name tags, signs & awards. Fast turnaround, friendly service.");
+    const headings = [...readText(pageFile("/")).matchAll(/<h3[^>]*class="[^"]*row-title[^"]*"[^>]*>([\s\S]*?)<\/h3>/g)].map((m) => decode(m[1]!.replace(/<[^>]+>/g, "")).trim());
+    expect(headings).toEqual(["Custom Stamps", "Name Tags", "Signs", "Name Plates", "Awards & Plaques", "Notary Stamps & Embossers"]);
+    for (const gone of ["Self-Inking Stamps", "Address Stamps", "Desk Name Plates", "Acrylic Awards"]) expect(text).not.toContain(gone);
+    expect(text).toContain("Signs photo coming soon");
+    expect(text).toContain("Ordering your custom products from Springfield Stamp & Engraving is simple and hassle-free.");
+    expect(text).toContain("and Springfield Stamp & Engraving came to the rescue!");
+    expect(text).toContain("At Springfield Stamp & Engraving, we don't just sell products");
     expect(text).toContain("over 50 years");
     expect(text).toContain("our 50 years of experience");
+  });
+
+  it("uses the new Facebook URL everywhere and never the old one", () => {
+    const fb = "https://www.facebook.com/SpringfieldStampandEngraving/";
+    expect(site.facebook).toBe(fb);
+    expect(readText(pageFile("/"))).toContain(`href="${fb}"`);
+    expect(readText(pageFile("/"))).toContain(`"sameAs":["${fb}"]`);
+    for (const f of textFiles) expect(noData(readText(f)), path.relative(DIST, f)).not.toMatch(/facebook\.com\/SpringfieldStamp(?!andEngraving)/);
   });
 
   it("home hero: photo first in body, inlined, gated, within the 70 KB budget", () => {

@@ -3,84 +3,14 @@
     "name": "home",
     "vpName": "desktop",
     "liveH": 6334,
-    "buildH": 6335,
-    "avg": 5.583258164472776
-  },
-  {
-    "name": "custom-stamps",
-    "vpName": "desktop",
-    "liveH": 5743,
-    "buildH": 5765,
-    "avg": 15.211935256137362
-  },
-  {
-    "name": "missouri-notary-stamp",
-    "vpName": "desktop",
-    "liveH": 3226,
-    "buildH": 3204,
-    "avg": 13.404269335511984
-  },
-  {
-    "name": "magnetic-name-tags",
-    "vpName": "desktop",
-    "liveH": 7948,
-    "buildH": 7936,
-    "avg": 14.151905487472769
-  },
-  {
-    "name": "about",
-    "vpName": "desktop",
-    "liveH": 2384,
-    "buildH": 2388,
-    "avg": 5.763868374261943
-  },
-  {
-    "name": "contact",
-    "vpName": "desktop",
-    "liveH": 2498,
-    "buildH": 2501,
-    "avg": 2.8134678251642535
+    "buildH": 6334,
+    "avg": 22.27273862026673
   },
   {
     "name": "home",
     "vpName": "mobile",
     "liveH": 11587,
-    "buildH": 11523,
-    "avg": 43.11442344295181
-  },
-  {
-    "name": "custom-stamps",
-    "vpName": "mobile",
-    "liveH": 8955,
-    "buildH": 8884,
-    "avg": 43.15267534934201
-  },
-  {
-    "name": "missouri-notary-stamp",
-    "vpName": "mobile",
-    "liveH": 6436,
-    "buildH": 6372,
-    "avg": 47.364734061319815
-  },
-  {
-    "name": "magnetic-name-tags",
-    "vpName": "mobile",
-    "liveH": 12431,
-    "buildH": 12372,
-    "avg": 44.4585451939908
-  },
-  {
-    "name": "about",
-    "vpName": "mobile",
-    "liveH": 2947,
-    "buildH": 2884,
-    "avg": 47.154338027404705
-  },
-  {
-    "name": "contact",
-    "vpName": "mobile",
-    "liveH": 3445,
-    "buildH": 3380,
-    "avg": 39.873669403943914
+    "buildH": 11464,
+    "avg": 48.49569105511347
   }
 ]
