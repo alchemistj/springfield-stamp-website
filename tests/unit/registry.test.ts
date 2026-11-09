@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import { routes } from "../../src/lib/routes";
-import { headerNav, footer, site } from "../../src/data/site";
+import { headerNav, footer } from "../../src/data/site";
 import { breadcrumbSchema, jsonLd, localBusinessSchema } from "../../src/lib/seo";
 import { llmsTxt, robotsTxt, sitemapXml } from "../../src/lib/discovery";
 
@@ -30,7 +30,7 @@ describe("schema and discovery files", () => {
     const lb = localBusinessSchema() as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
     expect(lb.geo.latitude).toBe(37.1883738);
     expect(lb.geo.longitude).toBe(-93.2618564);
-    expect(lb.sameAs).toEqual([site.facebook]);
+    expect(lb.sameAs).toEqual(["https://www.facebook.com/SpringfieldStampandEngraving/"]);
     expect(lb.address.streetAddress).toBe("1416 S. Glenstone Ave.");
   });
   it("breadcrumbs: home has one item, others two", () => {

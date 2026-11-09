@@ -32,7 +32,7 @@ export const site = {
     /** schema.org openingHours */
     schema: "Mo-Fr 08:00-16:30",
   },
-  facebook: "https://www.facebook.com/SpringfieldStamp",
+  facebook: "https://www.facebook.com/SpringfieldStampandEngraving/",
   banner: "1-Day Service!",
 } as const;
 

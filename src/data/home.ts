@@ -8,7 +8,9 @@ export interface HomeProduct {
   title: string;
   body: Rich;
   /** Key into `src/lib/images.ts` `homeProductImages`. */
-  image: "customStamps" | "magneticNameTags" | "selfInkingStamps" | "addressStamps" | "deskNamePlates" | "acrylicAwards" | "notaryStamps";
+  image?: "customStamps" | "magneticNameTags" | "deskNamePlates" | "acrylicAwards" | "notaryStamps";
+  /** No photo yet: omit `image` and the row shows a grey "coming soon" box with this text instead. */
+  placeholder?: string;
   cta?: { label: string; href: string };
 }
 
@@ -36,7 +38,7 @@ export const home: {
     /** H1: first part, then the uppercase second part (a line break sits between them on mobile). */
     h1Lead: "Springfield Stamp:",
     h1Rest: "Your Trusted Partner for Custom Products",
-    sub: ["High-quality stamps, name tags & awards.", "Fast turnaround, friendly service."],
+    sub: ["High-quality stamps, name tags, signs & awards.", "Fast turnaround, friendly service."],
     callCta: { label: `Give us a call Today! ${site.phone.display}`, href: site.phone.tel },
     emailCta: { label: "Email Springfield Stamp", href: `mailto:${site.email}` },
   },
@@ -49,59 +51,51 @@ export const home: {
         body: [
           "Leave a lasting impression with ",
           { strong: "custom stamps" },
-          " crafted to your exact specifications. Choose from a variety of sizes, styles, and ink colors to create unique stamps for your business, personal use, or special occasions.",
+          " crafted to your exact specifications. Choose from self-inking stamps, rubber handstamps, logo stamps and address stamps in a variety of sizes, styles, and ink colors. Perfect for everyday tasks like signing documents, addressing envelopes, or personalizing packaging. Choose from classic or decorative designs, and let us create a stamp that reflects your unique style.",
         ],
         image: "customStamps",
         cta: { label: "See Our Custom Stamp Options", href: "/custom-stamps/" },
       },
       {
-        title: "Magnetic Name Tags",
+        title: "Name Tags",
         body: [
           "Make introductions a breeze with ",
-          { strong: "professional-looking magnetic name tags" },
-          ". Our customizable options allow you to showcase your brand logo, personalize with employee names, and choose from various styles and materials to match your needs.",
+          { strong: "professional-looking name tags" },
+          ". We offer high-quality printed tags, engraved tags, and ID badges. Our customizable options allow you to showcase your brand logo, personalize with employee names, and choose from various styles and materials to match your needs.",
         ],
         image: "magneticNameTags",
         cta: { label: "Explore Magnetic Name Tags Here", href: "/magnetic-name-tags/" },
       },
       {
-        title: "Self-Inking Stamps",
+        title: "Signs",
         body: [
-          { strong: "Simplify your stamping needs" },
-          " with our convenient self-inking stamps. These stamps offer clean, crisp impressions with every use, eliminating the need for separate ink pads. Perfect for everyday tasks like signing documents, addressing envelopes, or personalizing packaging.",
+          "Custom metal and plastic signs, engraved or printed in the size you need. We can engrave or print your artwork, logos, and designs on room signs, max occupancy signs, ADA-compliant signs with braille, memorial signs, electrical tags, and parking lot signs, with standoff mounting available.",
         ],
-        image: "selfInkingStamps",
+        // TODO: replace this placeholder with a real photo: add the file to src/assets/, import it in
+        // src/lib/home-images.ts, add a `signs` key to homeProductImages, set `image: "signs"` here and delete `placeholder`.
+        placeholder: "Signs photo coming soon",
       },
       {
-        title: "Address Stamps",
-        body: [
-          "Add a touch of elegance and professionalism to your correspondence with a ",
-          { strong: "personalized address stamp" },
-          ". Choose from classic or decorative designs, and let us create a stamp that reflects your unique style.",
-        ],
-        image: "addressStamps",
-      },
-      {
-        title: "Desk Name Plates",
+        title: "Name Plates",
         body: [
           { strong: "Elevate your workspace" },
-          " with professional and stylish ",
-          { strong: "desk name plates" },
-          ". Our high-quality materials and elegant designs ensure your name stands out, making a lasting impression on visitors and colleagues.",
+          " with professional and stylish custom-engraved metal and plastic ",
+          { strong: "name plates" },
+          ". Display them on your desk with traditional wooden or sleek modern metal bases. Mount them flush to doors, or let them float on architectural standoffs. You'll make a lasting impression on visitors and colleagues.",
         ],
         image: "deskNamePlates",
       },
       {
-        title: "Acrylic Awards",
+        title: "Awards & Plaques",
         body: [
-          "Celebrate accomplishments and recognition with beautiful ",
-          { strong: "acrylic awards" },
-          ". We offer a variety of styles and sizes to suit any occasion, allowing you to personalize each award with text, logos, or images.",
+          "Celebrate accomplishments and recognition with our premium ",
+          { strong: "custom awards" },
+          ". Choose from modern acrylic, elegant glass, or timeless crystal, as well as classic wooden or plastic plaques featuring precision-engraved metal plates. We offer a variety of styles and sizes to suit any occasion, allowing you to personalize each piece with text, logos, or custom artwork.",
         ],
         image: "acrylicAwards",
       },
       {
-        title: "Notary Stamps",
+        title: "Notary Stamps & Embossers",
         body: [
           { strong: "Notarize documents" },
           " with ease and professionalism using your very own ",
@@ -116,11 +110,11 @@ export const home: {
 
   workflow: {
     title: "Our Workflow Process Might Be the Easiest Thing You Do All Day!",
-    intro: "Ordering your custom products from Springfield Stamp is simple and hassle-free.",
+    intro: "Ordering your custom products from Springfield Stamp & Engraving is simple and hassle-free.",
     testimonials: [
       {
         quote:
-          "\"I needed custom stamps in a hurry, and Springfield Stamp came to the rescue! They had my order ready in just a few days, and the quality is fantastic.",
+          "\"I needed custom stamps in a hurry, and Springfield Stamp & Engraving came to the rescue! They had my order ready in just a few days, and the quality is fantastic.",
         name: "Sarah B.",
         role: "Business Owner",
       },
@@ -160,7 +154,7 @@ export const home: {
         icon: "enhance",
         title: "Customer Service",
         body: [
-          "At Springfield Stamp, we don't just sell products, we ",
+          "At Springfield Stamp & Engraving, we don't just sell products, we ",
           { strong: "build relationship" },
           "s. Our friendly and knowledgeable team is dedicated to providing exceptional customer service. We'll take the time to understand your needs, answer your questions, and offer expert suggestions to ensure you get the perfect product for your specific requirements.",
         ],
