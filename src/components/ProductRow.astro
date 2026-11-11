@@ -13,8 +13,6 @@ import Button from "./Button.astro";
 interface Props {
   title: string;
   image?: ImageMetadata;
-  /** Text for a grey placeholder box shown in place of the picture while no photo exists (no `image`). */
-  placeholder?: string;
   /** Decorative by default: the title names the product. */
   imageAlt?: string;
   headingLevel?: "h2" | "h3" | "h4";
@@ -39,7 +37,6 @@ interface Props {
 const {
   title,
   image,
-  placeholder,
   imageAlt = "",
   headingLevel: Heading = "h3",
   reverse = false,
@@ -60,7 +57,7 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
 <article class:list={["row", { reverse, contain: fit === "contain", upper: upperTitle }]} data-tw={titleWeight} style={style || undefined}>
   <div class="media">
     {
-      image ? (
+      image && (
         <Picture
           src={image}
           alt={imageAlt}
@@ -70,10 +67,6 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
           sizes="(min-width: 1024px) 500px, (min-width: 400px) 303px, 90vw"
           quality={75}
         />
-      ) : (
-        <div class="ph" role="img" aria-label={placeholder}>
-          <span>{placeholder}</span>
-        </div>
       )
     }
   </div>
@@ -95,21 +88,6 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
     display: block;
     width: 100%;
     height: auto;
-  }
-  .ph {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    padding: 20px;
-    background: #ececec;
-    color: #6b6b6b;
-    font-family: var(--font-heading);
-    font-size: 18px;
-    line-height: 25px;
-    text-align: center;
   }
   .copy {
     text-align: center;
@@ -148,11 +126,6 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
     }
     .media {
       position: relative;
-    }
-    .ph {
-      position: absolute;
-      inset: 0;
-      aspect-ratio: auto;
     }
     .media :global(img) {
       position: absolute;

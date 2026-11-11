@@ -3,14 +3,14 @@
     "name": "home",
     "vpName": "desktop",
     "liveH": 6334,
-    "buildH": 6334,
-    "avg": 22.27273862026673
+    "buildH": 6413,
+    "avg": 41.16526137325525
   },
   {
     "name": "home",
     "vpName": "mobile",
     "liveH": 11587,
-    "buildH": 11464,
-    "avg": 48.49569105511347
+    "buildH": 11796,
+    "avg": 48.45196978761028
   }
 ]

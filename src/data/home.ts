@@ -8,9 +8,11 @@ export interface HomeProduct {
   title: string;
   body: Rich;
   /** Key into `src/lib/images.ts` `homeProductImages`. */
-  image?: "customStamps" | "magneticNameTags" | "deskNamePlates" | "acrylicAwards" | "notaryStamps";
-  /** No photo yet: omit `image` and the row shows a grey "coming soon" box with this text instead. */
-  placeholder?: string;
+  image?: "customStamps" | "magneticNameTags" | "signs" | "deskNamePlates" | "awardsPlaques" | "notaryEmbosser";
+  /** Alt text describing what the photo shows (empty for decorative). */
+  imageAlt?: string;
+  /** "contain" shows the whole photo instead of cropping it to the row box. */
+  fit?: "cover" | "contain";
   cta?: { label: string; href: string };
 }
 
@@ -54,6 +56,8 @@ export const home: {
           " crafted to your exact specifications. Choose from self-inking stamps, rubber handstamps, logo stamps and address stamps in a variety of sizes, styles, and ink colors. Perfect for everyday tasks like signing documents, addressing envelopes, or personalizing packaging. Choose from classic or decorative designs, and let us create a stamp that reflects your unique style.",
         ],
         image: "customStamps",
+        imageAlt: "Large Trodat professional stamp next to a small round self-inking stamp, with the banner \"Big to small, we have it all!\"",
+        fit: "contain",
         cta: { label: "See Our Custom Stamp Options", href: "/custom-stamps/" },
       },
       {
@@ -71,9 +75,8 @@ export const home: {
         body: [
           "Custom metal and plastic signs, engraved or printed in the size you need. We can engrave or print your artwork, logos, and designs on room signs, max occupancy signs, ADA-compliant signs with braille, memorial signs, electrical tags, and parking lot signs, with standoff mounting available.",
         ],
-        // TODO: replace this placeholder with a real photo: add the file to src/assets/, import it in
-        // src/lib/home-images.ts, add a `signs` key to homeProductImages, set `image: "signs"` here and delete `placeholder`.
-        placeholder: "Signs photo coming soon",
+        image: "signs",
+        imageAlt: "Engraved signs including an EXIT sign, Smoke Free Building plate and a frosted office sign on standoffs",
       },
       {
         title: "Name Plates",
@@ -92,7 +95,8 @@ export const home: {
           { strong: "custom awards" },
           ". Choose from modern acrylic, elegant glass, or timeless crystal, as well as classic wooden or plastic plaques featuring precision-engraved metal plates. We offer a variety of styles and sizes to suit any occasion, allowing you to personalize each piece with text, logos, or custom artwork.",
         ],
-        image: "acrylicAwards",
+        image: "awardsPlaques",
+        imageAlt: "Wood plaques with engraved metal plates and glass and crystal awards",
       },
       {
         title: "Notary Stamps & Embossers",
@@ -102,7 +106,8 @@ export const home: {
           { strong: "notary stamp" },
           ". No more messy ink pads or missed details plus –  we have all the supplies: the stamp, journal, and embosser!",
         ],
-        image: "notaryStamps",
+        image: "notaryEmbosser",
+        imageAlt: "Notary embosser pressing a raised seal into paper",
         cta: { label: "Get Your Notary Stamp", href: "/missouri-notary-stamp/" },
       },
     ],

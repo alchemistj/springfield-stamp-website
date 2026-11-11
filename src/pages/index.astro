@@ -58,7 +58,8 @@ const iconFor = homeIcons;
           <ProductRow
             title={p.title}
             image={p.image ? homeProductImages[p.image] : undefined}
-            placeholder={p.placeholder}
+            imageAlt={p.imageAlt}
+            fit={p.fit}
             reverse={i % 2 === 1}
             minHeight={rowHeights[i]}
             tone={i >= 4 ? "card-alt" : "card"}
@@ -66,7 +67,7 @@ const iconFor = homeIcons;
             ctaHref={p.cta?.href}
             ctaLabel={p.cta?.label}
             ctaTight={i === 1}
-            ctaWeight={p.image === "notaryStamps" ? 600 : 700}
+            ctaWeight={p.image === "notaryEmbosser" ? 600 : 700}
           >
             <Rich parts={p.body} />
           </ProductRow>

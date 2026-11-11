@@ -107,7 +107,12 @@ describe("build output", () => {
     const headings = [...readText(pageFile("/")).matchAll(/<h3[^>]*class="[^"]*row-title[^"]*"[^>]*>([\s\S]*?)<\/h3>/g)].map((m) => decode(m[1]!.replace(/<[^>]+>/g, "")).trim());
     expect(headings).toEqual(["Custom Stamps", "Name Tags", "Signs", "Name Plates", "Awards & Plaques", "Notary Stamps & Embossers"]);
     for (const gone of ["Self-Inking Stamps", "Address Stamps", "Desk Name Plates", "Acrylic Awards"]) expect(text).not.toContain(gone);
-    expect(text).toContain("Signs photo coming soon");
+    expect(text).not.toContain("Signs photo coming soon");
+    const signsRow = readText(pageFile("/")).match(/<article[^>]*>(?:(?!<\/article>)[\s\S])*?<h3[^>]*row-title[^>]*>Signs<\/h3>[\s\S]*?<\/article>/);
+    expect(signsRow, "Signs row").not.toBeNull();
+    expect(signsRow![0]).toContain("<img");
+    expect(signsRow![0]).not.toMatch(/class="[^"]*\bph\b/);
+    expect(signsRow![0]).toContain("EXIT sign");
     expect(text).toContain("Ordering your custom products from Springfield Stamp & Engraving is simple and hassle-free.");
     expect(text).toContain("and Springfield Stamp & Engraving came to the rescue!");
     expect(text).toContain("At Springfield Stamp & Engraving, we don't just sell products");

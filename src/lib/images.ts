@@ -8,9 +8,9 @@
 // Inventory (file: where the live site used it)
 //   Shared: springfield-stamp-logo-black.png (header logo, inlined by Header.astro), springfield-stamp-logo-white.png (footer),
 //     cropped-springfield-stamp-favicon.png (favicon source), springfield-stamp-testimonial.png (yellow quote mark, Testimonial.astro)
-//   Home: springfield-stamps4.jpg + springfield-stamps-mobile.jpg (hero, inlined as AVIF), self-inking-stamps.jpg (home "Custom Stamps" row),
+//   Home: springfield-stamps4.jpg + springfield-stamps-mobile.jpg (hero, inlined as AVIF), custom-stamps-2026.jpg, signs.jpg, awards-plaques.jpg, notary-embosser.jpg (client photos, home rows),
 //     springfield-logo-magnetic-tags-2.png, springfield-stamp-logo-stamp-2.png (home "Self-Inking Stamps" row; also Custom Stamps "Logo Stamps"),
-//     address-stamps.jpg, desk-name-plate.webp, acrylic-awards.webp, springfield-stamp-4913.jpg (also Custom Stamps notary),
+//     desk-name-plate.webp, springfield-stamp-4913.jpg (Custom Stamps notary),
 //     break-the-ice.png, enhance.png, boost-brand.png (Why Do Business icons), springfield-stamp-about.jpeg (storefront)
 //   Custom Stamps: springfield-stamp-custom-stamps-2.jpg (hero, 2300x782), custom-stamp-mobile.jpg (mobile hero, 339x533),
 //     springfield-stamps-premium.png (og + hero cut-out), springfield-stamp-ideal-line.jpg, springfield-stamp-maxlight.jpg,
@@ -27,9 +27,8 @@
 //   Contact: call-us-springfield-stamp.jpg (og, 700x413), springfield-stamp-arrow1.png, springfield-stamp-arrow2.png (540x540)
 //   springfield-hero-2.png (1920x653) appears in the live CSS only; check the page before using it.
 //
-// NOTE the live file names are sometimes swapped against the pictures: self-inking-stamps.jpg shows the large
-// Trodat stamp (home "Custom Stamps") and springfield-stamp-logo-stamp-2.png shows the round IDEAL 5000
-// (home "Self-Inking Stamps"). Go by what the picture shows.
+// NOTE the live file names are sometimes swapped against the pictures: springfield-stamp-logo-stamp-2.png shows the
+// round IDEAL 5000 (home "Self-Inking Stamps"). Go by what the picture shows.
 import homeLogoStamp from "../assets/springfield-stamp-logo-stamp-2.png";
 import customPremium from "../assets/springfield-stamps-premium.png";
 import notaryRectangular from "../assets/springfield-stamps-rectangular.jpg";
