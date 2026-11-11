@@ -8,7 +8,8 @@
 // Inventory (file: where the live site used it)
 //   Shared: springfield-stamp-logo-black.png (header logo, inlined by Header.astro), springfield-stamp-logo-white.png (footer),
 //     cropped-springfield-stamp-favicon.png (favicon source), springfield-stamp-testimonial.png (yellow quote mark, Testimonial.astro)
-//   Home: springfield-stamps4.jpg + springfield-stamps-mobile.jpg (hero, inlined as AVIF), custom-stamps-2026.jpg, signs.jpg, awards-plaques.jpg, notary-embosser.jpg (client photos, home rows),
+//   Home: home-hero.jpg + home-hero-mobile.jpg (hero, inlined as AVIF), custom-stamps-2026.jpg, signs.jpg, awards-plaques.jpg, notary-embosser.jpg (client photos, home rows),
+//     springfield-stamps4.jpg (contact hero), springfield-stamps-mobile.jpg (notary journal photo),
 //     springfield-logo-magnetic-tags-2.png, springfield-stamp-logo-stamp-2.png (home "Self-Inking Stamps" row; also Custom Stamps "Logo Stamps"),
 //     desk-name-plate.webp, springfield-stamp-4913.jpg (Custom Stamps notary),
 //     break-the-ice.png, enhance.png, boost-brand.png (Why Do Business icons), springfield-stamp-about.jpeg (storefront)
