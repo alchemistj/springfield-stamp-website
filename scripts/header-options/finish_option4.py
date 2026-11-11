@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Seat Option 4 on the original glossy gold table and write the hero photos.
+"""Seat Option 4 on the original glossy gold table and write the desktop hero.
 
 Option 4 is the one Josh picked: Robert Muse and Shryer name bars, the Regency
 desk sign, the red Casper tumbler, and the blue Trodat Printy 4913.
 
-The photographic table (highlights and the front rim) is kept. Only the old
-products are painted out, using the table's own gold and the wall beside them.
-Nothing here is a newly drawn ellipse.
+The photographed table and the storefront stay. Old products are removed by
+continuing the real wall and the real gold into the holes they covered. Nothing
+here is a newly drawn ellipse. The mobile hero was approved separately and this
+script does not rewrite it.
 """
 
 from __future__ import annotations
@@ -17,7 +18,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
-from rembg import new_session
+from rembg import new_session, remove
+from scipy.ndimage import distance_transform_edt, gaussian_filter1d, maximum_filter1d
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_options import cut, cut_tumbler, scale_to_height  # noqa: E402
@@ -26,77 +28,124 @@ ROOT = Path(__file__).resolve().parents[2]
 HERO = ROOT / "src" / "assets" / "springfield-stamps4.jpg"
 OUT = ROOT / "docs" / "header-options" / "option-4"
 DESKTOP_ASSET = ROOT / "src" / "assets" / "home-hero.jpg"
-MOBILE_ASSET = ROOT / "src" / "assets" / "home-hero-mobile.jpg"
 
 
-def clean_plate(src: np.ndarray) -> np.ndarray:
-    """Remove the old hero products. Keep the photographed gold table."""
-    h, w = src.shape[:2]
+def _channels(src: np.ndarray):
     r, g, b = [src[:, :, i].astype(np.int16) for i in range(3)]
-    yy, xx = np.indices((h, w))
+    yy, xx = np.indices(src.shape[:2])
+    lum = src.astype(np.float32).mean(2)
+    return r, g, b, yy, xx, lum
+
+
+def _gold_mask(src: np.ndarray) -> np.ndarray:
+    """The photographed table only. Cream name tags and white stamps are not gold."""
+    r, g, b, yy, xx, lum = _channels(src)
     gold = (
-        (r > 150) & (g > 125) & (b < 165) & (r > b + 28) & (g > b + 18)
-        & (np.abs(r - g) < 36) & (yy > 500) & (xx > 860)
+        (r > 140) & (g > 110) & (b < 155) & (r > b + 40) & (g > b + 25)
+        & (np.abs(r - g) < 40) & (yy > 470) & (xx > 860) & (lum > 90) & (lum < 235)
     )
-    letters = (r > 80) & (r > g + 18) & (r > b + 18) & (yy < 250) & (g < 120)
+    n, labels, stats, _ = cv2.connectedComponentsWithStats(gold.astype(np.uint8), 8)
+    if n <= 1:
+        return gold
+    main = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
+    return labels == main
 
-    # Tight boxes around each old product. Padding is background, which the
-    # fill below replaces from the real pixels next to the box.
-    rects = [
-        (860, 290, 340, 250),
-        (850, 455, 420, 200),
-        (1090, 225, 240, 360),
-        (1330, 280, 230, 250),
-        (1490, 185, 184, 460),
-        (1105, 515, 300, 150),
-        (1300, 525, 220, 145),
-        (1450, 485, 224, 185),
-    ]
-    hole = np.zeros((h, w), bool)
-    for x, y, ww, hh in rects:
-        hole[y : y + hh, x : x + ww] = True
-    hole[gold] = False
-    hole[letters] = False
-    hole[:175, :] = False
-    # Leave the photographed front rim alone.
-    hole[yy > 635] = False
 
+def _rim_bottom(gold: np.ndarray) -> np.ndarray:
+    """Smooth lower edge of the real table, ignoring dips where a product covers the rim."""
+    h, w = gold.shape
+    ymax = np.full(w, np.nan)
+    for x in range(w):
+        ys = np.flatnonzero(gold[:, x])
+        if ys.size >= 8:
+            ymax[x] = float(ys.max())
+    known = np.flatnonzero(~np.isnan(ymax))
+    curve = np.interp(np.arange(w), known, ymax[known])
+    return gaussian_filter1d(maximum_filter1d(curve, 90), 14)
+
+
+def _product_mask(src: np.ndarray, alpha: np.ndarray, gold: np.ndarray, env: np.ndarray) -> np.ndarray:
+    """Old products only. Sign letters, the yellow word, and the gold table stay."""
+    r, g, b, yy, xx, lum = _channels(src)
+    h, w = gold.shape
+    # Dark maroon channel letters. Bright red product caps are a higher red and sit lower.
+    sign = (
+        (r > g + 4) & (r > b + 4) & (r > 14) & (r < 110) & (g < 70)
+        & (yy > 145) & (yy < 308) & (xx > 480)
+    )
+    yellow = (r > 160) & (g > 120) & (b < 95) & (g > b + 30) & (yy > 255) & (yy < 365) & (xx < 1280)
+
+    raw = ((alpha > 12) & (xx > 860) & (yy > 145)).astype(np.uint8)
+    closed = cv2.morphologyEx(raw, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (19, 19)))
+    n, labels, stats, _ = cv2.connectedComponentsWithStats(closed, 8)
+    mask = np.zeros((h, w), bool)
+    for i in range(1, n):
+        x, y, ww, hh, area = stats[i]
+        if area < 400 or (y < 175 and x > 1500 and hh < 65):
+            continue
+        mask[labels == i] = True
+    # The open frame of the big stamp is thin and dark, so the cutout misses it.
+    near = cv2.dilate(mask.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13))).astype(bool)
+    mask |= near & (lum < 36) & (yy > 165) & (yy < 430) & (xx > 1180) & ~sign
+    cap = (yy > 155) & (yy < 300) & (xx > 1480) & (xx < 1665)
+    wallish = (np.abs(r - g) < 12) & (np.abs(g.astype(int) - b) < 14) & (lum > 40) & (lum < 88)
+    mask |= cap & ~wallish & ~sign
+    dist = distance_transform_edt(~gold)
+    # Name tags and the other pieces sitting on the gold, just above the visible metal.
+    mask |= (dist < 58) & (yy <= env[xx] + 2) & (yy > 488) & (xx > 870) & ~gold & (lum > 22)
+    mask[sign | yellow | gold] = False
+    mask[:140, :] = False
+    mask[:, :860] = False
+    return mask, sign, yellow, dist
+
+
+def _continue_rows(src: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    """Fill each hole from the real pixels to its left and right on the same row."""
     out = src.copy()
-    # Above the table, continue the wall from the clear column just left of
-    # the products, plus the light leak that is already on the right.
-    wall_hole = hole & (yy < 500)
-    leak_c = np.array([60.0, 58.0, 56.0])
-    for y in np.flatnonzero(wall_hole.any(1)):
-        holes = np.flatnonzero(wall_hole[y])
-        base = src[y, 860:910].mean(axis=0).astype(np.float32)
-        lk = np.clip((holes.astype(np.float32) - 1200) / 480.0, 0, 1)
-        out[y, holes] = np.clip(base * (1 - lk)[:, None] + leak_c * lk[:, None], 0, 255).astype(np.uint8)
+    for y in np.flatnonzero(mask.any(1)):
+        hole = mask[y]
+        known = np.flatnonzero(~hole)
+        if known.size == 0:
+            continue
+        xs = np.flatnonzero(hole)
+        idx = np.searchsorted(known, xs)
+        left = known[np.clip(idx - 1, 0, known.size - 1)]
+        right = known[np.clip(idx, 0, known.size - 1)]
+        dl = (xs - left).astype(np.float32)
+        dr = (right - xs).astype(np.float32)
+        both = (dl < 1100) & (dr < 1100)
+        out[y, xs] = src[y, np.where(dl <= dr, left, right)]
+        if both.any():
+            t = (dl[both] / np.maximum(dl[both] + dr[both], 1))[:, None]
+            mixed = src[y, left[both]].astype(np.float32) * (1 - t) + src[y, right[both]].astype(np.float32) * t
+            out[y, xs[both]] = np.clip(mixed, 0, 255).astype(np.uint8)
+    return out
 
-    trusted = gold & ~hole & (xx < 1200)
-    med = np.full((h, 3), 180, np.float32)
-    has = np.zeros(h, bool)
-    for y in range(h):
-        xs = np.flatnonzero(trusted[y])
-        if xs.size >= 6:
-            med[y] = np.median(src[y, xs], axis=0)
-            has[y] = True
-    known_y = np.flatnonzero(has)
-    for y in range(h):
-        if not has[y] and known_y.size:
-            med[y] = med[known_y[np.argmin(np.abs(known_y - y))]]
-    table_hole = hole & (yy >= 500)
-    ys, xs = np.where(table_hole)
-    right = np.clip((xs.astype(np.float32) - 1050) / 620.0, 0, 1)
-    gold_c = med[ys] + right[:, None] * np.array([14.0, 12.0, 6.0])
-    # Soften the back edge of the table into the wall instead of a hard cut.
-    fade = np.clip((ys.astype(np.float32) - 498) / 48.0, 0, 1)
-    wall_c = np.stack([src[y, 860:910].mean(axis=0) for y in ys]).astype(np.float32)
-    out[ys, xs] = np.clip(wall_c * (1 - fade)[:, None] + gold_c * fade[:, None], 0, 255).astype(np.uint8)
 
-    blur = cv2.GaussianBlur(out, (0, 0), 1.6)
-    out[hole] = (out[hole].astype(np.float32) * 0.35 + blur[hole].astype(np.float32) * 0.65).astype(np.uint8)
-    out[gold] = src[gold]
-    out[letters] = src[letters]
+def clean_plate(src: np.ndarray, alpha: np.ndarray) -> np.ndarray:
+    """Remove the old hero products. Keep the photographed gold and the storefront."""
+    gold = _gold_mask(src)
+    env = _rim_bottom(gold)
+    mask, sign, yellow, dist = _product_mask(src, alpha, gold, env)
+    wall = _continue_rows(src, mask)
+    # Soften row steps in the repaired wall. Letters and gold are put back after.
+    vert = cv2.GaussianBlur(wall, (1, 35), 0)
+    wall[mask] = (wall[mask].astype(np.float32) * 0.22 + vert[mask].astype(np.float32) * 0.78).astype(np.uint8)
+    keep = gold | sign | yellow
+    wall[keep] = src[keep]
+
+    _, inds = distance_transform_edt(~gold, return_indices=True)
+    field = src[inds[0], inds[1]].astype(np.float32)
+    for _ in range(2):
+        field = cv2.GaussianBlur(field, (0, 0), 1.8)
+        field[gold] = src[gold]
+    yy = np.indices(gold.shape)[0]
+    on = mask & (dist < 64) & (yy <= env[np.arange(gold.shape[1])] + 2) & (yy > 485)
+    band = np.clip(cv2.GaussianBlur(on.astype(np.float32), (0, 0), 11) * 1.8, 0, 1)
+    band[yy > env[np.arange(gold.shape[1])]] = 0
+    band[keep] = 0
+    out = np.clip(wall.astype(np.float32) * (1 - band[..., None]) + field * band[..., None], 0, 255).astype(np.uint8)
+    out[keep] = src[keep]
     return out
 
 
@@ -133,17 +182,11 @@ def layout(plate: Image.Image, sprites: dict[str, Image.Image]) -> Image.Image:
     return canvas.convert("RGB")
 
 
-def mobile_from(scene: Image.Image) -> Image.Image:
-    """A short, wide frame of the same table. All four products stay in the middle,
-    which is what the live hero shows at object-position 32%."""
-    # 794×330, the same aspect as the 748×311 mobile hero.
-    crop = scene.crop((880, 328, 1674, 658))
-    return crop.resize((748, 311), Image.Resampling.LANCZOS)
-
-
 def main() -> None:
     print("cutting products…", flush=True)
     session = new_session("u2net")
+    src = np.array(Image.open(HERO).convert("RGB"))
+    alpha = np.array(remove(Image.fromarray(src), session=session))[:, :, 3]
     sprites = {
         "blue": cut(session, "stamp-blue-4913.jpg", erode=1),
         "sign": cut(session, "signs-standoff-printed-2.jpg", erode=1),
@@ -151,17 +194,14 @@ def main() -> None:
         "muse": cut(session, "nametags-police.jpg", (280, 560, 780, 780), erode=1),
         "shryer": cut(session, "nametags-police.jpg", (300, 760, 880, 1000), erode=1),
     }
-    for k, im in sprites.items():
-        print(f"  {k} {im.size}", flush=True)
+    for key, im in sprites.items():
+        print(f"  {key} {im.size}", flush=True)
     print("clearing the old products…", flush=True)
-    plate = Image.fromarray(clean_plate(np.array(Image.open(HERO).convert("RGB"))))
-    scene = layout(plate, sprites)
+    scene = layout(Image.fromarray(clean_plate(src, alpha)), sprites)
     OUT.mkdir(parents=True, exist_ok=True)
     scene.save(OUT / "final-scene-desktop.jpg", quality=92, optimize=True)
-    mobile_from(scene).save(OUT / "final-scene-mobile.jpg", quality=92, optimize=True)
     scene.save(DESKTOP_ASSET, quality=92, optimize=True)
-    mobile_from(scene).save(MOBILE_ASSET, quality=92, optimize=True)
-    print("wrote", DESKTOP_ASSET.name, MOBILE_ASSET.name, flush=True)
+    print("wrote", DESKTOP_ASSET.name, flush=True)
 
 
 if __name__ == "__main__":
