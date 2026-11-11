@@ -137,10 +137,17 @@ describe("build output", () => {
     expect(html).toMatch(/\.atf:not\(:has\(>\s*\.atf-ready\)\)\s*\{\s*visibility:\s*hidden/);
     expect(html).toContain('fetchpriority="high"');
     expect(html).not.toMatch(/<link[^>]+rel="preload"/);
-    const hero = [...body.slice(0, body.indexOf("<header")).matchAll(/data:image\/avif;base64,([A-Za-z0-9+/=]+)/g)];
-    expect(hero.length).toBeGreaterThanOrEqual(1);
+    const atf = body.slice(0, body.indexOf('class="atf-ready"'));
+    const beforeHeader = body.slice(0, body.indexOf("<header"));
+    const hero = [...atf.matchAll(/data:image\/avif;base64,([A-Za-z0-9+/=]+)/g)];
+    // Storefront background (mobile + desktop) and the desktop product cut-out, all inside .atf.
+    expect(hero.length).toBe(3);
+    expect(beforeHeader).toContain("data-ff-lcp-hero");
     const bytes = hero.reduce((s, m) => s + Buffer.from(m[1]!, "base64").length, 0);
     expect(bytes).toBeLessThanOrEqual(70 * 1024);
+    const mobile = beforeHeader.match(/class="atf-photo"[^>]*src="data:image\/avif;base64,([^"]+)"/);
+    expect(mobile).not.toBeNull();
+    expect(Buffer.from(mobile![1]!, "base64").length).toBeLessThanOrEqual(20 * 1024);
     const logo = html.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/);
     expect(Buffer.from(logo![1]!, "base64").length).toBeLessThanOrEqual(4 * 1024);
     expect(html).not.toMatch(/transition:\s*all/);

@@ -4,7 +4,7 @@
 //   - AVIF data URI built at build time, inlined once per breakpoint (desktop <picture><source>, mobile <img>);
 //   - plain `position:absolute`, no anchor positioning, no preload, no fade/blur/swap;
 //   - eager / high / sync attributes and `data-ff-lcp-hero`.
-// Combined bytes of both images must stay at or under 70 KB (checked by tests/unit/hero-budget.test.ts).
+// Combined inline hero bytes, including a product cut-out rendered later in `.atf`, stay at or under 70 KB.
 import { heroImage, type HeroOptions } from "../lib/inline-image";
 
 interface Variant extends HeroOptions {
@@ -22,7 +22,10 @@ interface Props {
 }
 const { desktop, mobile, alt = "" } = Astro.props;
 
-const [m, d] = await Promise.all([heroImage(mobile.file, mobile), desktop ? heroImage(desktop.file, desktop) : Promise.resolve(undefined)]);
+const [m, d] = await Promise.all([
+  heroImage(mobile.file, mobile),
+  desktop ? heroImage(desktop.file, desktop) : Promise.resolve(undefined),
+]);
 const vars = [
   `--hero-pos-m:${mobile.position ?? "50% 50%"}`,
   `--hero-pos:${desktop?.position ?? mobile.position ?? "50% 50%"}`,
@@ -42,6 +45,7 @@ const vars = [
     fetchpriority="high"
     data-ff-lcp-hero
     data-hero-bytes={m.bytes + (d?.bytes ?? 0)}
+    data-hero-mobile-bytes={m.bytes}
     style={vars}
   />
 </picture>

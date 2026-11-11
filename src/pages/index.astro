@@ -14,37 +14,51 @@ import { routeByKey } from "../lib/routes";
 import { home } from "../data/home";
 import { site } from "../data/site";
 import { aboutStorefront, homeIcons, homeProductImages } from "../lib/home-images";
+import { heroImage } from "../lib/inline-image";
 
 const route = routeByKey("home");
 // Live desktop row heights (px) and the text-panel shade of each row.
 const rowHeights = [399, 420, 400, 378, 350, 433];
 const [callLead = ""] = home.hero.callCta.label.split(site.phone.display);
 const iconFor = homeIcons;
+const products = await heroImage("home-hero-products.png", { width: 1000, quality: 68, alpha: true });
 ---
 
-<BaseLayout route={route} heroHeight={{ desktop: 562, mobile: 196 }}>
+<BaseLayout route={route} heroHeight={{ desktop: 562, mobile: 588 }}>
   <HeroPhoto
     slot="hero-photo"
-    alt="Blue Trodat Printy 4913 stamp, Regency desk sign, red engraved tumbler, and metal name bars on a gold table"
-    desktop={{ file: "home-hero.jpg", width: 1440, cropAspect: 1440 / 562, cropY: 0.38, quality: 55 }}
-    mobile={{ file: "home-hero-mobile.jpg", width: 748, quality: 55, position: "32% 50%" }}
+    alt="Springfield Stamp & Engraving storefront"
+    desktop={{ file: "home-hero-bg.jpg", width: 1440, quality: 58, position: "40% center" }}
+    mobile={{ file: "home-hero-bg.jpg", width: 840, quality: 72, position: "36% 42%" }}
   />
 
   <section slot="hero" class="hero" aria-labelledby="hero-title">
     <div class="hero-body">
       <div class="hero-in">
-        <p class="kicker">{home.hero.kicker}</p>
-        <h1 id="hero-title" class="h1">
-          {home.hero.h1Lead}<br class="mb" />
-          <span class="up">{home.hero.h1Rest}</span>
-        </h1>
-        <p class="sub">
-          {home.hero.sub[0]}<br class="db" />
-          {home.hero.sub[1]}
-        </p>
-        <div class="ctas">
-          <Button href={home.hero.callCta.href} size="hero" compact width={380}>{callLead}<span class="nowrap">{site.phone.display}</span></Button>
-          <Button href={home.hero.emailCta.href} size="hero" width={450}>{home.hero.emailCta.label}</Button>
+        <div class="hero-copy">
+          <p class="kicker">{home.hero.kicker}</p>
+          <h1 id="hero-title" class="h1">
+            {home.hero.h1Lead}<br class="mb" />
+            <span class="up">{home.hero.h1Rest}</span>
+          </h1>
+          <p class="sub">
+            {home.hero.sub[0]}<br class="db" />
+            {home.hero.sub[1]}
+          </p>
+          <div class="ctas">
+            <Button href={home.hero.callCta.href} size="hero" compact width={380}>{callLead}<span class="nowrap">{site.phone.display}</span></Button>
+            <Button href={home.hero.emailCta.href} size="hero" width={450}>{home.hero.emailCta.label}</Button>
+          </div>
+        </div>
+        <div class="hero-art">
+          <img
+            class="hero-products"
+            src={products.uri}
+            alt="Blue Trodat Printy 4913 stamp, Regency desk sign, red engraved tumbler, and metal name bars on a gold table"
+            width={products.width}
+            height={products.height}
+            decoding="sync"
+          />
         </div>
       </div>
     </div>
@@ -131,16 +145,29 @@ const iconFor = homeIcons;
   .hero {
     position: relative;
     z-index: 1;
-    padding-top: var(--hero-h);
+    min-height: var(--hero-h);
+  }
+  /* Darkens the storefront enough for the white text and the red H1 to pass WCAG AA. */
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: rgba(8, 10, 14, 0.86);
   }
   .hero-body {
-    background: #fff;
-    padding: 36px 44px 35px;
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    padding: 28px 22px 32px;
     text-align: center;
   }
   .hero-in {
     max-width: 303px;
     margin: 0 auto;
+  }
+  .hero-art {
+    display: none;
   }
   .kicker {
     margin: 0;
@@ -149,7 +176,7 @@ const iconFor = homeIcons;
     font-weight: 500;
     font-size: 20px;
     line-height: 26px;
-    color: var(--color-ss-text);
+    color: #fff;
   }
   .h1 {
     margin: 0;
@@ -169,7 +196,7 @@ const iconFor = homeIcons;
     font-family: var(--font-heading);
     font-size: 18px;
     line-height: 27.9px;
-    color: var(--color-ss-text);
+    color: #fff;
   }
   .db {
     display: none;
@@ -269,17 +296,41 @@ const iconFor = homeIcons;
 
   @media (min-width: 1024px) {
     .hero {
+      display: flex;
+      align-items: center;
       height: var(--hero-h);
+      min-height: 0;
       padding-top: 0;
     }
     .hero-body {
       background: transparent;
-      padding: 37px 20px 0;
+      width: 100%;
+      padding: 0;
       text-align: left;
     }
     .hero-in {
-      max-width: var(--w-hero);
-      margin: 0 auto;
+      box-sizing: border-box;
+      display: grid;
+      /* 600px keeps the 45px headline to four lines at 1024px. Above that the columns share the row. */
+      grid-template-columns: minmax(600px, 1fr) minmax(0, 1fr);
+      column-gap: 24px;
+      align-items: center;
+      width: min(1200px, calc(100% - 40px));
+      max-width: none;
+      margin-inline: auto;
+    }
+    .hero-art {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+    }
+    .hero-products {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: calc(var(--hero-h) - 48px);
+      object-fit: contain;
     }
     .kicker,
     .h1,

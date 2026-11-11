@@ -27,6 +27,8 @@ export interface HeroOptions {
   cropY?: number;
   /** Horizontal position of the crop window when `cropAspect` is narrower than the source: 0 = left, 1 = right (default 0.5). */
   cropX?: number;
+  /** Keep the transparent pixels and skip chroma subsampling. Used for the product cut-out. */
+  alpha?: boolean;
 }
 
 /** AVIF data URI for a hero photo. One format only (AVIF), no fallback, per the SOP. */
@@ -53,7 +55,7 @@ export function heroImage(file: string, opts: HeroOptions): Promise<InlineImage>
       }
       const out = await img
         .resize({ width: Math.min(opts.width, srcW), withoutEnlargement: true })
-        .avif({ quality: opts.quality ?? 45, effort: 9, chromaSubsampling: "4:2:0" })
+        .avif({ quality: opts.quality ?? 45, effort: 9, chromaSubsampling: opts.alpha ? "4:4:4" : "4:2:0" })
         .toBuffer({ resolveWithObject: true });
       return {
         uri: `data:image/avif;base64,${out.data.toString("base64")}`,

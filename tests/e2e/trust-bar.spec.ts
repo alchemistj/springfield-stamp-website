@@ -42,6 +42,24 @@ test.describe("trust bar at 390px", () => {
 
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBeLessThanOrEqual(0);
+
+      const paint = await bar.evaluate((el) => {
+        const s = getComputedStyle(el);
+        return {
+          bg: s.backgroundColor,
+          color: s.color,
+          borderTopWidth: s.borderTopWidth,
+          borderBottomWidth: s.borderBottomWidth,
+          borderBottomStyle: s.borderBottomStyle,
+        };
+      });
+      expect(paint.bg).toBe("rgb(22, 26, 29)");
+      expect(paint.color).toBe("rgb(255, 255, 255)");
+      expect(parseFloat(paint.borderTopWidth)).toBeGreaterThanOrEqual(3);
+      expect(parseFloat(paint.borderBottomWidth)).toBeGreaterThanOrEqual(3);
+      expect(paint.borderBottomStyle).toBe("solid");
+      const linkColor = await link.evaluate((el) => getComputedStyle(el).color);
+      expect(linkColor).toBe("rgb(250, 192, 94)");
     });
   }
 });
