@@ -1,8 +1,10 @@
 # Header photo options
 
-Five mockups for the homepage hero. Each one keeps name tags and replaces the stamps the shop does not sell with products from the client's own photos in `docs/header-candidates/source/`. The storefront behind them is the existing hero photo, with those old products painted out and the gold table redrawn.
+Five mockups for the homepage hero. Each one keeps name tags and replaces the stamps the shop does not sell with products from the client's own photos in `docs/header-candidates/source/`.
 
-Nothing under `src/` changes in this commit. The live hero stays as it is until one option is chosen. Wiring the chosen photo into the page (and keeping the inlined hero under 70 KB) is a later step.
+Josh picked option 4. That one is wired into the homepage hero (`src/assets/home-hero.jpg` and `home-hero-mobile.jpg`): the Robert Muse and Shryer name bars, the Regency desk sign, the red Casper tumbler, and the blue Trodat Printy 4913, sitting on the original gold table. The fresh homepage screenshots are `option-4/final-desktop.png` and `option-4/final-mobile.png`.
+
+The other four options stay here as the choices that were not picked. The contact page still uses `springfield-stamps4.jpg`, and the notary page still uses `springfield-stamps-mobile.jpg` for the journal photo.
 
 `scripts/header-options/build_options.py` cuts the products out and composites them. `scripts/header-options/shoot_mocks.mjs` temporarily swaps each scene into the built homepage, screenshots it, and restores `src/`.
 
