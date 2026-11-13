@@ -20,7 +20,11 @@ const text = (html: string) =>
       .replace(/<\/?(?:strong|b|em|span)\b[^>]*>/g, "")
       .replace(/<[^>]+>/g, " "),
   ).replace(/\s+/g, " ");
-const flat = (parts: Rich) => parts.map((p) => (typeof p === "string" ? p : p.strong)).join("");
+const flat = (parts: Rich | readonly Rich[]): string => {
+  const paras: readonly Rich[] = Array.isArray(parts[0]) ? (parts as readonly Rich[]) : [parts as Rich];
+  return paras.map((para) => para.map((p) => (typeof p === "string" ? p : p.strong)).join("")).join(" ");
+};
+const paragraphText = (body: string | readonly string[]): string => (typeof body === "string" ? body : body.join(" "));
 const norm = (s: string) => decode(s).replace(/\s+/g, " ").trim();
 const noData = (s: string) => s.replace(/data:[a-z/+-]+;base64,[A-Za-z0-9+/=]+/g, "data:");
 
@@ -52,7 +56,7 @@ const needles: Record<(typeof pages)[number]["key"], string[]> = {
     `${notaryStamp.hero.lead} ${notaryStamp.hero.accent}`,
     notaryStamp.intro,
     notaryStamp.products.title,
-    ...notaryStamp.products.items.flatMap((p) => [p.name, p.price, p.body]),
+    ...notaryStamp.products.items.flatMap((p) => [p.name, p.price, paragraphText(p.body)]),
     notaryStamp.requirements.title,
     notaryStamp.requirements.intro,
     ...notaryStamp.requirements.items,
@@ -67,7 +71,7 @@ const needles: Record<(typeof pages)[number]["key"], string[]> = {
     flat(magneticNameTags.intro.whether),
     magneticNameTags.find.title,
     magneticNameTags.find.lead,
-    ...magneticNameTags.find.rows.flatMap((r) => [r.title, r.body]),
+    ...magneticNameTags.find.rows.flatMap((r) => [r.title, paragraphText(r.body)]),
     magneticNameTags.unique.title,
     flat(magneticNameTags.unique.body),
     magneticNameTags.unique.contact,

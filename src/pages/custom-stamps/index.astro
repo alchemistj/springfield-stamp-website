@@ -77,7 +77,11 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
               ctaHref={r.cta?.href}
               ctaLabel={r.cta?.label}
             >
-              <Rich parts={r.body} />
+              {r.body.map((para) => (
+                <p>
+                  <Rich parts={para} />
+                </p>
+              ))}
             </ProductRow>
           ))
         }

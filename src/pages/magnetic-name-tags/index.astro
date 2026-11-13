@@ -72,7 +72,9 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
           {
             d.find.rows.map((r, i) => (
               <ProductRow title={r.title} image={rowImages[r.image]} reverse={i % 2 === 1} minHeight={rowHeights[i]} fit="contain" upperTitle titleWeight={500}>
-                {r.body}
+                {(Array.isArray(r.body) ? r.body : [r.body]).map((para) => (
+                  <p>{para}</p>
+                ))}
               </ProductRow>
             ))
           }
