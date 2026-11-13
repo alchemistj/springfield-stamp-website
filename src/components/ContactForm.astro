@@ -1,0 +1,267 @@
+---
+// The contact form: the live Gravity Form's fields (Name first/last, Email, Phone, Message) plus a hidden honeypot.
+// Posts to Central Forms per docs/sop/central-forms-contact-form.md section 4 (see src/lib/forms.ts for the transport).
+// Without JavaScript the button stays disabled and a "call us" line shows (SOP 4f).
+import { contact, formMessages } from "../data/contact";
+import { site } from "../data/site";
+
+const f = contact.form;
+const phone = site.phone;
+---
+
+<form class="cf" id="contact-form" data-contact-form>
+  <div class="field">
+    <span class="label" id="name-label">{f.nameLabel}</span>
+    <div class="name-row" role="group" aria-labelledby="name-label">
+      <div>
+        <input type="text" name="first" id="cf-first" autocomplete="given-name" maxlength="100" aria-describedby="cf-first-l" />
+        <label class="sub" for="cf-first" id="cf-first-l">{f.firstLabel}</label>
+      </div>
+      <div>
+        <input type="text" name="last" id="cf-last" autocomplete="family-name" maxlength="100" aria-describedby="cf-last-l" />
+        <label class="sub" for="cf-last" id="cf-last-l">{f.lastLabel}</label>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label" for="cf-email">{f.emailLabel}</label>
+    <input type="email" name="email" id="cf-email" autocomplete="email" maxlength="320" />
+  </div>
+  <div class="field">
+    <label class="label" for="cf-phone">{f.phoneLabel}</label>
+    <input type="tel" name="phone" id="cf-phone" autocomplete="tel" maxlength="50" />
+  </div>
+  <div class="field">
+    <label class="label" for="cf-message">{f.messageLabel}</label>
+    <textarea name="message" id="cf-message" rows="10" maxlength="5000"></textarea>
+  </div>
+  <div class="hp" aria-hidden="true">
+    <label for="cf-website">{f.honeypotLabel}</label>
+    <input type="text" name="website_url" id="cf-website" tabindex="-1" autocomplete="off" />
+    <span>{f.honeypotNote}</span>
+  </div>
+  <button type="submit" class="submit" disabled data-submit>{f.submit}</button>
+  <p class="status" role="status" aria-live="polite" data-status></p>
+  <p class="loading" data-loading>{formMessages.loading} <a href={phone.tel}>{phone.display}</a></p>
+  <noscript><p class="status">{formMessages.noscript} <a href={phone.tel}>{phone.display}</a>.</p></noscript>
+</form>
+
+<script>
+  import { SubmissionAttempt, hasContactMethod, resolveEndpoint, submitLead, type FormValues } from "../lib/forms";
+  import { trackLeadFormSuccess } from "../lib/attribution/bootstrap";
+  import { attributionEnvelope } from "../lib/attribution/storage";
+  import { formMessages } from "../data/contact";
+  import { site } from "../data/site";
+
+  const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+  if (form) {
+    const submit = form.querySelector<HTMLButtonElement>("[data-submit]")!;
+    const status = form.querySelector<HTMLElement>("[data-status]")!;
+    const loading = form.querySelector<HTMLElement>("[data-loading]")!;
+    const attempt = new SubmissionAttempt();
+    let startedAt = Date.now();
+    let touched = false;
+    form.addEventListener(
+      "input",
+      () => {
+        if (!touched) {
+          touched = true;
+          startedAt = Date.now();
+        }
+      },
+      { once: true },
+    );
+
+    const say = (text: string, kind: "ok" | "error" | "info", withPhone = false) => {
+      status.textContent = text;
+      status.dataset["kind"] = kind;
+      if (withPhone) {
+        const a = document.createElement("a");
+        a.href = site.phone.tel;
+        a.textContent = site.phone.display;
+        status.append(" ", a, ".");
+      }
+    };
+    const val = (name: string) => (form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement).value;
+
+    loading.hidden = true;
+    submit.disabled = false;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (submit.disabled) return;
+      const values: FormValues = {
+        first: val("first"),
+        last: val("last"),
+        email: val("email"),
+        phone: val("phone"),
+        message: val("message"),
+        honeypot: val("website_url"),
+      };
+      if (!hasContactMethod(values)) {
+        say(formMessages.invalid, "error", true);
+        return;
+      }
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      // localhost and any other non-production, non-preview host posts nothing.
+      if (resolveEndpoint(location.hostname).kind === "none") {
+        say(formMessages.preview, "info");
+        return;
+      }
+      submit.disabled = true;
+      say(formMessages.sending, "info");
+      const result = await submitLead(values, {
+        hostname: location.hostname,
+        fetchImpl: (input, init) => fetch(input, init),
+        attempt,
+        ctx: {
+          formStartedAt: startedAt,
+          now: Date.now(),
+          pageUrl: location.href,
+          search: location.search,
+          referrer: document.referrer,
+          attribution: attributionEnvelope(document.cookie),
+        },
+        onLeadAccepted: (id) => trackLeadFormSuccess(id),
+      });
+      submit.disabled = false;
+      switch (result.kind) {
+        case "success":
+          form.reset();
+          touched = false;
+          startedAt = Date.now();
+          say(formMessages.success, "ok");
+          break;
+        case "invalid":
+          say(formMessages.invalid, "error", true);
+          break;
+        case "rate_limited":
+          say(formMessages.rateLimited, "error", true);
+          break;
+        case "unconfirmed":
+          say(formMessages.unconfirmed, "error", true);
+          break;
+        case "not_sent":
+          say(formMessages.preview, "info");
+          break;
+      }
+    });
+  }
+</script>
+
+<style>
+  .cf {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 41px 21px 40px;
+    background: #eee;
+    border-radius: 20px;
+    font-family: var(--font-body);
+    color: #112337;
+  }
+  .field {
+    margin-bottom: 40px;
+  }
+  .field:has(textarea) {
+    margin-bottom: 25px;
+  }
+  .label {
+    display: block;
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #112337;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0 8px;
+    font: 400 15px/36px var(--font-body);
+    color: #112337;
+    background: #fff;
+    border: 1px solid #686e77;
+    border-radius: 3px;
+    height: 38px;
+  }
+  textarea {
+    height: 288px;
+    padding: 8px;
+    line-height: 22px;
+    resize: vertical;
+  }
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #204ce5;
+    outline-offset: 1px;
+  }
+  .name-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 11px 15px;
+  }
+  .sub {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 19px;
+    color: rgba(17, 35, 55, 0.65);
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .submit {
+    display: inline-block;
+    padding: 0 17px;
+    height: 38px;
+    font: 400 14px/38px var(--font-body);
+    color: #fff;
+    background: var(--color-ss-red);
+    border: 0;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .status,
+  .loading {
+    margin: 14px 0 0;
+    font-size: 15px;
+    line-height: 22px;
+    color: #112337;
+  }
+  .status:empty {
+    display: none;
+  }
+  .status[data-kind="error"] {
+    color: #8b0d1a;
+  }
+  .status[data-kind="ok"] {
+    color: #1d5b2b;
+  }
+  .status a,
+  .loading a {
+    color: inherit;
+    font-weight: 700;
+  }
+  @media (min-width: 768px) {
+    .name-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

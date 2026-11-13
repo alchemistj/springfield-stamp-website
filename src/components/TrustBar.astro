@@ -1,0 +1,163 @@
+---
+// Full-width trust bar directly under the hero on every page (after `.atf`, so it is not part of
+// the first-frame gate). Copy comes from `trustBar` in src/data/site.ts. No client JS.
+import { site, trustBar } from "../data/site";
+import Icon from "./Icon.astro";
+---
+
+<aside class="trust-bar" aria-label="Springfield Stamp">
+  <div class="trust-in">
+    <p class="trust-line">
+      {
+        trustBar.line1.map((item, i) => (
+          <>
+            {i > 0 && (
+              <span class="sep" aria-hidden="true">
+                ·
+              </span>
+            )}
+            <span class="item">{item}</span>
+          </>
+        ))
+      }
+    </p>
+    <p class="trust-line">
+      <span class="item place">
+        <Icon name="pin" class="trust-ico" />
+        <span class="place-text">
+          {
+            trustBar.place.endsWith("Springfield, MO") ? (
+              <>
+                {trustBar.place.slice(0, -"Springfield, MO".length)}
+                <span class="place-city">Springfield, MO</span>
+              </>
+            ) : (
+              trustBar.place
+            )
+          }
+        </span>
+      </span>
+      <span class="sep" aria-hidden="true">·</span>
+      <span class="item call">
+        {trustBar.call}{" "}
+        <a href={site.phone.tel}>
+          <Icon name="phone" class="trust-ico" />
+          {site.phone.display}
+        </a>
+      </span>
+    </p>
+  </div>
+</aside>
+
+<style>
+  .trust-bar {
+    background: var(--color-ss-surface);
+    color: var(--color-ss-ink);
+    border-top: 3px solid var(--color-ss-red);
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 22px;
+    text-align: center;
+  }
+  .trust-in {
+    box-sizing: border-box;
+    width: min(1080px, 100%);
+    margin: 0 auto;
+    padding: 8px 16px 10px;
+  }
+  .trust-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+    margin: 0;
+  }
+  .trust-line + .trust-line {
+    margin-top: 2px;
+  }
+  .item {
+    max-width: 100%;
+  }
+  .sep {
+    display: none;
+  }
+  .place {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    max-width: 100%;
+  }
+  .place-text {
+    min-width: 0;
+  }
+  /* Keep the city and state on one line at 390px. "MO" was wrapping onto a line by itself. */
+  .place-city {
+    white-space: nowrap;
+  }
+  .call {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .trust-bar a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-sizing: border-box;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 8px;
+    color: var(--color-ss-maroon);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .trust-bar :global(.trust-ico) {
+    flex: none;
+    width: 16px;
+    height: 16px;
+  }
+  .place :global(.trust-ico) {
+    margin-top: 3px;
+  }
+
+  @media (min-width: 1024px) {
+    .trust-bar {
+      font-size: 16px;
+      line-height: 24px;
+    }
+    .trust-in {
+      padding: 12px 20px 14px;
+    }
+    .trust-line {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0;
+    }
+    .trust-line + .trust-line {
+      margin-top: 2px;
+    }
+    .sep {
+      display: inline;
+      margin: 0 0.55em;
+      color: var(--color-ss-maroon);
+    }
+    .place {
+      align-items: center;
+    }
+    .place :global(.trust-ico) {
+      margin-top: 0;
+    }
+    .trust-bar a {
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+    }
+  }
+</style>

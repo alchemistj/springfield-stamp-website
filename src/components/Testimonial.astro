@@ -1,0 +1,83 @@
+---
+// Testimonial card (frosted white card with the yellow quote mark). Copy exactly as written;
+// the live site shows first name + last initial and a job title. No star or review markup.
+//   <Testimonial quote="..." name="Sarah B." role="Business Owner" />
+import { Image } from "astro:assets";
+import quoteMark from "../assets/springfield-stamp-testimonial.png";
+
+interface Props {
+  quote: string;
+  name: string;
+  role: string;
+}
+const { quote, name, role } = Astro.props;
+---
+
+<figure class="card">
+  <Image class="mark" src={quoteMark} alt="" width={48} height={48} densities={[1, 2]} format="webp" />
+  <blockquote class="quote"><p>{quote}</p></blockquote>
+  <figcaption class="cap">
+    <strong class="name">{name}</strong>
+    <span class="role">{role}</span>
+  </figcaption>
+</figure>
+
+<style>
+  .card {
+    position: relative;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 30px 30px 41px;
+    background: rgba(255, 255, 255, 0.65);
+    border-radius: 10px;
+    color: #323232;
+    font-family: var(--font-heading);
+  }
+  .mark {
+    display: block;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 21px;
+  }
+  .quote {
+    margin: 0;
+  }
+  .quote p {
+    margin: 0;
+    padding: 0 0 30px;
+    font-size: 18px;
+    line-height: 27px;
+  }
+  .cap {
+    display: block;
+    line-height: 22.5px;
+    font-weight: 600;
+  }
+  .name {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .role {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  @media (min-width: 1024px) {
+    .card {
+      min-height: 337px;
+    }
+    .mark {
+      position: absolute;
+      top: -21px;
+      left: 24px;
+      margin: 0;
+    }
+    .card {
+      padding-bottom: 10px;
+    }
+    .quote p {
+      padding: 1px 0 24px;
+    }
+  }
+</style>

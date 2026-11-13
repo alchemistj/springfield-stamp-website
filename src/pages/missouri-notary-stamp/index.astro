@@ -1,0 +1,497 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HeroPhoto from "../../components/HeroPhoto.astro";
+import Button from "../../components/Button.astro";
+import Section from "../../components/Section.astro";
+import SectionTitle from "../../components/SectionTitle.astro";
+import Icon from "../../components/Icon.astro";
+import { Picture } from "astro:assets";
+import { routeByKey } from "../../lib/routes";
+import { notaryStamp as d } from "../../data/missouri-notary-stamp";
+import { site } from "../../data/site";
+import rectangle from "../../assets/springfield-stamps-rectangular.jpg";
+import circular from "../../assets/springfield-stamps-circular.jpg";
+import embosser from "../../assets/springfield-stamps-notary-embosser.jpg";
+import journal from "../../assets/springfield-stamps-mobile.jpg";
+
+const route = routeByKey("missouri-notary-stamp");
+const images = { rectangle, circular, embosser, journal };
+---
+
+<BaseLayout route={route} heroHeight={{ desktop: 490, mobile: 303 }}>
+  <HeroPhoto
+    slot="hero-photo"
+    desktop={{ file: "springfield-stamps-0522.png", width: 1440, cropAspect: 1440 / 490, quality: 55 }}
+    mobile={{ file: "springfield-hero-notary-stamps-1.png", width: 780, cropAspect: 390 / 303, cropX: 0.88, quality: 50 }}
+  />
+
+  <section slot="hero" class="hero" aria-labelledby="hero-title">
+    <div class="hero-body">
+      <div class="hero-in">
+        <h1 id="hero-title" class="h1">
+          <span class="dark">{d.hero.lead}</span>
+          <span class="red">{d.hero.accent}</span>
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <div class="notary-pg">
+    <Section tone="white" class="intro-sec" width={1080} padTop={[61, 17]} padBottom={[0, 20]}>
+      <p class="intro">{d.intro}</p>
+    </Section>
+
+    <Section tone="white" class="cards-sec" width={1080} padTop={[44, 26]} padBottom={[84, 45]}>
+      <SectionTitle as="h2">{d.products.title}</SectionTitle>
+      <div class="cards">
+        {
+          d.products.items.map((p) => (
+            <article class:list={["card", { "m-only": p.mobileOnly }]}>
+              <div class="pic">
+                <Picture src={images[p.image]} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[343, 686]} sizes="(min-width: 1024px) 343px, 90vw" quality={75} />
+              </div>
+              <div class="info">
+                <h3 class="name">{p.name}</h3>
+                <p class="price">{p.price}</p>
+                <div class="desc">
+                  {(Array.isArray(p.body) ? p.body : [p.body]).map((para, i, all) => (
+                    <p>
+                      {para}
+                      {p.mobileExtra && i === all.length - 1 && <span class="m-only-inline"> {p.mobileExtra}</span>}
+                    </p>
+                  ))}
+                </div>
+                <Button href={d.products.buy.href} weight={700} class="buy">{d.products.buy.label}</Button>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </Section>
+
+    <Section tone="surface" bg="#f7f7f7" class="req-sec" width={1080} padTop={[62, 41]} padBottom={[75, 17]}>
+      <SectionTitle as="h2">{d.requirements.title}</SectionTitle>
+      <p class="req-intro">{d.requirements.intro}</p>
+      <ul class="req-list">
+        {d.requirements.items.map((t) => <li>{t}</li>)}
+      </ul>
+      <p id="buy" class="req-outro">{d.requirements.outro}</p>
+    </Section>
+
+    <Section tone="maroon" class="buy-sec" width={1080} padTop={[56, 51]} padBottom={[78, 62]}>
+      <SectionTitle as="h2" tone="white">{d.buy.title}</SectionTitle>
+      <p class="buy-text">{d.buy.body}</p>
+      <div class="contact-lines">
+        <p class="cl"><Icon name="phone-alt" class="cl-ico" /><span>{site.phone.display}</span></p>
+        <p class="cl"><Icon name="mail" class="cl-ico" /><span>{site.email}</span></p>
+      </div>
+      <div class="buy-ctas">
+        <Button href={site.phone.tel} weight={700} class="cta">{d.buy.callLabel}</Button>
+        <Button href={`mailto:${site.email}`} weight={700} class="cta">{d.buy.emailLabel}</Button>
+      </div>
+    </Section>
+  </div>
+</BaseLayout>
+
+<style>
+  .notary-pg {
+    --gutter: 21px;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding-top: var(--hero-h);
+  }
+  .hero-body {
+    background: #fff;
+    padding: 34px 21px 50px;
+    border-bottom: 1px solid #e8e8e8;
+    text-align: center;
+  }
+  .h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 42px;
+    text-transform: uppercase;
+  }
+  .dark {
+    color: var(--color-ss-text);
+  }
+  .red {
+    color: #c81626;
+  }
+
+  .notary-pg :global(.section-title) {
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .notary-pg :global(.cards-sec .section-title),
+  .notary-pg :global(.req-sec .section-title) {
+    color: #c81626;
+  }
+
+  /* ---- Intro ---- */
+  .intro,
+  .req-intro,
+  .req-outro,
+  .buy-text {
+    margin: 0;
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 31.5px;
+    color: #151515;
+  }
+  .req-sec-note {
+    display: none;
+  }
+
+  /* ---- Product cards ---- */
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding-top: 10px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #f8f8f8;
+    border-radius: 20px;
+  }
+  .pic :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #fff;
+  }
+  .info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 21px 48px;
+    text-align: center;
+  }
+  .name {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 23px;
+    line-height: 30px;
+    color: #c81626;
+  }
+  .price {
+    margin: 0;
+    padding-bottom: 14px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 36px;
+    color: var(--color-ss-text);
+  }
+  .desc {
+    flex: 1;
+    margin: 0;
+    padding-bottom: 20px;
+    text-align: left;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 30px;
+    color: #151515;
+  }
+  .desc p {
+    margin: 0;
+  }
+  .desc p + p {
+    margin-top: 12px;
+  }
+  .m-only-inline {
+    display: inline;
+  }
+  .info :global(.buy) {
+    width: 160px;
+    padding: 14px 20px;
+    font-size: 18px;
+    line-height: 25px;
+    text-transform: uppercase;
+  }
+
+  /* ---- Requirements ---- */
+  .req-intro {
+    padding-top: 10px;
+    text-align: center;
+  }
+  .req-list {
+    margin: 0;
+    padding: 20px 0 14px;
+    list-style: none;
+  }
+  .req-list li {
+    position: relative;
+    margin: 0 0 14px;
+    padding-left: 36px;
+    font-family: var(--font-heading);
+    font-size: 17px;
+    line-height: 26.5px;
+    color: #151515;
+  }
+  .req-list li::before {
+    content: "";
+    position: absolute;
+    left: 1px;
+    top: 4px;
+    box-sizing: border-box;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #c81626;
+    border-radius: 50%;
+    background: radial-gradient(circle, #c81626 0 3px, transparent 3.5px);
+  }
+  .req-outro {
+    padding-top: 22px;
+    text-align: center;
+  }
+
+  /* ---- Buy band ---- */
+  .buy-text {
+    padding-top: 0;
+    text-align: center;
+    color: #fff;
+  }
+  .contact-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: max-content;
+    margin: 36px auto 30px;
+  }
+  .cl {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 19px;
+    line-height: 28px;
+    color: #fff;
+  }
+  .cl :global(.cl-ico) {
+    width: 24px;
+    height: 24px;
+    color: var(--color-ss-yellow);
+    fill: currentColor;
+  }
+  .buy-ctas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  .buy-ctas :global(.cta) {
+    width: 185px;
+    padding: 14px 20px;
+    font-size: 20px;
+    line-height: 22px;
+    text-transform: uppercase;
+  }
+
+  /* Mobile parity (below 1024px): live type sizes and spacing at 390px. */
+  @media (max-width: 1023px) {
+    .h1 {
+      font-size: 30px;
+    }
+    .cards {
+      gap: 50px;
+      padding-top: 16px;
+    }
+    .info {
+      padding: 43px 21px 52px;
+    }
+    .price {
+      padding-bottom: 18px;
+    }
+    .desc {
+      padding-bottom: 20px;
+      line-height: 30.6px;
+    }
+    .card:nth-child(1) .desc {
+      padding-bottom: 30px;
+    }
+    .card.m-only {
+      margin-top: -20px;
+    }
+    .card.m-only .info {
+      padding-top: 23px;
+    }
+    .notary-pg :global(.req-sec .section-title) {
+      max-width: 277px;
+      margin: 0 auto;
+      text-wrap: wrap;
+    }
+    .card:nth-child(2) .desc {
+      font-size: 17px;
+      line-height: 28.9px;
+    }
+    .req-list {
+      padding-bottom: 30px;
+    }
+    .buy-text {
+      padding-bottom: 20px;
+    }
+    .contact-lines {
+      gap: 53px;
+      margin: 27px auto 56px;
+    }
+    .cl {
+      gap: 20px;
+      font-size: 18px;
+    }
+    .buy-ctas :global(.cta) {
+      width: 204px;
+      padding: 18px 20px;
+      line-height: 21.6px;
+    }
+    .req-list li {
+      margin-bottom: 15px;
+      padding-left: 38px;
+      font-size: 18px;
+      line-height: 28.8px;
+    }
+    .req-list li::before {
+      top: 6px;
+    }
+    .notary-pg :global(.cards-sec .section-title) {
+      font-size: 25px;
+      line-height: 32.5px;
+    }
+    .notary-pg :global(.req-sec .section-title) {
+      font-size: 25px;
+      line-height: 35px;
+    }
+    .notary-pg :global(.buy-sec) {
+      --gutter: 26px;
+    }
+    .notary-pg :global(.buy-sec .section-title) {
+      font-size: 28px;
+      line-height: 36.4px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      height: var(--hero-h);
+      padding-top: 0;
+    }
+    .hero-body {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 0 20px 20px;
+      border-bottom: 0;
+      background: transparent;
+      text-align: left;
+    }
+    .hero-in {
+      width: min(var(--w-header), calc(100% - 40px));
+      margin: 0 auto;
+    }
+    .h1 {
+      max-width: 640px;
+      padding-bottom: 8px;
+      font-size: 41px;
+      line-height: 53px;
+    }
+    .dark,
+    .red {
+      display: block;
+    }
+    .dark {
+      width: 640px;
+    }
+    .notary-pg :global(.section-title) {
+      font-size: 33px;
+      line-height: 41.25px;
+    }
+    .cards {
+      flex-direction: row;
+      gap: 25px;
+      padding-top: 6px;
+    }
+    .card {
+      flex: 1 1 0;
+    }
+    .m-only {
+      display: none;
+    }
+    .m-only-inline {
+      display: none;
+    }
+    .info {
+      align-items: flex-start;
+      min-height: 587px;
+      padding: 43px 20px 26px;
+      text-align: left;
+    }
+    .name {
+      padding-bottom: 8px;
+      font-size: 24px;
+    }
+    .price {
+      padding-bottom: 20px;
+    }
+    .desc {
+      line-height: 30.5px;
+      font-size: 18px;
+    }
+    .info :global(.buy) {
+      margin-left: 27px;
+    }
+    .req-list {
+      width: 737px;
+      margin: 0 0 0 158px;
+      padding: 41px 0 22px 0;
+    }
+    .req-list li {
+      font-size: 18px;
+      line-height: 28px;
+      margin-bottom: 23px;
+      padding-left: 38px;
+    }
+    .req-intro {
+      padding-top: 4px;
+    }
+    .req-outro {
+      padding-top: 18px;
+    }
+    .buy-text {
+      width: 780px;
+      margin: 0 auto;
+    }
+    .contact-lines {
+      flex-direction: row;
+      gap: 62px;
+      margin: 60px auto 70px;
+    }
+    .cl {
+      font-size: 25px;
+      line-height: 36px;
+    }
+    .buy-ctas {
+      flex-direction: row;
+      justify-content: center;
+    }
+    .buy-ctas :global(.cta) {
+      width: 180px;
+      padding: 18px 15px;
+      font-size: 20px;
+    }
+  }
+</style>

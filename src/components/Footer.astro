@@ -1,0 +1,208 @@
+---
+// Site footer: white logo, INFORMATION links, CONTACT US (NAP) and SOCIAL (Facebook). Below the fold,
+// so the logo is a normal optimized image. Phone and email come from src/data/site.ts.
+import { Image } from "astro:assets";
+import { footer, site } from "../data/site";
+import logoWhite from "../assets/springfield-stamp-logo-white.png";
+import Icon from "./Icon.astro";
+---
+
+<footer class="site-footer">
+  <div class="ft-inner">
+    <div class="cols">
+      <div class="col col-logo">
+        <a href="/" aria-label="Springfield Stamp & Engraving: home">
+          <Image src={logoWhite} alt="springfield-stamps logo" width={240} height={78} densities={[1, 2]} format="webp" />
+        </a>
+      </div>
+      <div class="col col-info">
+        <p class="ft-heading">{footer.informationHeading}</p>
+        <ul class="ft-links">
+          {footer.links.map((l) => <li><a href={l.path}>{l.label}</a></li>)}
+        </ul>
+      </div>
+      <div class="col col-contact">
+        <p class="ft-heading">{footer.contactHeading}</p>
+        <ul class="ft-contact">
+          <li class="addr">
+            <Icon name="pin" class="ico" />
+            <span>
+              {site.legalName}<br />{site.address.street}<br />{site.address.city}, {site.address.region} {site.address.postalCode}
+            </span>
+          </li>
+          <li>
+            <Icon name="phone" class="ico" />
+            <a href={site.phone.tel}>{site.phone.footer}</a>
+          </li>
+          <li>
+            <Icon name="mail" class="ico" />
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col col-social">
+        <p class="ft-heading">{footer.socialHeading}</p>
+        <a class="fb" href={site.facebook} target="_blank" rel="noopener nofollow" aria-label="Springfield Stamp on Facebook">
+          <Icon name="facebook" />
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-ss-footer);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 23.1px;
+  }
+  .ft-inner {
+    box-sizing: border-box;
+    max-width: calc(var(--w-content) + 40px);
+    margin: 0 auto;
+    padding: 30px 19px 0;
+  }
+  .cols {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-bottom: 11px;
+    border-bottom: 1px solid var(--color-ss-footer-line);
+  }
+  .col-logo img {
+    display: block;
+    width: 240px;
+    height: auto;
+  }
+  .ft-heading {
+    margin: 43px 0 10px;
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 21px;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.97);
+  }
+  .ft-links,
+  .ft-contact {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .col-info .ft-heading {
+    margin-top: 29px;
+  }
+  .col-contact .ft-heading {
+    margin-top: 32px;
+  }
+  .ft-links li {
+    margin: 0;
+    padding: 3.5px 1px;
+    line-height: 26px;
+  }
+  .ft-links a {
+    color: #fff;
+    text-decoration: none;
+  }
+  .ft-links a:hover,
+  .ft-contact a:hover {
+    text-decoration: underline;
+  }
+  .ft-contact li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+  }
+  .ft-contact .addr {
+    padding-left: 14px;
+    margin-bottom: 8px;
+  }
+  .ft-contact .addr span {
+    padding-top: 0;
+  }
+  .ft-contact a {
+    color: var(--color-ss-yellow);
+    text-decoration: none;
+  }
+  .ft-contact :global(.ico) {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin-top: 3px;
+    color: var(--color-ss-red);
+  }
+  .fb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(to right bottom, var(--color-ss-red) 49%, rgba(23, 23, 22, 0.7) 49%, #aa1c29 50%);
+    color: #fff;
+  }
+  .fb :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+  .col-social .ft-heading {
+    margin-bottom: 14px;
+  }
+  .ft-inner::after {
+    content: "";
+    display: block;
+    height: 35px;
+  }
+
+  @media (min-width: 1024px) {
+    .ft-inner {
+      padding: 45px 0 0;
+      max-width: var(--w-content);
+    }
+    .cols {
+      display: grid;
+      grid-template-columns: 263px 232px 331px 174px;
+      padding-bottom: 21px;
+    }
+    .col-logo img {
+      width: 213px;
+    }
+    .ft-heading {
+      margin: 3px 0 15px;
+      font-size: 13px;
+      line-height: 22.75px;
+    }
+    .col-info .ft-heading {
+      margin-left: 1px;
+    }
+    .col-info {
+      padding-left: 0;
+    }
+    .ft-links li {
+      padding: 5.75px 1px;
+    }
+    .col-info .ft-heading {
+      margin-top: 3px;
+      margin-bottom: 1px;
+    }
+    .col-contact .ft-heading {
+      margin-top: 3px;
+      margin-bottom: 10px;
+    }
+    .ft-contact li {
+      margin-bottom: 11px;
+    }
+    .ft-contact .addr {
+      margin-bottom: 14px;
+    }
+    .col-social .ft-heading {
+      margin-bottom: 18px;
+    }
+    .ft-inner::after {
+      height: 41px;
+    }
+  }
+</style>

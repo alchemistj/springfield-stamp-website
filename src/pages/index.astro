@@ -1,0 +1,392 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroPhoto from "../components/HeroPhoto.astro";
+import Button from "../components/Button.astro";
+import Section from "../components/Section.astro";
+import SectionTitle from "../components/SectionTitle.astro";
+import ProductRows from "../components/ProductRows.astro";
+import ProductRow from "../components/ProductRow.astro";
+import Testimonial from "../components/Testimonial.astro";
+import FeatureRow from "../components/FeatureRow.astro";
+import Rich from "../components/Rich.astro";
+import { Picture } from "astro:assets";
+import { routeByKey } from "../lib/routes";
+import { home } from "../data/home";
+import { site } from "../data/site";
+import { aboutStorefront, homeIcons, homeProductImages } from "../lib/home-images";
+
+const route = routeByKey("home");
+// Live desktop row heights (px) and the text-panel shade of each row.
+const rowHeights = [399, 420, 400, 378, 350, 433];
+const [callLead = ""] = home.hero.callCta.label.split(site.phone.display);
+const iconFor = homeIcons;
+---
+
+<BaseLayout route={route} heroHeight={{ desktop: 562, mobile: 196 }}>
+  <HeroPhoto
+    slot="hero-photo"
+    alt="Blue Trodat Printy 4913 stamp, Regency desk sign, red engraved tumbler, and metal name bars on a gold table"
+    desktop={{ file: "home-hero.jpg", width: 1440, cropAspect: 1440 / 562, cropY: 0.38, quality: 55 }}
+    mobile={{ file: "home-hero-mobile.jpg", width: 748, quality: 55, position: "32% 50%" }}
+  />
+
+  <section slot="hero" class="hero" aria-labelledby="hero-title">
+    <div class="hero-body">
+      <div class="hero-in">
+        <p class="kicker">{home.hero.kicker}</p>
+        <h1 id="hero-title" class="h1">
+          {home.hero.h1Lead}<br class="mb" />
+          <span class="up">{home.hero.h1Rest}</span>
+        </h1>
+        <p class="sub">
+          {home.hero.sub[0]}<br class="db" />
+          {home.hero.sub[1]}
+        </p>
+        <div class="ctas">
+          <Button href={home.hero.callCta.href} size="hero" compact width={380}>{callLead}<span class="nowrap">{site.phone.display}</span></Button>
+          <Button href={home.hero.emailCta.href} size="hero" width={450}>{home.hero.emailCta.label}</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Section tone="surface" padTop={[81, 51]} padBottom={[80, 70]}>
+    <SectionTitle as="h2">{home.help.title}</SectionTitle>
+    <div class="help-gap"></div>
+    <ProductRows>
+      {
+        home.help.products.map((p, i) => (
+          <ProductRow
+            title={p.title}
+            image={p.image ? homeProductImages[p.image] : undefined}
+            imageAlt={p.imageAlt}
+            fit={p.fit}
+            reverse={i % 2 === 1}
+            minHeight={rowHeights[i]}
+            tone={i >= 4 ? "card-alt" : "card"}
+            padTop={i === 0 ? 30 : undefined}
+            ctaHref={p.cta?.href}
+            ctaLabel={p.cta?.label}
+            ctaTight={i === 1}
+            ctaWeight={p.image === "notaryEmbosser" ? 600 : 700}
+          >
+            {p.body.map((para) => (
+              <p>
+                <Rich parts={para} />
+              </p>
+            ))}
+          </ProductRow>
+        ))
+      }
+    </ProductRows>
+  </Section>
+
+  <Section tone="maroon" padTop={[81, 51]} padBottom={[79, 50]}>
+    <SectionTitle as="h2" tone="white">{home.workflow.title}</SectionTitle>
+    <p class="intro">{home.workflow.intro}</p>
+    <div class="cards">
+      {home.workflow.testimonials.map((t) => <Testimonial quote={t.quote} name={t.name} role={t.role} />)}
+    </div>
+    <p class="outro"><Rich parts={home.workflow.outro} /></p>
+    <div class="outro-cta">
+      <Button href={home.workflow.cta.href} size="xl" weight={600} width={400} shadow>{home.workflow.cta.label}</Button>
+    </div>
+  </Section>
+
+  <Section tone="white" padTop={[79, 51]} padBottom={[85, 41]}>
+    <SectionTitle as="h2">{home.why.title}</SectionTitle>
+    <div class="why">
+      {
+        home.why.items.map((f) => (
+          <FeatureRow title={f.title} icon={iconFor[f.icon]}>
+            <Rich parts={f.body} />
+          </FeatureRow>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section tone="about" width={1040} padTop={[80, 64]} padBottom={[80, 82]}>
+    <div class="about">
+      <div class="about-media">
+        <Picture
+          src={aboutStorefront}
+          alt=""
+          formats={["avif", "webp"]}
+          fallbackFormat="webp"
+          widths={[303, 513, 1026]}
+          sizes="(min-width: 1024px) 513px, 303px"
+          quality={75}
+        />
+      </div>
+      <div class="about-copy">
+        <SectionTitle as="h2" align="left">{home.about.title}</SectionTitle>
+        {home.about.body.map((para) => (
+          <p class="about-body">
+            <Rich parts={para} />
+          </p>
+        ))}
+        <div class="about-cta">
+          <Button href={home.about.cta.href} size="xl" weight={600} width={300} shadow>{home.about.cta.label}</Button>
+        </div>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  /* ---- Hero ---- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding-top: var(--hero-h);
+  }
+  .hero-body {
+    background: #fff;
+    padding: 36px 44px 35px;
+    text-align: center;
+  }
+  .hero-in {
+    max-width: 303px;
+    margin: 0 auto;
+  }
+  .kicker {
+    margin: 0;
+    padding-bottom: 20px;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 26px;
+    color: var(--color-ss-text);
+  }
+  .h1 {
+    margin: 0;
+    padding-bottom: 31px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 32.5px;
+    color: var(--color-ss-red);
+  }
+  .up {
+    text-transform: uppercase;
+  }
+  .sub {
+    margin: 0;
+    padding-bottom: 20px;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 27.9px;
+    color: var(--color-ss-text);
+  }
+  .db {
+    display: none;
+  }
+  /* Keep the phone number on one line; the label before it may wrap. */
+  .nowrap {
+    white-space: nowrap;
+  }
+  .ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 21px -1px 0;
+  }
+
+  /* ---- How we can help ---- */
+  .help-gap {
+    height: 21px;
+  }
+
+  /* ---- Workflow band ---- */
+  .intro {
+    margin: 0;
+    padding-bottom: 20px;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 19px;
+    line-height: 33.25px;
+  }
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  /* Live mobile card heights. */
+  .cards > :global(:nth-child(1)) {
+    min-height: 407px;
+  }
+  .cards > :global(:nth-child(2)) {
+    min-height: 449px;
+  }
+  .cards > :global(:nth-child(3)) {
+    min-height: 427px;
+  }
+  .outro {
+    margin: 31px 0 0;
+    padding: 0 0 20px;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 19px;
+    line-height: 33.25px;
+  }
+  .outro :global(strong) {
+    font-weight: 600;
+  }
+  .outro-cta {
+    padding-top: 17px;
+  }
+
+  /* ---- Why do business with us ---- */
+  .why {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding-top: 16px;
+  }
+
+  /* ---- About ---- */
+  .about {
+    display: flex;
+    flex-direction: column;
+  }
+  .about-media :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-card);
+  }
+  .about-copy {
+    padding-top: 41px;
+  }
+  .about-body {
+    margin: 0;
+    padding-bottom: 0;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 31.5px;
+    color: #151515;
+  }
+  .about-body + .about-body {
+    margin-top: 16px;
+  }
+  .about-body:last-of-type {
+    padding-bottom: 20px;
+  }
+  .about-body :global(strong) {
+    font-weight: 600;
+  }
+  .about-cta {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      height: var(--hero-h);
+      padding-top: 0;
+    }
+    .hero-body {
+      background: transparent;
+      padding: 37px 20px 0;
+      text-align: left;
+    }
+    .hero-in {
+      max-width: var(--w-hero);
+      margin: 0 auto;
+    }
+    .kicker,
+    .h1,
+    .sub {
+      max-width: 714px;
+    }
+    .kicker {
+      padding-bottom: 26px;
+      font-size: 24px;
+      line-height: 33.6px;
+      color: #fff;
+    }
+    .h1 {
+      padding-bottom: 27px;
+      font-size: 45px;
+      line-height: 56.25px;
+    }
+    .mb {
+      display: none;
+    }
+    .sub {
+      padding-bottom: 24px;
+      font-size: 22px;
+      line-height: 31.9px;
+      color: #fff;
+    }
+    .db {
+      display: inline;
+    }
+    .ctas {
+      gap: 11px;
+      margin: 0 0 0 -1px;
+    }
+
+    .help-gap {
+      height: 16px;
+    }
+
+    .cards {
+      flex-direction: row;
+      gap: 15px;
+      padding-top: 23px;
+    }
+    .cards > :global(*) {
+      flex: 1 1 0;
+      min-height: 337px !important;
+    }
+    .intro,
+    .outro {
+      width: 965px;
+      margin-left: 1px;
+    }
+    .intro {
+      margin-top: -8px;
+      padding-bottom: 24px;
+    }
+    .outro {
+      margin-top: 26px;
+      padding: 0 0 24px;
+    }
+    .outro-cta {
+      padding-top: 11px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .why {
+      gap: 50px;
+      padding-top: 23px;
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: 482px 513px;
+      column-gap: 45px;
+    }
+    .about-media {
+      order: 2;
+    }
+    .about-media :global(img) {
+      height: 100%;
+      object-fit: cover;
+    }
+    .about-copy {
+      order: 1;
+      padding-top: 1px;
+    }
+    .about-body:last-of-type {
+      padding-bottom: 24px;
+    }
+    .about-cta {
+      max-width: none;
+      margin: 0;
+    }
+  }
+</style>

@@ -1,0 +1,273 @@
+---
+// Site header: logo (inline palette PNG, 600x195, about 3.9 KB, so it is in the first frame),
+// "1-Day Service!" banner, phone pill, nav. Desktop shows the nav in a row. Below 1024px the header
+// is one row (logo left, hamburger right) with no phone pill; the number lives in the sticky call
+// bar (StickyCallBar.astro). The <details> hamburger opens the page links as a dropdown (no JS).
+import { headerNav, site } from "../data/site";
+import { logoImage } from "../lib/inline-image";
+import Icon from "./Icon.astro";
+
+interface Props {
+  /** Current page path, to mark the active link with aria-current. */
+  current?: string;
+  /** 1200px content width (live Custom Stamps, Name Tags, About and Contact pages) instead of the default 1080px. */
+  wide?: boolean;
+}
+const { current, wide = false } = Astro.props;
+const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
+---
+
+<header class:list={["site-header", { wide }]} style={wide ? "--w-header:1200px" : undefined}>
+  <div class="hd-inner">
+    <a class="logo" href="/" aria-label="Springfield Stamp & Engraving: home">
+      <img
+        src={logo.uri}
+        width={logo.width}
+        height={logo.height}
+        alt="springfield stamp logo"
+        decoding="sync"
+        data-logo-bytes={logo.bytes}
+      />
+    </a>
+    <p class="banner">{site.banner}</p>
+    <a class="phone-btn" href={site.phone.tel}>
+      <Icon name="phone-alt" class="phone-ico" />
+      <strong>{site.phone.display}</strong>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <ul>
+        {
+          headerNav.map((item) => (
+            <li>
+              <a href={item.path} aria-current={current === item.path ? "page" : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <details class="nav-mobile">
+      <summary aria-label="Menu">
+        <Icon name="menu" class="i-menu" />
+        <Icon name="close" class="i-close" />
+      </summary>
+      <nav aria-label="Primary (mobile)">
+        <ul>
+          {
+            headerNav.map((item) => (
+              <li>
+                <a href={item.path} aria-current={current === item.path ? "page" : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 10;
+    height: var(--header-h);
+    background: #fff;
+    box-shadow: var(--shadow-header);
+  }
+  .hd-inner {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: var(--w-header);
+  }
+  .logo {
+    display: block;
+    flex: none;
+    width: 220px;
+  }
+  .logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .banner {
+    display: none;
+    margin: 0;
+  }
+  .phone-btn {
+    position: absolute;
+    top: 143px;
+    left: 20px;
+    box-sizing: border-box;
+    display: none;
+    align-items: center;
+    gap: 16px;
+    width: 235px;
+    height: 41px;
+    padding: 0 23px;
+    border-radius: var(--radius-pill);
+    background: var(--color-ss-yellow);
+    color: #3a3a3a;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 21.6px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .phone-btn:hover {
+    transform: translateY(-1px);
+  }
+  .phone-btn strong {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .phone-btn :global(.phone-ico) {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    color: var(--color-ss-phone-icon);
+  }
+  .nav-desktop {
+    display: none;
+  }
+
+  /* Mobile menu */
+  .nav-mobile summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-right: -7px;
+    list-style: none;
+    cursor: pointer;
+    color: #111;
+  }
+  .nav-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+  .nav-mobile summary :global(svg) {
+    width: 33px;
+    height: 33px;
+  }
+  .nav-mobile:not([open]) :global(.i-close),
+  .nav-mobile[open] :global(.i-menu) {
+    display: none;
+  }
+  .nav-mobile nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: #fff;
+    box-shadow: var(--shadow-header);
+  }
+  .nav-mobile ul,
+  .nav-desktop ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .nav-mobile a {
+    display: block;
+    padding: 10px 32px;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 32px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: rgba(10, 10, 10, 0.85);
+  }
+
+  @media (min-width: 1024px) {
+    .hd-inner {
+      display: block;
+      padding: 0;
+      width: min(var(--w-header), calc(100% - 40px));
+      max-width: none;
+    }
+    .wide .hd-inner {
+      width: min(1200px, calc(100% - 40px));
+    }
+    .wide .logo {
+      width: 278px;
+    }
+    .logo {
+      position: absolute;
+      top: 25px;
+      left: 0;
+      width: 249px;
+    }
+    .banner {
+      position: absolute;
+      top: 24px;
+      right: 244px;
+      display: block;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 21px;
+      line-height: 36.75px;
+      color: #746b6a;
+      white-space: nowrap;
+    }
+    .phone-btn {
+      display: flex;
+      top: 22px;
+      right: 0;
+      left: auto;
+    }
+    .nav-mobile {
+      display: none;
+    }
+    .nav-desktop {
+      position: absolute;
+      top: 84px;
+      right: 10px;
+      display: block;
+    }
+    .nav-desktop ul {
+      display: flex;
+      gap: 24px;
+    }
+    .nav-desktop a {
+      display: block;
+      font-family: var(--font-heading);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 32px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(10, 10, 10, 0.85);
+    }
+    .nav-desktop a:hover,
+    .nav-desktop a[aria-current="page"] {
+      color: var(--color-ss-red);
+    }
+    /* Live site: a red bar under the current page's link (not shown on the home page). */
+    .nav-desktop a[aria-current="page"] {
+      position: relative;
+    }
+    .nav-desktop a[aria-current="page"]::after {
+      content: "";
+      position: absolute;
+      left: -10px;
+      right: -10px;
+      bottom: -5px;
+      height: 3px;
+      background: var(--color-ss-red);
+    }
+  }
+</style>

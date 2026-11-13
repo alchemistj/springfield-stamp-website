@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/* Muli (now Mulish) stays a self-hosted file with swap. The display font and the Poppins
+   weights used above the fold are inlined in the document head (src/lib/atf-fonts.ts)
+   with font-display: block. No preload, no Google Fonts. */
+@font-face {
+  font-family: "Muli";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("../assets/fonts/muli-var.woff2") format("woff2");
+}
+
+/* Design tokens: values read from the live site's Thrive CSS and computed styles. */
+@theme {
+  --color-ss-red: #fa1b2f;
+  --color-ss-maroon: #96101c;
+  --color-ss-yellow: #fac05e;
+  --color-ss-ink: #161a1d;
+  --color-ss-body: #6a6b6c;
+  --color-ss-text: #323232;
+  --color-ss-surface: #f2f2f2;
+  --color-ss-card: #e0e0e0;
+  --color-ss-card-alt: #e4e4e4;
+  --color-ss-about: #efefef;
+  --color-ss-footer: #161a1d;
+  --color-ss-footer-line: #282b2e;
+  --color-ss-phone-icon: #4f7942;
+
+  --font-display: "Hoarse Rough 02", "Arial Black", Impact, sans-serif;
+  --font-heading: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-body: "Muli", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+  --radius-pill: 100px;
+  --radius-card: 20px;
+  --shadow-header: 0 2px 30px rgba(0, 0, 0, 0.08);
+  --shadow-button: 0 8px 12px rgba(0, 0, 0, 0.13);
+  /* Layout widths (desktop). */
+  --w-header: 1080px;
+  --w-hero: 1160px;
+  --w-content: 1000px;
+  --w-about: 1040px;
+  /* Above-the-fold geometry, per breakpoint. Pages may override --hero-h on .atf. */
+  --header-h: 96px;
+  --gutter: 44px;
+  /* Sticky mobile call bar: 8px + 48px buttons + 8px + 1px border. Footer gets this much room below. */
+  --callbar-h: 65px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 134px;
+  }
+}
+
+/* Keep the fixed call bar (phones only) from covering the footer's last lines. */
+@media (max-width: 1023.98px) {
+  .site-footer {
+    padding-bottom: calc(var(--callbar-h) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+html {
+  background: #fff;
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--color-ss-body);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 27px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -64px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: #fff;
+  color: var(--color-ss-ink);
+  font: 600 16px/1.2 var(--font-heading);
+  border-radius: 6px;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The above-the-fold block stays invisible until its last element is parsed, then paints whole
+   (docs/sop/astro-first-frame-and-pagespeed.md section 2a). No transition on it. */
+.atf {
+  position: relative;
+  /* Pages set --hero-h-m / --hero-h-d (via BaseLayout's heroHeight prop); defaults match the live home hero. */
+  --hero-h: var(--hero-h-m, 196px);
+}
+@media (min-width: 1024px) {
+  .atf {
+    --hero-h: var(--hero-h-d, 562px);
+  }
+}
+.atf:not(:has(> .atf-ready)) {
+  visibility: hidden;
+}
+
+/* Early use of the inlined faces. See the note in BaseLayout. */
+.atf-font {
+  position: absolute;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-heading);
+  white-space: nowrap;
+}
+.atf-font-display {
+  font-family: var(--font-display);
+}
+.atf-font-500 {
+  font-weight: 500;
+}
+.atf-font-600 {
+  font-weight: 600;
+}
+.atf-font-700 {
+  font-weight: 700;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ss-ink);
+  outline-offset: 2px;
+}

@@ -1,0 +1,70 @@
+---
+// The inline hero photo, rendered FIRST inside the `.atf` block (see BaseLayout) so it is complete
+// in the first network chunk. Follows docs/sop/astro-first-frame-and-pagespeed.md sections 2 and 3:
+//   - AVIF data URI built at build time, inlined once per breakpoint (desktop <picture><source>, mobile <img>);
+//   - plain `position:absolute`, no anchor positioning, no preload, no fade/blur/swap;
+//   - eager / high / sync attributes and `data-ff-lcp-hero`.
+// Combined bytes of both images must stay at or under 70 KB (checked by tests/unit/hero-budget.test.ts).
+import { heroImage, type HeroOptions } from "../lib/inline-image";
+
+interface Variant extends HeroOptions {
+  /** Source file in src/assets/. */
+  file: string;
+  /** CSS object-position (default "50% 50%"). */
+  position?: string;
+}
+interface Props {
+  /** Image used from 1024px up. Omit to use one image for every width. */
+  desktop?: Variant;
+  /** Image used below 1024px (and the fallback for every width when `desktop` is omitted). */
+  mobile: Variant;
+  alt?: string;
+}
+const { desktop, mobile, alt = "" } = Astro.props;
+
+const [m, d] = await Promise.all([heroImage(mobile.file, mobile), desktop ? heroImage(desktop.file, desktop) : Promise.resolve(undefined)]);
+const vars = [
+  `--hero-pos-m:${mobile.position ?? "50% 50%"}`,
+  `--hero-pos:${desktop?.position ?? mobile.position ?? "50% 50%"}`,
+].join(";");
+---
+
+<picture class="atf-picture">
+  {d && <source media="(min-width: 1024px)" srcset={d.uri} width={d.width} height={d.height} />}
+  <img
+    class="atf-photo"
+    src={m.uri}
+    alt={alt}
+    width={m.width}
+    height={m.height}
+    loading="eager"
+    decoding="sync"
+    fetchpriority="high"
+    data-ff-lcp-hero
+    data-hero-bytes={m.bytes + (d?.bytes ?? 0)}
+    style={vars}
+  />
+</picture>
+
+<style is:global>
+  .atf-picture {
+    display: contents;
+  }
+  .atf-photo {
+    position: absolute;
+    left: 0;
+    top: var(--header-h);
+    z-index: 0;
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: var(--hero-h);
+    object-fit: cover;
+    object-position: var(--hero-pos-m, 50% 50%);
+  }
+  @media (min-width: 1024px) {
+    .atf-photo {
+      object-position: var(--hero-pos, 50% 50%);
+    }
+  }
+</style>

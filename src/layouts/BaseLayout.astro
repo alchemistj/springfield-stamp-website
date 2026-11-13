@@ -1,0 +1,107 @@
+---
+// Base layout for every page: head (SEO, canonical, Open Graph, JSON-LD, Google tag), the
+// above-the-fold `.atf` block (photo first, then header, then hero, then the `.atf-ready` marker),
+// the page content, and the footer.
+//
+//   <BaseLayout route={routeByKey("home")} heroHeight={{ desktop: 562, mobile: 196 }}>
+//     <HeroPhoto slot="hero-photo" mobile={...} desktop={...} />
+//     <section slot="hero"> ...H1... </section>
+//     ...page sections...
+//   </BaseLayout>
+//
+// Pages without a photo hero omit both slots; the header then sits alone in `.atf`.
+import "../styles/global.css";
+import { getImage } from "astro:assets";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import StickyCallBar from "../components/StickyCallBar.astro";
+import TrustBar from "../components/TrustBar.astro";
+import { SITE_URL } from "../data/site";
+import { atfFontCss } from "../lib/atf-fonts";
+import { canonicalUrl, type Route } from "../lib/routes";
+import { ogImages } from "../lib/images";
+import { breadcrumbSchema, jsonLd, localBusinessSchema } from "../lib/seo";
+
+interface Props {
+  route: Route;
+  /** Hero heights in px per breakpoint (default 562 desktop, 196 mobile). Sets --hero-h-d / --hero-h-m on .atf. */
+  heroHeight?: { desktop?: number; mobile?: number };
+  /** Use the 1200px header width (Custom Stamps, Name Tags, About, Contact on the live site). */
+  headerWide?: boolean;
+}
+const { route, heroHeight, headerWide = false } = Astro.props;
+
+const canonical = canonicalUrl(route.path);
+const og = await getImage({ src: ogImages[route.key], format: "jpeg", quality: 80 });
+const ogUrl = new URL(og.src, SITE_URL).toString();
+const atfStyle = [
+  heroHeight?.desktop ? `--hero-h-d:${heroHeight.desktop}px` : "",
+  heroHeight?.mobile ? `--hero-h-m:${heroHeight.mobile}px` : "",
+]
+  .filter(Boolean)
+  .join(";");
+const GTAG_ID = "GT-WK5CGGGZ";
+const gtagInline = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","${GTAG_ID}");`;
+const fontCss = atfFontCss();
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Fragment set:html={`<style>${fontCss}</style>`} />
+    <title>{route.title}</title>
+    <meta name="description" content={route.description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content={route.ogType} />
+    <meta property="og:title" content={route.title} />
+    <meta property="og:description" content={route.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Springfield Stamp" />
+    <meta property="og:image" content={ogUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <script type="application/ld+json" set:html={jsonLd(localBusinessSchema())} />
+    <script type="application/ld+json" set:html={jsonLd(breadcrumbSchema(route))} />
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`}></script>
+    <script is:inline set:html={gtagInline} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="atf" style={atfStyle || undefined}>
+      <!--
+        Chrome decodes an inlined face only once an element uses it. The H1 is after the hero
+        image, so without an earlier use the display face lands one frame after first paint on
+        a throttled phone. These boxes are 0×0 and sit inside .atf (still hidden until
+        .atf-ready). They are not a font preload and they add no download.
+      -->
+      <span class="atf-font atf-font-display" aria-hidden="true">A</span>
+      <span class="atf-font" aria-hidden="true">A</span>
+      <span class="atf-font atf-font-500" aria-hidden="true">A</span>
+      <span class="atf-font atf-font-600" aria-hidden="true">A</span>
+      <span class="atf-font atf-font-700" aria-hidden="true">A</span>
+      <slot name="hero-photo" />
+      <Header current={route.path} wide={headerWide} />
+      <slot name="hero" />
+      <span class="atf-ready" hidden></span>
+    </div>
+    <!-- After .atf-ready, outside .atf, so the first-frame gate does not include this bar. -->
+    <TrustBar />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <!-- Fixed to the bottom on phones. After .atf and the page content, so it never delays the first frame. -->
+    <StickyCallBar />
+    <!-- Journey beacons. A deferred module after the page, so it is not part of the first frame. -->
+    <script>
+      import { bootJourney } from "../lib/attribution/bootstrap";
+      bootJourney();
+    </script>
+  </body>
+</html>

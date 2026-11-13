@@ -1,0 +1,2 @@
+# Verbatim copies of the live WordPress HTML: keep byte-for-byte, skip whitespace checks.
+docs/reference/raw/** -whitespace
