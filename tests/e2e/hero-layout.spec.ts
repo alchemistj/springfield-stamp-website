@@ -70,12 +70,8 @@ test.describe("homepage hero", () => {
       expect(pair).not.toBeNull();
       expect(Math.abs(pair!.x + pair!.width / 2 - width / 2)).toBeLessThan(3);
 
-      // 1024 is the desktop breakpoint. The about row below the hero is a fixed 1040px
-      // grid from the existing page, so the scroll check starts at the widths in the spec.
-      if (width >= 1280) {
-        const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-        expect(overflow).toBeLessThanOrEqual(0);
-      }
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
     });
   }
 });

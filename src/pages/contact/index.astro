@@ -13,7 +13,7 @@ const route = routeByKey("contact");
 const c = contact;
 ---
 
-<BaseLayout route={route} headerWide heroHeight={{ desktop: 482, mobile: 607 }}>
+<BaseLayout route={route} heroHeight={{ desktop: 482, mobile: 607 }}>
   <HeroPhoto
     slot="hero-photo"
     desktop={{ file: "springfield-stamps4.jpg", width: 1440, cropAspect: 1440 / 482, cropY: 0.55, quality: 40 }}
@@ -21,7 +21,7 @@ const c = contact;
   />
 
   <section slot="hero" class="hero" aria-labelledby="contact-title">
-    <div class="hero-in">
+    <div class="hero-in content-col">
       <h1 id="contact-title" class="h1">{c.h1}</h1>
       <p class="lead">
         {c.intro.lead}<strong>{c.intro.strong}</strong>{c.intro.tail}<br />
@@ -38,8 +38,8 @@ const c = contact;
   </section>
 
   <section class="details">
-    <h2 class="details-h">{c.details.heading}</h2>
-    <div class="details-grid">
+    <h2 class="details-h content-col">{c.details.heading}</h2>
+    <div class="details-grid content-col">
       <address class="addr">
         <div class="row">
           <svg class="ico" viewBox="3 2 18 20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4 21V3h11v6h5v12h-6v-4h-3v4H4zm3-15v2h2V6H7zm4 0v2h2V6h-2zM7 11v2h2v-2H7zm4 0v2h2v-2h-2zM7 16v2h2v-2H7zm8-5v2h2v-2h-2zm0 4v2h2v-2h-2z"></path></svg>
@@ -65,7 +65,7 @@ const c = contact;
   </section>
 
   <section class="form-sec">
-    <h2 class="form-h">{c.form.heading}</h2>
+    <h2 class="form-h content-col">{c.form.heading}</h2>
     <ContactForm />
   </section>
 </BaseLayout>
@@ -82,10 +82,7 @@ const c = contact;
     overflow: hidden;
   }
   .hero-in {
-    box-sizing: border-box;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 50px 20px 0;
+    padding: 50px 0 0;
   }
   .h1 {
     margin: 0;
@@ -96,7 +93,6 @@ const c = contact;
     color: var(--color-ss-red);
   }
   .lead {
-    max-width: 310px;
     margin: 35px auto 0;
     font-family: var(--font-heading);
     font-size: 18px;
@@ -118,7 +114,6 @@ const c = contact;
     height: 36px;
   }
   .reach-t {
-    max-width: 200px;
     margin: 0;
     font-family: var(--font-display);
     font-size: 22px;
@@ -132,14 +127,12 @@ const c = contact;
     white-space: nowrap;
   }
   .plain {
-    max-width: 310px;
     margin: 39px auto 0;
     font-family: var(--font-heading);
     font-size: 18px;
     line-height: 28px;
   }
   .plain + .plain {
-    max-width: 300px;
     font-size: 20px;
     margin-top: 30px;
     line-height: 35px;
@@ -147,11 +140,10 @@ const c = contact;
 
   /* ---- Details ---- */
   .details {
-    padding: 39px 33px 0;
+    padding: 39px 0 0;
   }
   .details-h {
     margin: 0 auto;
-    max-width: 1000px;
     text-align: center;
     font-family: var(--font-heading);
     font-weight: 600;
@@ -165,7 +157,6 @@ const c = contact;
     flex-direction: column;
     gap: 34px;
     align-items: center;
-    max-width: 883px;
     margin: 45px auto 0;
   }
   .addr {
@@ -207,7 +198,7 @@ const c = contact;
 
   /* ---- Form ---- */
   .form-sec {
-    padding: 48px 33px 66px;
+    padding: 48px 0 66px;
   }
   .form-h {
     margin: 0 0 42px;
@@ -222,14 +213,13 @@ const c = contact;
 
   @media (min-width: 1024px) {
     .hero-in {
-      padding: 52px 40px 0 20px;
+      padding: 52px 0 0;
     }
     .h1 {
       font-size: 40px;
       line-height: 52px;
     }
     .lead {
-      max-width: none;
       margin: 49px 0 0;
       font-size: 20px;
       line-height: 33px;
@@ -247,13 +237,11 @@ const c = contact;
       line-height: 36px;
     }
     .plain {
-      max-width: none;
       margin: 31px 0 0;
       font-size: 20px;
       line-height: 30px;
     }
     .plain + .plain {
-      max-width: none;
       font-size: 20px;
       margin-top: 31px;
       line-height: 30px;
@@ -263,7 +251,7 @@ const c = contact;
       margin-right: 0;
     }
     .reach-t {
-      max-width: none;
+      flex: 1 1 auto;
     }
     .reach + .plain {
       margin-top: 32px;
@@ -291,11 +279,16 @@ const c = contact;
       margin-top: 51px;
     }
     .addr {
-      flex: none;
+      flex: 1 1 55%;
       align-self: center;
-      width: 423px;
+      width: auto;
+      min-width: 0;
       padding: 12px 0 0 3px;
       box-sizing: border-box;
+    }
+    .map-col {
+      flex: 0 0 42%;
+      max-width: 42%;
     }
     .form-sec {
       padding: 49px 0 66px;

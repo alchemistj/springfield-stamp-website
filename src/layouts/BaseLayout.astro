@@ -26,10 +26,8 @@ interface Props {
   route: Route;
   /** Hero heights in px per breakpoint (default 562 desktop, 196 mobile). Sets --hero-h-d / --hero-h-m on .atf. */
   heroHeight?: { desktop?: number; mobile?: number };
-  /** Use the 1200px header width (Custom Stamps, Name Tags, About, Contact on the live site). */
-  headerWide?: boolean;
 }
-const { route, heroHeight, headerWide = false } = Astro.props;
+const { route, heroHeight } = Astro.props;
 
 const canonical = canonicalUrl(route.path);
 const og = await getImage({ src: ogImages[route.key], format: "jpeg", quality: 80 });
@@ -86,7 +84,7 @@ const fontCss = atfFontCss();
       <span class="atf-font atf-font-600" aria-hidden="true">A</span>
       <span class="atf-font atf-font-700" aria-hidden="true">A</span>
       <slot name="hero-photo" />
-      <Header current={route.path} wide={headerWide} />
+      <Header current={route.path} />
       <slot name="hero" />
       <span class="atf-ready" hidden></span>
     </div>

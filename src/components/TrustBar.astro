@@ -66,9 +66,9 @@ import Icon from "./Icon.astro";
   }
   .trust-in {
     box-sizing: border-box;
-    width: min(1080px, 100%);
+    width: min(var(--content-max), calc(100% - 2 * var(--content-pad)));
     margin: 0 auto;
-    padding: 16px 18px 18px;
+    padding: 16px 0 18px;
   }
   .trust-line {
     display: flex;
@@ -136,7 +136,7 @@ import Icon from "./Icon.astro";
       line-height: 24px;
     }
     .trust-in {
-      padding: 18px 24px 20px;
+      padding: 18px 0 20px;
     }
     .trust-line {
       flex-direction: row;

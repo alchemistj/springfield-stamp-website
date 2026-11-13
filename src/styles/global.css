@@ -37,14 +37,16 @@
   --radius-card: 20px;
   --shadow-header: 0 2px 30px rgba(0, 0, 0, 0.08);
   --shadow-button: 0 8px 12px rgba(0, 0, 0, 0.13);
-  /* Layout widths (desktop). */
-  --w-header: 1080px;
-  --w-hero: 1160px;
-  --w-content: 1000px;
-  --w-about: 1040px;
+  /* One readable column (Rule 4). Backgrounds may be full-bleed; text stays in this column. */
+  --content-max: 900px;
+  --content-pad: 24px;
+  --w-header: var(--content-max);
+  --w-hero: var(--content-max);
+  --w-content: var(--content-max);
+  --w-about: var(--content-max);
   /* Above-the-fold geometry, per breakpoint. Pages may override --hero-h on .atf. */
   --header-h: 96px;
-  --gutter: 44px;
+  --gutter: var(--content-pad);
   /* Sticky mobile call bar: 8px + 48px buttons + 8px + 1px border. Footer gets this much room below. */
   --callbar-h: 65px;
 }
@@ -81,6 +83,13 @@ body {
 img {
   max-width: 100%;
   height: auto;
+}
+
+/* Shared readable column. Full-bleed bands keep their background; the words use this. */
+.content-col {
+  box-sizing: border-box;
+  width: min(var(--content-max), calc(100% - 2 * var(--content-pad)));
+  margin-inline: auto;
 }
 
 a {
