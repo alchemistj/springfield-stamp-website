@@ -88,8 +88,10 @@ const fontCss = atfFontCss();
       <slot name="hero" />
       <span class="atf-ready" hidden></span>
     </div>
-    <!-- After .atf-ready, outside .atf, so the first-frame gate does not include this bar. -->
+    <!-- After .atf-ready, outside .atf. .trust-ready is the marker that releases the hero and
+         the bar together; see the rule in global.css. -->
     <TrustBar />
+    <span class="trust-ready" hidden></span>
     <main id="main">
       <slot />
     </main>

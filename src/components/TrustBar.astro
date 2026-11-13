@@ -1,6 +1,7 @@
 ---
-// Full-width trust bar directly under the hero on every page (after `.atf`, so it is not part of
-// the first-frame gate). Copy comes from `trustBar` in src/data/site.ts. No client JS.
+// Full-width trust bar directly under the hero on every page (after `.atf`). The `.trust-ready`
+// marker in BaseLayout holds the hero and this bar until the bar has been parsed. Copy comes
+// from `trustBar` in src/data/site.ts. No client JS.
 import { site, trustBar } from "../data/site";
 import Icon from "./Icon.astro";
 ---

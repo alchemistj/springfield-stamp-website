@@ -271,7 +271,7 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     .hd-inner {
       display: block;
       padding: 0;
-      width: min(var(--content-max), calc(100% - 2 * var(--content-pad)));
+      width: min(var(--w-header), calc(100% - 2 * var(--content-pad)));
       max-width: none;
     }
     .logo {
@@ -309,7 +309,7 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     }
     .nav-desktop ul {
       display: flex;
-      gap: 24px;
+      gap: 16px;
     }
     .nav-desktop a {
       display: block;
@@ -337,6 +337,13 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
       bottom: -5px;
       height: 3px;
       background: var(--color-ss-red);
+    }
+  }
+
+  /* From 1280px the 1200px bar has room for the original nav spacing. */
+  @media (min-width: 1280px) {
+    .nav-desktop ul {
+      gap: 24px;
     }
   }
 </style>

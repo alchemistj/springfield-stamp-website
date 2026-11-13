@@ -165,14 +165,20 @@ const route = routeByKey("about");
       padding-top: 0;
       text-align: left;
     }
+    /* The photo's yellow stripe cuts into the left side. The heading stays in the
+       dark area, so this box is narrower than the 900px column and the type steps
+       down where the wedge is too narrow for "SPRINGFIELD" at 40px. */
     .hero-in {
+      width: 230px;
+      margin-left: 24px;
+      margin-right: auto;
       background: transparent;
-      padding: 149px 0 0;
+      padding: 200px 0 0;
     }
     .kicker,
     .h1 {
-      font-size: 40px;
-      line-height: 56px;
+      font-size: 26px;
+      line-height: 36px;
     }
     .story {
       padding: 63px 0 67px;
@@ -205,6 +211,47 @@ const route = routeByKey("about");
       font-size: 27px;
       line-height: 43.2px;
       padding-bottom: 39px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .hero-in {
+      width: 260px;
+      margin-left: max(24px, calc((100% - var(--content-max)) / 2));
+      padding-top: 149px;
+    }
+    .kicker,
+    .h1 {
+      font-size: 30px;
+      line-height: 42px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .hero-in {
+      width: 290px;
+    }
+    .kicker,
+    .h1 {
+      font-size: 32px;
+      line-height: 44px;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .hero-in {
+      width: 350px;
+    }
+    .kicker,
+    .h1 {
+      font-size: 40px;
+      line-height: 56px;
+    }
+  }
+
+  @media (min-width: 1800px) {
+    .hero-in {
+      width: 520px;
     }
   }
 </style>

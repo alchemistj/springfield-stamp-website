@@ -40,7 +40,9 @@
   /* One readable column (Rule 4). Backgrounds may be full-bleed; text stays in this column. */
   --content-max: 900px;
   --content-pad: 24px;
-  --w-header: var(--content-max);
+  /* The header is its own bar. The logo, five nav links, the banner, and the phone
+     pill cannot share the 900px reading column without overlapping. */
+  --w-header: 1200px;
   --w-hero: var(--content-max);
   --w-content: var(--content-max);
   --w-about: var(--content-max);
@@ -136,6 +138,16 @@ a {
   }
 }
 .atf:not(:has(> .atf-ready)) {
+  visibility: hidden;
+  /* Stays its own rule. A matching declaration gets merged, and the build test looks for this selector. */
+  --atf-gate: 1;
+}
+
+/* The trust bar sits outside .atf, immediately after it. On a short hero it is inside the
+   measured first-frame band, and a chunk boundary between .atf-ready and the bar paints the
+   bar one frame late. Hold both until the marker after the bar is parsed. */
+body:not(:has(> .trust-ready)) .atf,
+body:not(:has(> .trust-ready)) .trust-bar {
   visibility: hidden;
 }
 
