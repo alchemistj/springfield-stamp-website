@@ -14,21 +14,19 @@ import { routeByKey } from "../lib/routes";
 import { home } from "../data/home";
 import { site } from "../data/site";
 import { aboutStorefront, homeIcons, homeProductImages } from "../lib/home-images";
-import { heroImage } from "../lib/inline-image";
 
 const route = routeByKey("home");
 // Live desktop row heights (px) and the text-panel shade of each row.
 const rowHeights = [399, 420, 400, 378, 350, 433];
 const [callLead = ""] = home.hero.callCta.label.split(site.phone.display);
 const iconFor = homeIcons;
-const products = await heroImage("home-hero-products.png", { width: 1000, quality: 68, alpha: true });
 ---
 
 <BaseLayout route={route} heroHeight={{ desktop: 562, mobile: 588 }}>
   <HeroPhoto
     slot="hero-photo"
     alt="Springfield Stamp & Engraving storefront"
-    desktop={{ file: "home-hero-bg.jpg", width: 1440, quality: 58, position: "40% center" }}
+    desktop={{ file: "docs/designer-header/springfield-stamps-header-textured.png", width: 2100, quality: 50, position: "right bottom" }}
     mobile={{ file: "home-hero-bg.jpg", width: 840, quality: 72, position: "36% 42%" }}
   />
 
@@ -49,16 +47,6 @@ const products = await heroImage("home-hero-products.png", { width: 1000, qualit
             <Button href={home.hero.callCta.href} size="hero" compact width={380}>{callLead}<span class="nowrap">{site.phone.display}</span></Button>
             <Button href={home.hero.emailCta.href} size="hero" width={450}>{home.hero.emailCta.label}</Button>
           </div>
-        </div>
-        <div class="hero-art">
-          <img
-            class="hero-products"
-            src={products.uri}
-            alt="Blue Trodat Printy 4913 stamp, Regency desk sign, red engraved tumbler, and metal name bars on a gold table"
-            width={products.width}
-            height={products.height}
-            decoding="sync"
-          />
         </div>
       </div>
     </div>
@@ -165,9 +153,6 @@ const products = await heroImage("home-hero-products.png", { width: 1000, qualit
   .hero-in {
     max-width: 303px;
     margin: 0 auto;
-  }
-  .hero-art {
-    display: none;
   }
   .kicker {
     margin: 0;
@@ -298,9 +283,22 @@ const products = await heroImage("home-hero-products.png", { width: 1000, qualit
     .hero {
       display: flex;
       align-items: center;
-      height: var(--hero-h);
       min-height: 0;
       padding-top: 0;
+    }
+    /* The designer photo is 2100×891. Matching that ratio shows the whole frame, so the
+       product group on the right is not cropped. right/bottom keeps it in frame if the
+       box is a pixel off. */
+    .hero,
+    :global(.atf .atf-photo) {
+      height: calc(100vw * 891 / 2100);
+    }
+    :global(.atf .atf-photo) {
+      object-position: right bottom;
+    }
+    /* The left half of the photo is already dark. Products stay on the right, undarkened. */
+    .hero::before {
+      background: none;
     }
     .hero-body {
       background: transparent;
@@ -310,58 +308,47 @@ const products = await heroImage("home-hero-products.png", { width: 1000, qualit
     }
     .hero-in {
       box-sizing: border-box;
-      display: grid;
-      /* 600px keeps the 45px headline to four lines at 1024px. Above that the columns share the row. */
-      grid-template-columns: minmax(600px, 1fr) minmax(0, 1fr);
-      column-gap: 24px;
-      align-items: center;
       width: min(1200px, calc(100% - 40px));
       max-width: none;
       margin-inline: auto;
     }
-    .hero-art {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 0;
-    }
-    .hero-products {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: calc(var(--hero-h) - 48px);
-      object-fit: contain;
+    /* Stay on the dark left side. The products begin at the horizontal midpoint. */
+    .hero-copy {
+      max-width: min(580px, calc(50vw - 48px));
     }
     .kicker,
     .h1,
     .sub {
-      max-width: 714px;
+      max-width: none;
     }
     .kicker {
-      padding-bottom: 26px;
-      font-size: 24px;
-      line-height: 33.6px;
+      padding-bottom: 8px;
+      font-size: 22px;
+      line-height: 30px;
       color: #fff;
     }
     .h1 {
-      padding-bottom: 27px;
-      font-size: 45px;
-      line-height: 56.25px;
+      padding-bottom: 8px;
+      font-size: 36px;
+      line-height: 44px;
     }
     .mb {
       display: none;
     }
     .sub {
-      padding-bottom: 24px;
-      font-size: 22px;
-      line-height: 31.9px;
+      padding-bottom: 8px;
+      font-size: 18px;
+      line-height: 26px;
       color: #fff;
+    }
+    .ctas :global(.btn-fixed) {
+      max-width: 100%;
     }
     .db {
       display: inline;
     }
     .ctas {
-      gap: 11px;
+      gap: 8px;
       margin: 0 0 0 -1px;
     }
 
@@ -424,6 +411,25 @@ const products = await heroImage("home-hero-products.png", { width: 1000, qualit
     .about-cta {
       max-width: none;
       margin: 0;
+    }
+  }
+
+  /* From 1280 the frame is tall enough for the original desktop type. */
+  @media (min-width: 1280px) {
+    .kicker {
+      padding-bottom: 26px;
+      font-size: 24px;
+      line-height: 33.6px;
+    }
+    .h1 {
+      padding-bottom: 27px;
+      font-size: 45px;
+      line-height: 56.25px;
+    }
+    .sub {
+      padding-bottom: 24px;
+      font-size: 22px;
+      line-height: 31.9px;
     }
   }
 </style>

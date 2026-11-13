@@ -14,7 +14,8 @@ export interface InlineImage {
   mime: string;
 }
 
-const assetPath = (file: string): string => path.resolve(process.cwd(), "src/assets", file);
+const assetPath = (file: string): string =>
+  file.startsWith("docs/") ? path.resolve(process.cwd(), file) : path.resolve(process.cwd(), "src/assets", file);
 
 export interface HeroOptions {
   /** Output width in CSS px x1 (the file is never upscaled). */

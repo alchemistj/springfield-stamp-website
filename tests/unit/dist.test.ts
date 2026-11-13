@@ -140,8 +140,8 @@ describe("build output", () => {
     const atf = body.slice(0, body.indexOf('class="atf-ready"'));
     const beforeHeader = body.slice(0, body.indexOf("<header"));
     const hero = [...atf.matchAll(/data:image\/avif;base64,([A-Za-z0-9+/=]+)/g)];
-    // Storefront background (mobile + desktop) and the desktop product cut-out, all inside .atf.
-    expect(hero.length).toBe(3);
+    // Mobile storefront and the desktop designer photo, both inside .atf.
+    expect(hero.length).toBe(2);
     expect(beforeHeader).toContain("data-ff-lcp-hero");
     const bytes = hero.reduce((s, m) => s + Buffer.from(m[1]!, "base64").length, 0);
     expect(bytes).toBeLessThanOrEqual(70 * 1024);

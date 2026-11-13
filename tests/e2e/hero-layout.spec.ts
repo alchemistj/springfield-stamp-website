@@ -9,9 +9,7 @@ test.describe("homepage hero", () => {
       await page.setViewportSize({ width, height: 844 });
       await page.goto("/", { waitUntil: "networkidle" });
 
-      const products = page.locator(".hero-products");
-      await expect(products).toHaveCount(1);
-      await expect(products).toBeHidden();
+      await expect(page.locator(".hero-products")).toHaveCount(0);
 
       const hero = page.locator(".hero");
       const pad = await hero.evaluate((el) => getComputedStyle(el).paddingTop);
@@ -45,21 +43,28 @@ test.describe("homepage hero", () => {
   }
 
   for (const width of desktopWidths) {
-    test(`desktop ${width}px: centred pair, product group fully inside the viewport`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 900 });
+    test(`desktop ${width}px: text on the dark left, product group inside the frame`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1200 });
       await page.goto("/", { waitUntil: "networkidle" });
 
-      const products = page.locator(".hero-products");
-      await expect(products).toBeVisible();
-      const fit = await products.evaluate((el) => getComputedStyle(el).objectFit);
-      expect(fit).toBe("contain");
+      await expect(page.locator(".hero-products")).toHaveCount(0);
 
-      const box = await products.boundingBox();
-      expect(box).not.toBeNull();
-      expect(box!.x).toBeGreaterThanOrEqual(-1);
-      expect(box!.x + box!.width).toBeLessThanOrEqual(width + 1);
-      expect(box!.width).toBeGreaterThan(200);
-      expect(box!.height).toBeGreaterThan(80);
+      const photo = page.locator(".atf-photo");
+      const fit = await photo.evaluate((el) => {
+        const s = getComputedStyle(el);
+        return { fit: s.objectFit, pos: s.objectPosition };
+      });
+      expect(fit.fit).toBe("cover");
+      expect(fit.pos).toBe("100% 100%");
+
+      const hero = await page.locator(".hero").boundingBox();
+      const copy = await page.locator(".hero-copy").boundingBox();
+      expect(hero).not.toBeNull();
+      expect(copy).not.toBeNull();
+      // The product group starts at the midpoint of the full-bleed photo.
+      expect(copy!.x + copy!.width).toBeLessThanOrEqual(width * 0.52);
+      expect(copy!.y).toBeGreaterThanOrEqual(hero!.y - 1);
+      expect(copy!.y + copy!.height).toBeLessThanOrEqual(hero!.y + hero!.height + 1);
 
       const pair = await page.locator(".hero-in").boundingBox();
       expect(pair).not.toBeNull();

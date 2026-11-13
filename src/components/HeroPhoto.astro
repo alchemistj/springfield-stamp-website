@@ -4,7 +4,7 @@
 //   - AVIF data URI built at build time, inlined once per breakpoint (desktop <picture><source>, mobile <img>);
 //   - plain `position:absolute`, no anchor positioning, no preload, no fade/blur/swap;
 //   - eager / high / sync attributes and `data-ff-lcp-hero`.
-// Combined inline hero bytes, including a product cut-out rendered later in `.atf`, stay at or under 70 KB.
+// Combined inline hero bytes (mobile and desktop) stay at or under 70 KB.
 import { heroImage, type HeroOptions } from "../lib/inline-image";
 
 interface Variant extends HeroOptions {
