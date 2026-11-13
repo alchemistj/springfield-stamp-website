@@ -70,7 +70,11 @@ const iconFor = homeIcons;
             ctaTight={i === 1}
             ctaWeight={p.image === "notaryEmbosser" ? 600 : 700}
           >
-            <Rich parts={p.body} />
+            {p.body.map((para) => (
+              <p>
+                <Rich parts={para} />
+              </p>
+            ))}
           </ProductRow>
         ))
       }
@@ -117,7 +121,11 @@ const iconFor = homeIcons;
       </div>
       <div class="about-copy">
         <SectionTitle as="h2" align="left">{home.about.title}</SectionTitle>
-        <p class="about-body"><Rich parts={home.about.body} /></p>
+        {home.about.body.map((para) => (
+          <p class="about-body">
+            <Rich parts={para} />
+          </p>
+        ))}
         <div class="about-cta">
           <Button href={home.about.cta.href} size="xl" weight={600} width={300} shadow>{home.about.cta.label}</Button>
         </div>
@@ -253,11 +261,17 @@ const iconFor = homeIcons;
   }
   .about-body {
     margin: 0;
-    padding-bottom: 20px;
+    padding-bottom: 0;
     font-family: var(--font-heading);
     font-size: 18px;
     line-height: 31.5px;
     color: #151515;
+  }
+  .about-body + .about-body {
+    margin-top: 16px;
+  }
+  .about-body:last-of-type {
+    padding-bottom: 20px;
   }
   .about-body :global(strong) {
     font-weight: 600;
@@ -367,7 +381,7 @@ const iconFor = homeIcons;
       order: 1;
       padding-top: 1px;
     }
-    .about-body {
+    .about-body:last-of-type {
       padding-bottom: 24px;
     }
     .about-cta {

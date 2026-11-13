@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",
-    "test": "vitest run && playwright test"
+    "test": "vitest run && playwright test",
+    "qa:paragraphs": "node scripts/qa/paragraphs.mjs http://127.0.0.1:4321 /tmp/paragraph-report.md"
   },
   "dependencies": {
     "@astrojs/vercel": "^8.2.11",

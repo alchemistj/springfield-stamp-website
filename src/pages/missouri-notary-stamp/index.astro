@@ -53,10 +53,14 @@ const images = { rectangle, circular, embosser, journal };
               <div class="info">
                 <h3 class="name">{p.name}</h3>
                 <p class="price">{p.price}</p>
-                <p class="desc">
-                  {p.body}
-                  {p.mobileExtra && <span class="m-only-inline"> {p.mobileExtra}</span>}
-                </p>
+                <div class="desc">
+                  {(Array.isArray(p.body) ? p.body : [p.body]).map((para, i, all) => (
+                    <p>
+                      {para}
+                      {p.mobileExtra && i === all.length - 1 && <span class="m-only-inline"> {p.mobileExtra}</span>}
+                    </p>
+                  ))}
+                </div>
                 <Button href={d.products.buy.href} weight={700} class="buy">{d.products.buy.label}</Button>
               </div>
             </article>
@@ -200,6 +204,12 @@ const images = { rectangle, circular, embosser, journal };
     font-size: 18px;
     line-height: 30px;
     color: #151515;
+  }
+  .desc p {
+    margin: 0;
+  }
+  .desc p + p {
+    margin-top: 12px;
   }
   .m-only-inline {
     display: inline;

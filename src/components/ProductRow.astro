@@ -72,7 +72,7 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
   </div>
   <div class:list={["copy", `tone-${tone}`]}>
     <Heading class="row-title">{title}</Heading>
-    <p class="row-body"><slot /></p>
+    <div class="row-body"><slot /></div>
     {ctaHref && ctaLabel && <Button href={ctaHref} weight={ctaWeight} tight={ctaTight} class="row-cta">{ctaLabel}</Button>}
   </div>
 </article>
@@ -107,6 +107,12 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
     font-size: 18px;
     line-height: 31.5px;
     color: var(--color-ss-ink);
+  }
+  .row-body :global(p) {
+    margin: 0;
+  }
+  .row-body :global(p + p) {
+    margin-top: 14px;
   }
   .row-body :global(strong) {
     font-weight: 600;

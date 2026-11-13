@@ -82,7 +82,10 @@ describe("build output", () => {
   it("home copy from src/data appears in the built HTML", () => {
     const text = visibleText(readText(pageFile("/")));
     const norm = (s: string) => decode(s).replace(/\s+/g, " ").trim();
-    const flat = (parts: readonly (string | { strong: string })[]) => parts.map((p) => (typeof p === "string" ? p : p.strong)).join("");
+    const flat = (parts: readonly (string | { strong: string })[] | readonly (readonly (string | { strong: string })[])[]) => {
+      const paras = Array.isArray(parts[0]) ? (parts as readonly (readonly (string | { strong: string })[])[]) : [parts as readonly (string | { strong: string })[]];
+      return paras.map((para) => para.map((p) => (typeof p === "string" ? p : p.strong)).join("")).join(" ");
+    };
     const needles = [
       home.hero.kicker,
       `${home.hero.h1Lead} ${home.hero.h1Rest}`,

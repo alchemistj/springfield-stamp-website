@@ -6,7 +6,8 @@ import type { Cta, Rich } from "./types";
 
 export interface TagRow {
   title: string;
-  body: string;
+  /** One string, or one string per paragraph when a row is split on sentence ends. */
+  body: string | readonly string[];
   image: "classic" | "logo" | "engraved" | "fullColor" | "photo";
 }
 export interface Benefit {
@@ -66,7 +67,11 @@ export const magneticNameTags: {
       },
       {
         title: "Magnetic Name Tags with Logo",
-        body: "Showcase your brand with a professional-looking logo. Upload your own logo or let our design team create one for you. Make a lasting impression whenever you meet someone new.",
+        body: [
+          "Showcase your brand with a professional-looking logo.",
+          "Upload your own logo or let our design team create one for you.",
+          "Make a lasting impression whenever you meet someone new.",
+        ],
         image: "logo",
       },
       {
