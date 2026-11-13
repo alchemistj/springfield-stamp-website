@@ -6,7 +6,8 @@ import type { Cta, Rich } from "./types";
 
 export interface HomeProduct {
   title: string;
-  body: Rich;
+  /** One entry per paragraph. Splits fall on sentence ends. */
+  body: readonly Rich[];
   /** Key into `src/lib/images.ts` `homeProductImages`. */
   image?: "customStamps" | "magneticNameTags" | "signs" | "deskNamePlates" | "awardsPlaques" | "notaryEmbosser";
   /** Alt text describing what the photo shows (empty for decorative). */
@@ -33,7 +34,7 @@ export const home: {
   help: { title: string; products: readonly HomeProduct[] };
   workflow: { title: string; intro: string; testimonials: readonly Testimonial[]; outro: Rich; cta: Cta };
   why: { title: string; items: readonly HomeFeature[] };
-  about: { title: string; body: Rich; cta: Cta };
+  about: { title: string; body: readonly Rich[]; cta: Cta };
 } = {
   hero: {
     kicker: "Make a Lasting Impression…",
@@ -51,9 +52,14 @@ export const home: {
       {
         title: "Custom Stamps",
         body: [
-          "Leave a lasting impression with ",
-          { strong: "custom stamps" },
-          " crafted to your exact specifications. Choose from self-inking stamps, rubber handstamps, logo stamps and address stamps in a variety of sizes, styles, and ink colors. Perfect for everyday tasks like signing documents, addressing envelopes, or personalizing packaging. Choose from classic or decorative designs, and let us create a stamp that reflects your unique style.",
+          [
+            "Leave a lasting impression with ",
+            { strong: "custom stamps" },
+            " crafted to your exact specifications.",
+          ],
+          ["Choose from self-inking stamps, rubber handstamps, logo stamps and address stamps in a variety of sizes, styles, and ink colors."],
+          ["Perfect for everyday tasks like signing documents, addressing envelopes, or personalizing packaging."],
+          ["Choose from classic or decorative designs, and let us create a stamp that reflects your unique style."],
         ],
         image: "customStamps",
         imageAlt: "Large Trodat professional stamp next to a small round self-inking stamp, with the banner \"Big to small, we have it all!\"",
@@ -63,9 +69,9 @@ export const home: {
       {
         title: "Name Tags",
         body: [
-          "Make introductions a breeze with ",
-          { strong: "professional-looking name tags" },
-          ". We offer high-quality printed tags, engraved tags, and ID badges. Our customizable options allow you to showcase your brand logo, personalize with employee names, and choose from various styles and materials to match your needs.",
+          ["Make introductions a breeze with ", { strong: "professional-looking name tags" }, "."],
+          ["We offer high-quality printed tags, engraved tags, and ID badges."],
+          ["Our customizable options allow you to showcase your brand logo, personalize with employee names, and choose from various styles and materials to match your needs."],
         ],
         image: "magneticNameTags",
         cta: { label: "Explore Magnetic Name Tags Here", href: "/magnetic-name-tags/" },
@@ -73,7 +79,8 @@ export const home: {
       {
         title: "Signs",
         body: [
-          "Custom metal and plastic signs, engraved or printed in the size you need. We can engrave or print your artwork, logos, and designs on room signs, max occupancy signs, ADA-compliant signs with braille, memorial signs, electrical tags, and parking lot signs, with standoff mounting available.",
+          ["Custom metal and plastic signs, engraved or printed in the size you need."],
+          ["We can engrave or print your artwork, logos, and designs on room signs, max occupancy signs, ADA-compliant signs with braille, memorial signs, electrical tags, and parking lot signs, with standoff mounting available."],
         ],
         image: "signs",
         imageAlt: "Engraved signs including an EXIT sign, Smoke Free Building plate and a frosted office sign on standoffs",
@@ -81,19 +88,19 @@ export const home: {
       {
         title: "Name Plates",
         body: [
-          { strong: "Elevate your workspace" },
-          " with professional and stylish custom-engraved metal and plastic ",
-          { strong: "name plates" },
-          ". Display them on your desk with traditional wooden or sleek modern metal bases. Mount them flush to doors, or let them float on architectural standoffs. You'll make a lasting impression on visitors and colleagues.",
+          [{ strong: "Elevate your workspace" }, " with professional and stylish custom-engraved metal and plastic ", { strong: "name plates" }, "."],
+          ["Display them on your desk with traditional wooden or sleek modern metal bases."],
+          ["Mount them flush to doors, or let them float on architectural standoffs."],
+          ["You'll make a lasting impression on visitors and colleagues."],
         ],
         image: "deskNamePlates",
       },
       {
         title: "Awards & Plaques",
         body: [
-          "Celebrate accomplishments and recognition with our premium ",
-          { strong: "custom awards" },
-          ". Choose from modern acrylic, elegant glass, or timeless crystal, as well as classic wooden or plastic plaques featuring precision-engraved metal plates. We offer a variety of styles and sizes to suit any occasion, allowing you to personalize each piece with text, logos, or custom artwork.",
+          ["Celebrate accomplishments and recognition with our premium ", { strong: "custom awards" }, "."],
+          ["Choose from modern acrylic, elegant glass, or timeless crystal, as well as classic wooden or plastic plaques featuring precision-engraved metal plates."],
+          ["We offer a variety of styles and sizes to suit any occasion, allowing you to personalize each piece with text, logos, or custom artwork."],
         ],
         image: "awardsPlaques",
         imageAlt: "Wood plaques with engraved metal plates and glass and crystal awards",
@@ -101,10 +108,8 @@ export const home: {
       {
         title: "Notary Stamps & Embossers",
         body: [
-          { strong: "Notarize documents" },
-          " with ease and professionalism using your very own ",
-          { strong: "notary stamp" },
-          ". No more messy ink pads or missed details plus –  we have all the supplies: the stamp, journal, and embosser!",
+          [{ strong: "Notarize documents" }, " with ease and professionalism using your very own ", { strong: "notary stamp" }, "."],
+          ["No more messy ink pads or missed details plus –  we have all the supplies: the stamp, journal, and embosser!"],
         ],
         image: "notaryEmbosser",
         imageAlt: "Notary embosser pressing a raised seal into paper",
@@ -181,9 +186,9 @@ export const home: {
   about: {
     title: "About Us",
     body: [
-      "Springfield Stamp has been a family-owned and operated business for ",
-      { strong: "over 50 years" },
-      ". Now in the hands of Adam and Bri, the founder's nephew and niece-in-law, we carry on the tradition of exceptional quality, personalized service, and fast turnaround times. We're passionate about helping our customers make a lasting impression, and we're dedicated to providing the best possible experience every step of the way.",
+      ["Springfield Stamp has been a family-owned and operated business for ", { strong: "over 50 years" }, "."],
+      ["Now in the hands of Adam and Bri, the founder's nephew and niece-in-law, we carry on the tradition of exceptional quality, personalized service, and fast turnaround times."],
+      ["We're passionate about helping our customers make a lasting impression, and we're dedicated to providing the best possible experience every step of the way."],
     ],
     cta: { label: "Read Our STORY", href: "/about/" },
   },

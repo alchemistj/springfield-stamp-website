@@ -6,7 +6,8 @@ import type { Cta } from "./types";
 export interface NotaryProduct {
   name: string;
   price: string;
-  body: string;
+  /** One string, or one string per paragraph when a card is split on sentence ends. */
+  body: string | readonly string[];
   /** Extra sentence the live site shows on the mobile layout only. */
   mobileExtra?: string;
   image: "rectangle" | "circular" | "embosser" | "journal";
@@ -31,20 +32,29 @@ export const notaryStamp: {
       {
         name: "Rectangle Stamp",
         price: "$22",
-        body: "Sleek and easy to use, this rectangular notary stamp provides a modern alternative to the traditional circular style. Designed for efficiency, it produces sharp, legible text and fits perfectly on standard document lines.",
+        body: [
+          "Sleek and easy to use, this rectangular notary stamp provides a modern alternative to the traditional circular style.",
+          "Designed for efficiency, it produces sharp, legible text and fits perfectly on standard document lines.",
+        ],
         image: "rectangle",
       },
       {
         name: "Circular Stamp",
         price: "$30",
-        body: "This classic round notary stamp features a clean, professional design that complies with state regulations. Ideal for official documents, it delivers crisp, clear impressions with every use.",
+        body: [
+          "This classic round notary stamp features a clean, professional design that complies with state regulations.",
+          "Ideal for official documents, it delivers crisp, clear impressions with every use.",
+        ],
         mobileExtra: "Available in multiple ink colors.",
         image: "circular",
       },
       {
         name: "Notary Embosser",
         price: "$32",
-        body: "Add a layer of authenticity and elegance to your documents with this notary embosser. Compact and durable, it creates a raised seal impression and is perfect for both personal and professional use.",
+        body: [
+          "Add a layer of authenticity and elegance to your documents with this notary embosser.",
+          "Compact and durable, it creates a raised seal impression and is perfect for both personal and professional use.",
+        ],
         image: "embosser",
       },
       {

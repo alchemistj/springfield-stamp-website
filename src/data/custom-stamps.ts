@@ -6,7 +6,8 @@ import type { Cta, Rich } from "./types";
 
 export interface CustomStampRow {
   title: string;
-  body: Rich;
+  /** One entry per paragraph. Splits fall on sentence ends. */
+  body: readonly Rich[];
   /** Key into the images imported by the page. */
   image: "selfInking" | "signature" | "logo" | "daters" | "notary";
   cta?: Cta;
@@ -46,50 +47,41 @@ export const customStamps: {
       {
         title: "Self-Inking Stamps",
         body: [
-          "Stay efficient with ",
-          { strong: "quick, clean impressions" },
-          ". Perfect for invoices, receipts, and adding a ",
-          { strong: "personalized touch" },
-          " to packaging. Choose from a variety of sizes, colors, and ink types to match your brand.",
+          ["Stay efficient with ", { strong: "quick, clean impressions" }, "."],
+          ["Perfect for invoices, receipts, and adding a ", { strong: "personalized touch" }, " to packaging."],
+          ["Choose from a variety of sizes, colors, and ink types to match your brand."],
         ],
         image: "selfInking",
       },
       {
         title: "Signature Stamps",
         body: [
-          "Replicate your handwritten signature with perfect accuracy, saving you time and adding a ",
-          { strong: "personal touch" },
-          " to documents. Ideal for contracts, handwritten notes, proposals, and checks.",
+          ["Replicate your handwritten signature with perfect accuracy, saving you time and adding a ", { strong: "personal touch" }, " to documents."],
+          ["Ideal for contracts, handwritten notes, proposals, and checks."],
         ],
         image: "signature",
       },
       {
         title: "Logo Stamps",
         body: [
-          "Showcase your brand with a professional-looking ",
-          { strong: "logo stamp" },
-          ". Upload your own logo or let our design partners create one for you, ensuring a ",
-          { strong: "consistent and memorable brand image" },
-          ".",
+          ["Showcase your brand with a professional-looking ", { strong: "logo stamp" }, "."],
+          ["Upload your own logo or let our design partners create one for you, ensuring a ", { strong: "consistent and memorable brand image" }, "."],
         ],
         image: "logo",
       },
       {
         title: "Daters & Inks",
         body: [
-          "Keep track of important dates with our handy daters, available in various styles and ink colors. We also offer a variety of high-quality inks to keep your stamps looking their best, ensuring ",
-          { strong: "professionalism and accuracy" },
-          " on every document.",
+          ["Keep track of important dates with our handy daters, available in various styles and ink colors."],
+          ["We also offer a variety of high-quality inks to keep your stamps looking their best, ensuring ", { strong: "professionalism and accuracy" }, " on every document."],
         ],
         image: "daters",
       },
       {
         title: "NOTARY STAMPS",
         body: [
-          { strong: "Notarize documents" },
-          " with ease and professionalism using your very own ",
-          { strong: "notary stamp" },
-          ". No more messy ink pads or missed details plus –  we have all the supplies: the stamp, journal, and embosser!",
+          [{ strong: "Notarize documents" }, " with ease and professionalism using your very own ", { strong: "notary stamp" }, "."],
+          ["No more messy ink pads or missed details plus –  we have all the supplies: the stamp, journal, and embosser!"],
         ],
         image: "notary",
         cta: { label: "Get Your Notary Stamp", href: "/missouri-notary-stamp/" },
