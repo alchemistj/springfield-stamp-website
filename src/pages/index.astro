@@ -22,29 +22,31 @@ const [callLead = ""] = home.hero.callCta.label.split(site.phone.display);
 const iconFor = homeIcons;
 ---
 
-<BaseLayout route={route} heroHeight={{ desktop: 562, mobile: 196 }}>
+<BaseLayout route={route} heroHeight={{ desktop: 562, mobile: 588 }}>
   <HeroPhoto
     slot="hero-photo"
-    alt="Blue Trodat Printy 4913 stamp, Regency desk sign, red engraved tumbler, and metal name bars on a gold table"
-    desktop={{ file: "home-hero.jpg", width: 1440, cropAspect: 1440 / 562, cropY: 0.38, quality: 55 }}
-    mobile={{ file: "home-hero-mobile.jpg", width: 748, quality: 55, position: "32% 50%" }}
+    alt="Springfield Stamp & Engraving storefront"
+    desktop={{ file: "docs/designer-header/springfield-stamps-header-textured.png", width: 2100, quality: 50, position: "right bottom" }}
+    mobile={{ file: "home-hero-bg.jpg", width: 840, quality: 72, position: "36% 42%" }}
   />
 
   <section slot="hero" class="hero" aria-labelledby="hero-title">
     <div class="hero-body">
       <div class="hero-in">
-        <p class="kicker">{home.hero.kicker}</p>
-        <h1 id="hero-title" class="h1">
-          {home.hero.h1Lead}<br class="mb" />
-          <span class="up">{home.hero.h1Rest}</span>
-        </h1>
-        <p class="sub">
-          {home.hero.sub[0]}<br class="db" />
-          {home.hero.sub[1]}
-        </p>
-        <div class="ctas">
-          <Button href={home.hero.callCta.href} size="hero" compact width={380}>{callLead}<span class="nowrap">{site.phone.display}</span></Button>
-          <Button href={home.hero.emailCta.href} size="hero" width={450}>{home.hero.emailCta.label}</Button>
+        <div class="hero-copy">
+          <p class="kicker">{home.hero.kicker}</p>
+          <h1 id="hero-title" class="h1">
+            {home.hero.h1Lead}<br class="mb" />
+            <span class="up">{home.hero.h1Rest}</span>
+          </h1>
+          <p class="sub">
+            {home.hero.sub[0]}<br class="db" />
+            {home.hero.sub[1]}
+          </p>
+          <div class="ctas">
+            <Button href={home.hero.callCta.href} size="hero" compact width={380}>{callLead}<span class="nowrap">{site.phone.display}</span></Button>
+            <Button href={home.hero.emailCta.href} size="hero" width={450}>{home.hero.emailCta.label}</Button>
+          </div>
         </div>
       </div>
     </div>
@@ -61,7 +63,7 @@ const iconFor = homeIcons;
             image={p.image ? homeProductImages[p.image] : undefined}
             imageAlt={p.imageAlt}
             fit={p.fit}
-            reverse={i % 2 === 1}
+            reverse={i % 2 === 0}
             minHeight={rowHeights[i]}
             tone={i >= 4 ? "card-alt" : "card"}
             padTop={i === 0 ? 30 : undefined}
@@ -81,32 +83,24 @@ const iconFor = homeIcons;
     </ProductRows>
   </Section>
 
-  <Section tone="maroon" padTop={[81, 51]} padBottom={[79, 50]}>
-    <SectionTitle as="h2" tone="white">{home.workflow.title}</SectionTitle>
-    <p class="intro">{home.workflow.intro}</p>
-    <div class="cards">
-      {home.workflow.testimonials.map((t) => <Testimonial quote={t.quote} name={t.name} role={t.role} />)}
-    </div>
-    <p class="outro"><Rich parts={home.workflow.outro} /></p>
-    <div class="outro-cta">
-      <Button href={home.workflow.cta.href} size="xl" weight={600} width={400} shadow>{home.workflow.cta.label}</Button>
-    </div>
-  </Section>
-
   <Section tone="white" padTop={[79, 51]} padBottom={[85, 41]}>
     <SectionTitle as="h2">{home.why.title}</SectionTitle>
     <div class="why">
       {
         home.why.items.map((f) => (
           <FeatureRow title={f.title} icon={iconFor[f.icon]}>
-            <Rich parts={f.body} />
+            {f.body.map((para) => (
+              <p>
+                <Rich parts={para} />
+              </p>
+            ))}
           </FeatureRow>
         ))
       }
     </div>
   </Section>
 
-  <Section tone="about" width={1040} padTop={[80, 64]} padBottom={[80, 82]}>
+  <Section tone="about" padTop={[80, 64]} padBottom={[80, 82]}>
     <div class="about">
       <div class="about-media">
         <Picture
@@ -115,7 +109,7 @@ const iconFor = homeIcons;
           formats={["avif", "webp"]}
           fallbackFormat="webp"
           widths={[303, 513, 1026]}
-          sizes="(min-width: 1024px) 513px, 303px"
+          sizes="(min-width: 1024px) 400px, 303px"
           quality={75}
         />
       </div>
@@ -132,6 +126,18 @@ const iconFor = homeIcons;
       </div>
     </div>
   </Section>
+
+  <Section tone="maroon" padTop={[81, 51]} padBottom={[79, 50]}>
+    <SectionTitle as="h2" tone="white">{home.workflow.title}</SectionTitle>
+    <p class="intro">{home.workflow.intro}</p>
+    <div class="cards">
+      {home.workflow.testimonials.map((t) => <Testimonial quote={t.quote} name={t.name} role={t.role} />)}
+    </div>
+    <p class="outro"><Rich parts={home.workflow.outro} /></p>
+    <div class="outro-cta">
+      <Button href={home.workflow.cta.href} size="xl" weight={600} width={400} shadow>{home.workflow.cta.label}</Button>
+    </div>
+  </Section>
 </BaseLayout>
 
 <style>
@@ -139,11 +145,21 @@ const iconFor = homeIcons;
   .hero {
     position: relative;
     z-index: 1;
-    padding-top: var(--hero-h);
+    min-height: var(--hero-h);
+  }
+  /* Darkens the storefront enough for the white text and the red H1 to pass WCAG AA. */
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: rgba(8, 10, 14, 0.86);
   }
   .hero-body {
-    background: #fff;
-    padding: 36px 44px 35px;
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    padding: 28px 22px 32px;
     text-align: center;
   }
   .hero-in {
@@ -157,7 +173,7 @@ const iconFor = homeIcons;
     font-weight: 500;
     font-size: 20px;
     line-height: 26px;
-    color: var(--color-ss-text);
+    color: #fff;
   }
   .h1 {
     margin: 0;
@@ -177,7 +193,7 @@ const iconFor = homeIcons;
     font-family: var(--font-heading);
     font-size: 18px;
     line-height: 27.9px;
-    color: var(--color-ss-text);
+    color: #fff;
   }
   .db {
     display: none;
@@ -250,6 +266,10 @@ const iconFor = homeIcons;
     display: flex;
     flex-direction: column;
   }
+  .about-media {
+    order: 2;
+    padding-top: 24px;
+  }
   .about-media :global(img) {
     display: block;
     width: 100%;
@@ -257,7 +277,8 @@ const iconFor = homeIcons;
     border-radius: var(--radius-card);
   }
   .about-copy {
-    padding-top: 41px;
+    order: 1;
+    padding-top: 0;
   }
   .about-body {
     margin: 0;
@@ -283,48 +304,74 @@ const iconFor = homeIcons;
 
   @media (min-width: 1024px) {
     .hero {
-      height: var(--hero-h);
+      display: flex;
+      align-items: center;
+      min-height: 0;
       padding-top: 0;
+    }
+    /* The designer photo is 2100×891. Matching that ratio shows the whole frame, so the
+       product group on the right is not cropped. right/bottom keeps it in frame if the
+       box is a pixel off. */
+    .hero,
+    :global(.atf .atf-photo) {
+      height: calc(100vw * 891 / 2100);
+    }
+    :global(.atf .atf-photo) {
+      object-position: right bottom;
+    }
+    /* The left half of the photo is already dark. Products stay on the right, undarkened. */
+    .hero::before {
+      background: none;
     }
     .hero-body {
       background: transparent;
-      padding: 37px 20px 0;
+      width: 100%;
+      padding: 0;
       text-align: left;
     }
     .hero-in {
-      max-width: var(--w-hero);
-      margin: 0 auto;
+      box-sizing: border-box;
+      width: min(1200px, calc(100% - 40px));
+      max-width: none;
+      margin-inline: auto;
+    }
+    /* Stay on the dark left side. The products begin at the horizontal midpoint. */
+    .hero-copy {
+      max-width: min(580px, calc(50vw - 48px));
     }
     .kicker,
     .h1,
     .sub {
-      max-width: 714px;
+      max-width: none;
     }
     .kicker {
-      padding-bottom: 26px;
-      font-size: 24px;
-      line-height: 33.6px;
+      padding-bottom: 8px;
+      font-size: 22px;
+      line-height: 30px;
       color: #fff;
     }
     .h1 {
-      padding-bottom: 27px;
-      font-size: 45px;
-      line-height: 56.25px;
+      padding-bottom: 8px;
+      font-size: 36px;
+      line-height: 44px;
     }
     .mb {
       display: none;
     }
     .sub {
-      padding-bottom: 24px;
-      font-size: 22px;
-      line-height: 31.9px;
+      padding-bottom: 8px;
+      font-size: 18px;
+      line-height: 26px;
       color: #fff;
+    }
+    .ctas :global(.btn-fixed) {
+      max-width: 100%;
     }
     .db {
       display: inline;
     }
     .ctas {
-      gap: 11px;
+      gap: 8px;
       margin: 0 0 0 -1px;
     }
 
@@ -333,18 +380,13 @@ const iconFor = homeIcons;
     }
 
     .cards {
-      flex-direction: row;
-      gap: 15px;
+      gap: 24px;
       padding-top: 23px;
-    }
-    .cards > :global(*) {
-      flex: 1 1 0;
-      min-height: 337px !important;
     }
     .intro,
     .outro {
-      width: 965px;
-      margin-left: 1px;
+      width: 100%;
+      margin-left: 0;
     }
     .intro {
       margin-top: -8px;
@@ -367,8 +409,8 @@ const iconFor = homeIcons;
 
     .about {
       display: grid;
-      grid-template-columns: 482px 513px;
-      column-gap: 45px;
+      grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr);
+      column-gap: 24px;
     }
     .about-media {
       order: 2;
@@ -387,6 +429,25 @@ const iconFor = homeIcons;
     .about-cta {
       max-width: none;
       margin: 0;
+    }
+  }
+
+  /* From 1280 the frame is tall enough for the original desktop type. */
+  @media (min-width: 1280px) {
+    .kicker {
+      padding-bottom: 26px;
+      font-size: 24px;
+      line-height: 33.6px;
+    }
+    .h1 {
+      padding-bottom: 27px;
+      font-size: 45px;
+      line-height: 56.25px;
+    }
+    .sub {
+      padding-bottom: 24px;
+      font-size: 22px;
+      line-height: 31.9px;
     }
   }
 </style>

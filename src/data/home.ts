@@ -20,7 +20,8 @@ export interface HomeProduct {
 export interface HomeFeature {
   icon: "breakTheIce" | "enhance" | "boostBrand";
   title: string;
-  body: Rich;
+  /** One entry per paragraph. Splits fall on sentence ends. */
+  body: readonly Rich[];
 }
 
 export interface Testimonial {
@@ -155,29 +156,37 @@ export const home: {
         icon: "breakTheIce",
         title: "FAST TURNAROUND",
         body: [
-          "Need your order quickly? No problem! We understand tight deadlines. Our ",
-          { strong: "lightning-fast turnaround times" },
-          " ensure you get your products when you need them most. Whether you need custom stamps for a last-minute marketing campaign or personalized name tags for an upcoming event, we've got you covered.",
+          [
+            "Need your order quickly? No problem! We understand tight deadlines. Our ",
+            { strong: "lightning-fast turnaround times" },
+            " ensure you get your products when you need them most. Whether you need custom stamps for a last-minute marketing campaign or personalized name tags for an upcoming event, we've got you covered.",
+          ],
         ],
       },
       {
         icon: "enhance",
         title: "Customer Service",
         body: [
-          "At Springfield Stamp & Engraving, we don't just sell products, we ",
-          { strong: "build relationship" },
-          "s. Our friendly and knowledgeable team is dedicated to providing exceptional customer service. We'll take the time to understand your needs, answer your questions, and offer expert suggestions to ensure you get the perfect product for your specific requirements.",
+          [
+            "At Springfield Stamp & Engraving, we don't just sell products, we ",
+            { strong: "build relationship" },
+            "s.",
+          ],
+          ["Our friendly and knowledgeable team is dedicated to providing exceptional customer service."],
+          ["We'll take the time to understand your needs, answer your questions, and offer expert suggestions to ensure you get the perfect product for your specific requirements."],
         ],
       },
       {
         icon: "boostBrand",
         title: "QUALITY WORK",
         body: [
-          "We take pride in offering ",
-          { strong: "superior" },
-          " ",
-          { strong: "quality products " },
-          "that are built to last. From the materials we use to the craftsmanship of our work, we ensure exceptional results that will exceed your expectations. Our products are not only beautiful but also durable, ensuring they make a lasting impression.",
+          [
+            "We take pride in offering ",
+            { strong: "superior" },
+            " ",
+            { strong: "quality products " },
+            "that are built to last. From the materials we use to the craftsmanship of our work, we ensure exceptional results that will exceed your expectations. Our products are not only beautiful but also durable, ensuring they make a lasting impression.",
+          ],
         ],
       },
     ],

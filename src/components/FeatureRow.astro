@@ -18,7 +18,7 @@ const { title, icon, headingLevel: Heading = "h3", uppercase = true } = Astro.pr
 <div class="feature">
   <Image class="icon" src={icon} alt="" width={100} height={100} densities={[1, 2]} format="webp" />
   <Heading class:list={["title", { upper: uppercase }]}>{title}</Heading>
-  <p class="body"><slot /></p>
+  <div class="body"><slot /></div>
 </div>
 
 <style>
@@ -56,6 +56,12 @@ const { title, icon, headingLevel: Heading = "h3", uppercase = true } = Astro.pr
     font-size: 18px;
     line-height: 31.5px;
     color: #151515;
+  }
+  .body :global(p) {
+    margin: 0;
+  }
+  .body :global(p + p) {
+    margin-top: 14px;
   }
   .body :global(strong) {
     font-weight: 600;

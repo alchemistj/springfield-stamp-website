@@ -9,7 +9,7 @@ import { about } from "../../data/about";
 const route = routeByKey("about");
 ---
 
-<BaseLayout route={route} headerWide heroHeight={{ desktop: 411, mobile: 219 }}>
+<BaseLayout route={route} heroHeight={{ desktop: 411, mobile: 219 }}>
   <HeroPhoto
     slot="hero-photo"
     desktop={{ file: "springfield-stamp-hero-about3.jpg", width: 1920, quality: 45, position: "100% 50%" }}
@@ -17,14 +17,14 @@ const route = routeByKey("about");
   />
 
   <section slot="hero" class="hero" aria-labelledby="about-title">
-    <div class="hero-in">
+    <div class="hero-in content-col">
       <p class="kicker">{about.kicker}</p>
       <h1 id="about-title" class="h1">{about.h1}</h1>
     </div>
   </section>
 
   <section class="story">
-    <div class="story-in">
+    <div class="story-in content-col">
       <div class="story-desktop">
         {about.story.map((p, i) => <p class:list={["p", { first: i === 0 }]}><Rich parts={p} /></p>)}
       </div>
@@ -33,14 +33,14 @@ const route = routeByKey("about");
   </section>
 
   <section class="why">
-    <div class="why-in">
+    <div class="why-in content-col">
       <h2 class="why-title">{about.why.title}</h2>
       {about.why.paragraphs.map((p) => <p class="p"><Rich parts={p} /></p>)}
     </div>
   </section>
 
   <section class="closing">
-    <div class="closing-in">
+    <div class="closing-in content-col">
       <p class="closing-text"><Rich parts={about.closing.body} /></p>
       <div class="closing-cta">
         <Button href={about.closing.cta.href} size="lg" weight={600} width={313} shadow>{about.closing.cta.label}</Button>
@@ -80,11 +80,6 @@ const route = routeByKey("about");
   .story-in,
   .why-in,
   .closing-in {
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 20px;
     text-align: center;
   }
   .p {
@@ -170,29 +165,26 @@ const route = routeByKey("about");
       padding-top: 0;
       text-align: left;
     }
+    /* The photo's yellow stripe cuts into the left side. The heading stays in the
+       dark area, so this box is narrower than the 900px column and the type steps
+       down where the wedge is too narrow for "SPRINGFIELD" at 40px. */
     .hero-in {
+      width: 230px;
+      margin-left: 24px;
+      margin-right: auto;
       background: transparent;
-      width: 100%;
-      max-width: 1212px;
-      margin: 0 auto;
-      padding: 149px 20px 0 0;
-      box-sizing: border-box;
+      padding: 200px 0 0;
     }
     .kicker,
     .h1 {
-      font-size: 40px;
-      line-height: 56px;
+      font-size: 26px;
+      line-height: 36px;
     }
     .story {
       padding: 63px 0 67px;
     }
     .p.first {
       margin-bottom: 35.5px;
-    }
-    .story-in,
-    .why-in,
-    .closing-in {
-      padding: 0;
     }
     .p {
       line-height: 31.5px;
@@ -215,11 +207,51 @@ const route = routeByKey("about");
       padding: 47px 0 51px;
     }
     .closing-text {
-      max-width: 820px;
       margin: 0 auto;
       font-size: 27px;
       line-height: 43.2px;
       padding-bottom: 39px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .hero-in {
+      width: 260px;
+      margin-left: max(24px, calc((100% - var(--content-max)) / 2));
+      padding-top: 149px;
+    }
+    .kicker,
+    .h1 {
+      font-size: 30px;
+      line-height: 42px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .hero-in {
+      width: 290px;
+    }
+    .kicker,
+    .h1 {
+      font-size: 32px;
+      line-height: 44px;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .hero-in {
+      width: 350px;
+    }
+    .kicker,
+    .h1 {
+      font-size: 40px;
+      line-height: 56px;
+    }
+  }
+
+  @media (min-width: 1800px) {
+    .hero-in {
+      width: 520px;
     }
   }
 </style>

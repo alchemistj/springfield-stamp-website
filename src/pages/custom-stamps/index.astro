@@ -33,7 +33,7 @@ const readyTitle = d.ready.title.split(/(?<=\bown) /) as [string, string];
 const icons = { detail: stampGrey, turnaround, service: csGrey, community };
 ---
 
-<BaseLayout route={route} heroHeight={{ desktop: 503, mobile: 309 }} headerWide>
+<BaseLayout route={route} heroHeight={{ desktop: 503, mobile: 309 }}>
   <HeroPhoto
     slot="hero-photo"
     desktop={{ file: "springfield-stamp-custom-stamps-2.jpg", width: 1440, cropAspect: 1440 / 503, cropX: 0.5, quality: 50 }}
@@ -42,7 +42,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
 
   <section slot="hero" class="hero" aria-labelledby="hero-title">
     <div class="hero-body">
-      <div class="hero-in">
+      <div class="hero-in content-col">
         <p class="brand">{d.hero.brand}</p>
         <h1 id="hero-title" class="h1">{d.hero.h1}</h1>
       </div>
@@ -57,7 +57,13 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
   <Section tone="surface" bg="#f4f4f4" class="find-sec" padTop={[69, 57]} padBottom={[92, 45]}>
     <SectionTitle as="h2" class="bal">{findTitle[0]}{" "}<br class="mbr" />{findTitle[1]}</SectionTitle>
     <div class="find-intro">
-      <p class="find-text"><Rich parts={d.find.body} /></p>
+      <div class="find-text">
+        {d.find.body.map((para) => (
+          <p>
+            <Rich parts={para} />
+          </p>
+        ))}
+      </div>
       <div class="find-img">
         <Picture src={premium} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[214, 428]} sizes="214px" quality={80} />
       </div>
@@ -69,7 +75,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
             <ProductRow
               title={r.title}
               image={rowImages[r.image]}
-              reverse={i % 2 === 1}
+              reverse={i % 2 === 0}
               minHeight={rowHeights[i]}
               ctaWeight={600}
               upperTitle
@@ -123,7 +129,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
         </p>
       </div>
       <div class="mark-img">
-        <Picture src={makeYourMark} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[354, 490, 980]} sizes="(min-width: 1024px) 490px, 100vw" quality={75} />
+        <Picture src={makeYourMark} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[354, 400, 800]} sizes="(min-width: 1024px) 380px, 100vw" quality={75} />
       </div>
     </div>
   </Section>
@@ -139,7 +145,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
   }
   .hero-body {
     background: #fff;
-    padding: 33px 24px 0;
+    padding: 33px 0 0;
     text-align: center;
   }
   .brand {
@@ -187,12 +193,18 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
   }
   .find-text {
     margin: 0;
-    padding: 0 29px;
+    padding: 0;
     text-align: left;
     font-family: var(--font-heading);
     font-size: 18px;
     line-height: 31.5px;
     color: #151515;
+  }
+  .find-text p {
+    margin: 0;
+  }
+  .find-text p + p {
+    margin-top: 16px;
   }
   .find-img {
     order: -1;
@@ -208,7 +220,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     display: inline;
   }
   .rows {
-    max-width: 960px;
+    width: 100%;
     margin: 0 auto;
   }
   .custom-pg :global(.find-sec.has-bg) {
@@ -278,10 +290,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
   .custom-pg :global(.ready-sec .section-title) {
     line-height: 39.5px;
   }
-  .custom-pg {
-    --gutter: 25px;
-  }
-
   /* ---- Why choose ---- */
   .why-intro,
   .why-lead {
@@ -346,15 +354,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
 
   /* ---- Mobile parity (below 1024px): live paddings, type sizes and spacing at 390px ---- */
   @media (max-width: 1023px) {
-    .custom-pg {
-      --gutter: 26px;
-    }
-    .custom-pg :global(.ready-sec) {
-      --gutter: 32px;
-    }
-    .custom-pg :global(.mark-sec) {
-      --gutter: 21px;
-    }
     .custom-pg :global(.why-sec .section-title),
     .custom-pg :global(.find-sec .section-title),
     .custom-pg :global(.mark-sec .section-title) {
@@ -451,23 +450,21 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       align-items: center;
       height: 100%;
       box-sizing: border-box;
-      padding: 0 20px 22px;
+      padding: 0 0 22px;
       background: transparent;
       text-align: left;
     }
     .hero-in {
-      width: var(--w-hero);
-      margin: 0 auto;
-      padding-left: 21px;
-      box-sizing: border-box;
+      padding-left: 0;
     }
     .brand {
+      max-width: 480px;
       padding-bottom: 24px;
       font-size: 45px;
       line-height: 56px;
     }
     .h1 {
-      max-width: 520px;
+      max-width: 480px;
       font-size: 34.5px;
       line-height: 45px;
       color: #fff;
@@ -513,32 +510,31 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       justify-content: space-between;
       align-items: center;
       margin-top: -20px;
-      padding: 0 30px 36px 20px;
+      padding: 0 0 36px;
     }
     .find-text {
-      width: 700px;
+      flex: 1 1 auto;
+      min-width: 0;
+      width: auto;
       text-align: left;
       line-height: 31.5px;
     }
     .find-img {
       order: 0;
-      width: 214px;
+      flex: 0 0 42%;
+      width: auto;
+      max-width: 42%;
       padding: 0;
     }
     .call-h {
       padding-bottom: 24px;
       font-size: 24px;
     }
-    .custom-pg :global(.find-sec .section-title) {
-      max-width: 720px;
-      margin: 0 auto;
-    }
+    .custom-pg :global(.find-sec .section-title),
     .custom-pg :global(.ready-sec .section-title) {
-      max-width: 640px;
       margin: 0 auto;
     }
     .ready-text {
-      max-width: 920px;
       margin: 0 auto;
     }
     .ready-cta :global(.btn) {
@@ -569,7 +565,8 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       padding-top: 13px;
     }
     .mark-copy {
-      flex: 0 0 480px;
+      flex: 1 1 auto;
+      min-width: 0;
     }
     .mark-lead,
     .mark-p {
@@ -582,7 +579,8 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     }
     .mark-img {
       order: 0;
-      flex: 0 0 470px;
+      flex: 0 0 42%;
+      max-width: 42%;
     }
   }
 </style>

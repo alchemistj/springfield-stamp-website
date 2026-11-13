@@ -64,7 +64,7 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
           formats={["avif", "webp"]}
           fallbackFormat="webp"
           widths={[303, 500, 606, 1000]}
-          sizes="(min-width: 1024px) 500px, (min-width: 400px) 303px, 90vw"
+          sizes="(min-width: 1024px) 405px, (min-width: 400px) 303px, 90vw"
           quality={75}
         />
       )
@@ -127,8 +127,11 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
   @media (min-width: 1024px) {
     .row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
       min-height: var(--row-h, 0);
+    }
+    .reverse {
+      grid-template-columns: minmax(0, 0.55fr) minmax(0, 0.45fr);
     }
     .media {
       position: relative;

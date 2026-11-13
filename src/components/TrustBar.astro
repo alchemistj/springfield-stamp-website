@@ -1,6 +1,7 @@
 ---
-// Full-width trust bar directly under the hero on every page (after `.atf`, so it is not part of
-// the first-frame gate). Copy comes from `trustBar` in src/data/site.ts. No client JS.
+// Full-width trust bar directly under the hero on every page (after `.atf`). The `.trust-ready`
+// marker in BaseLayout holds the hero and this bar until the bar has been parsed. Copy comes
+// from `trustBar` in src/data/site.ts. No client JS.
 import { site, trustBar } from "../data/site";
 import Icon from "./Icon.astro";
 ---
@@ -51,9 +52,13 @@ import Icon from "./Icon.astro";
 
 <style>
   .trust-bar {
-    background: var(--color-ss-surface);
-    color: var(--color-ss-ink);
+    /* Footer charcoal, not the light grey of the section under it, so the band reads as its own
+       strip. The red rule is the top edge (it stays visible against the hero). The white rule is
+       the bottom edge against the grey or white section below. */
+    background: var(--color-ss-footer);
+    color: #fff;
     border-top: 3px solid var(--color-ss-red);
+    border-bottom: 3px solid #fff;
     font-family: var(--font-heading);
     font-weight: 500;
     font-size: 15px;
@@ -62,9 +67,9 @@ import Icon from "./Icon.astro";
   }
   .trust-in {
     box-sizing: border-box;
-    width: min(1080px, 100%);
+    width: min(var(--content-max), calc(100% - 2 * var(--content-pad)));
     margin: 0 auto;
-    padding: 8px 16px 10px;
+    padding: 16px 0 18px;
   }
   .trust-line {
     display: flex;
@@ -112,7 +117,7 @@ import Icon from "./Icon.astro";
     min-width: 48px;
     min-height: 48px;
     padding: 0 8px;
-    color: var(--color-ss-maroon);
+    color: var(--color-ss-yellow);
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -132,7 +137,7 @@ import Icon from "./Icon.astro";
       line-height: 24px;
     }
     .trust-in {
-      padding: 12px 20px 14px;
+      padding: 18px 0 20px;
     }
     .trust-line {
       flex-direction: row;
@@ -146,7 +151,7 @@ import Icon from "./Icon.astro";
     .sep {
       display: inline;
       margin: 0 0.55em;
-      color: var(--color-ss-maroon);
+      color: rgba(255, 255, 255, 0.72);
     }
     .place {
       align-items: center;
