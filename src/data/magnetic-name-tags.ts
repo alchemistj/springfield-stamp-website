@@ -26,9 +26,9 @@ export const magneticNameTags: {
   intro: { hello: Rich; pride: Rich; callHeading: string; callCta: Cta; whether: Rich };
   find: { title: string; lead: string; rows: readonly TagRow[] };
   unique: { title: string; body: Rich; contact: string; callLine: string; cta: Cta };
-  design: { title: string; body: Rich };
+  design: { title: string; body: readonly Rich[] };
   power: { title: string; lead: string; benefits: readonly Benefit[] };
-  more: { title: string; body: Rich; bullets: readonly string[] };
+  more: { title: string; body: readonly Rich[]; bullets: readonly string[] };
   why: { title: string; lead: Rich; items: readonly WhyItem[] };
   ready: { title: string; before: string; after: string };
 } = {
@@ -107,9 +107,13 @@ export const magneticNameTags: {
   design: {
     title: "Design Your Own in Minutes: It's Easy!",
     body: [
-      "Creating your ",
-      { strong: "custom magnetic name tags" },
-      " is a breeze! Choose your style, size, and design elements, send us your logo or photo, and see your creation come to life. Once you're satisfied, place your order and we'll get started right away!",
+      [
+        "Creating your ",
+        { strong: "custom magnetic name tags" },
+        " is a breeze!",
+      ],
+      ["Choose your style, size, and design elements, send us your logo or photo, and see your creation come to life."],
+      ["Once you're satisfied, place your order and we'll get started right away!"],
     ],
   },
   power: {
@@ -153,9 +157,12 @@ export const magneticNameTags: {
   more: {
     title: "More Than Just Name Tags: Building Connection",
     body: [
-      "At Springfield Stamp, we're passionate about helping businesses ",
-      { strong: "connect with their customers and employees" },
-      ". That's why we offer a variety of other products to enhance your professional image, including:",
+      [
+        "At Springfield Stamp, we're passionate about helping businesses ",
+        { strong: "connect with their customers and employees" },
+        ".",
+      ],
+      ["That's why we offer a variety of other products to enhance your professional image, including:"],
     ],
     bullets: [
       "Custom rubber stamps for a personalized touch on documents and packaging.",

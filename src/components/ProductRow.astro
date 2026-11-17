@@ -1,9 +1,10 @@
 ---
 // Alternating image / text product row (the home "How We Can Help..." rows, and the product
 // rows on the other pages). Put several inside <ProductRows>. Pass `reverse` on every second row
-// so the picture alternates left/right on desktop; on mobile the picture is always on top.
+// so the picture alternates left/right on desktop. Both columns are equal, so the edges line up
+// in a checkerboard. On mobile the picture is always on top, full width.
 //
-//   <ProductRow title="Custom Stamps" image={img} imageAlt="" ctaHref="/custom-stamps/" ctaLabel="See Our Custom Stamp Options" minHeight={399}>
+//   <ProductRow title="Custom Stamps" image={img} imageAlt="" ctaHref="/custom-stamps/" ctaLabel="See Our Custom Stamp Options">
 //     body copy (slot)
 //   </ProductRow>
 import { Picture } from "astro:assets";
@@ -16,9 +17,9 @@ interface Props {
   /** Decorative by default: the title names the product. */
   imageAlt?: string;
   headingLevel?: "h2" | "h3" | "h4";
-  /** Picture on the right (desktop). */
+  /** Picture on the right (desktop). Both columns stay 50%. */
   reverse?: boolean;
-  /** Desktop row height in px (the live rows are fixed heights between 350 and 433). */
+  /** Unused. Row height follows the taller of the photo and the text. */
   minHeight?: number;
   /** Text panel shade: the live site uses #e0e0e0 for most rows and #e4e4e4 for the last two. */
   tone?: "card" | "card-alt";
@@ -28,7 +29,7 @@ interface Props {
   ctaLabel?: string;
   ctaWeight?: 600 | 700;
   ctaTight?: boolean;
-  /** "contain" shows the whole picture centred on white (the Custom Stamps rows); default crops to fill. */
+  /** Kept for callers. Every product photo is shown whole (`object-fit: contain`). */
   fit?: "cover" | "contain";
   /** Upper-case title with a lighter weight (the Custom Stamps and Name Tags rows). */
   upperTitle?: boolean;
@@ -40,21 +41,19 @@ const {
   imageAlt = "",
   headingLevel: Heading = "h3",
   reverse = false,
-  minHeight,
   tone = "card",
   padTop,
   ctaHref,
   ctaLabel,
   ctaWeight = 700,
   ctaTight = false,
-  fit = "cover",
   upperTitle = false,
   titleWeight = 600,
 } = Astro.props;
-const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${padTop}px` : ""].filter(Boolean).join(";");
+const style = padTop ? `--pad-top:${padTop}px` : undefined;
 ---
 
-<article class:list={["row", { reverse, contain: fit === "contain", upper: upperTitle }]} data-tw={titleWeight} style={style || undefined}>
+<article class:list={["row", { reverse, upper: upperTitle }]} data-tw={titleWeight} style={style}>
   <div class="media">
     {
       image && (
@@ -64,7 +63,7 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
           formats={["avif", "webp"]}
           fallbackFormat="webp"
           widths={[303, 500, 606, 1000]}
-          sizes="(min-width: 1024px) 500px, (min-width: 400px) 303px, 90vw"
+          sizes="(min-width: 1024px) 402px, (min-width: 400px) 303px, 90vw"
           quality={75}
         />
       )
@@ -80,14 +79,22 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
 <style>
   .row {
     display: block;
+    margin: 0;
   }
   .media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
     background: #fff;
   }
   .media :global(img) {
     display: block;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     height: auto;
+    object-fit: contain;
   }
   .copy {
     text-align: center;
@@ -127,20 +134,11 @@ const style = [minHeight ? `--row-h:${minHeight}px` : "", padTop ? `--pad-top:${
   @media (min-width: 1024px) {
     .row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: var(--row-h, 0);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: stretch;
     }
     .media {
-      position: relative;
-    }
-    .media :global(img) {
-      position: absolute;
-      inset: 0;
-      height: 100%;
-      object-fit: cover;
-    }
-    .contain .media :global(img) {
-      object-fit: contain;
+      padding: 24px;
     }
     .row[data-tw="500"] .row-title {
       font-weight: 500;

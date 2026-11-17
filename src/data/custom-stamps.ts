@@ -22,7 +22,7 @@ export interface WhyItem {
 export const customStamps: {
   hero: { brand: string; h1: string };
   intro: Rich;
-  find: { title: string; body: Rich; rows: readonly CustomStampRow[] };
+  find: { title: string; body: readonly Rich[]; rows: readonly CustomStampRow[] };
   ready: { title: string; body: string; callHeading: string; cta: Cta };
   why: { title: string; intro: Rich; lead: string; items: readonly WhyItem[] };
   mark: { title: string; lead: string; contactLabel: string; contactBody: string; callPrefix: string; callMiddle: string };
@@ -39,9 +39,12 @@ export const customStamps: {
   find: {
     title: "Find the Perfect Stamp for Your Unique Needs",
     body: [
-      "We take pride in being your friendly neighborhood stamp experts. That means we offer ",
-      { strong: "premium quality stamps" },
-      " crafted with care, lightning-fast turnaround time, and personalized customer service that feels just like chatting over a cup of coffee!",
+      ["We take pride in being your friendly neighborhood stamp experts."],
+      [
+        "That means we offer ",
+        { strong: "premium quality stamps" },
+        " crafted with care, lightning-fast turnaround time, and personalized customer service that feels just like chatting over a cup of coffee!",
+      ],
     ],
     rows: [
       {

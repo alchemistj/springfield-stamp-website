@@ -155,8 +155,8 @@ const phone = site.phone;
 <style>
   .cf {
     box-sizing: border-box;
-    width: 100%;
-    max-width: 900px;
+    width: min(var(--content-max), calc(100% - 2 * var(--content-pad)));
+    max-width: none;
     margin: 0 auto;
     padding: 41px 21px 40px;
     background: #eee;
