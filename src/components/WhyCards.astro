@@ -11,19 +11,18 @@ interface Props {
   items: readonly { icon: ImageMetadata; title: string; body: Rich }[];
   /** Card shade per item (default: all grey). */
   tones?: readonly ("grey" | "white")[];
-  /** Icon sizes in px per item (the live icons differ slightly). */
-  iconSizes?: readonly number[];
   /** Desktop row heights in px (the live rows are fixed heights). */
   rowHeights?: readonly [number, number];
 }
-const { items, tones = [], iconSizes = [], rowHeights = [0, 0] } = Astro.props;
+const { items, tones = [], rowHeights = [0, 0] } = Astro.props;
+const iconSize = 44;
 ---
 
 <div class="cards" style={`--r1:${rowHeights[0]}px;--r2:${rowHeights[1]}px`}>
   {
     items.map((it, i) => (
       <div class:list={["card", tones[i] ?? "grey"]}>
-        <Image class="ico" src={it.icon} alt="" width={iconSizes[i] ?? 44} height={iconSizes[i] ?? 44} densities={[1, 2]} format="webp" style={`width:${iconSizes[i] ?? 44}px;height:${iconSizes[i] ?? 44}px`} />
+        <Image class="ico" src={it.icon} alt="" width={iconSize} height={iconSize} densities={[1, 2]} format="webp" />
         <h3 class="ttl">{it.title}</h3>
         <p class="txt">
           <RichText parts={it.body} />
@@ -52,12 +51,15 @@ const { items, tones = [], iconSizes = [], rowHeights = [0, 0] } = Astro.props;
   }
   .ico {
     display: block;
+    width: 44px;
+    height: 44px;
     margin: 0 0 22px;
+    object-fit: contain;
   }
   .ttl {
     margin: 0 0 14px;
     font-family: var(--font-heading);
-    font-weight: 500;
+    font-weight: 600;
     font-size: 18px;
     line-height: 31.5px;
     text-transform: uppercase;

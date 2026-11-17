@@ -98,6 +98,19 @@ a {
   color: inherit;
 }
 
+/* Keep a short last line from sitting alone. Balance is for headings; pretty is for paragraphs. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+
 .skip-link {
   position: absolute;
   left: 8px;

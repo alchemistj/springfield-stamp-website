@@ -160,11 +160,18 @@ const images = { rectangle, circular, embosser, journal };
     background: #f8f8f8;
     border-radius: 20px;
   }
+  .pic {
+    margin: 0;
+    background: #f8f8f8;
+    line-height: 0;
+  }
+  .pic :global(picture),
   .pic :global(img) {
     display: block;
     width: 100%;
     height: auto;
-    background: #fff;
+    margin: 0;
+    background: #f8f8f8;
   }
   .info {
     display: flex;
@@ -210,12 +217,17 @@ const images = { rectangle, circular, embosser, journal };
   .m-only-inline {
     display: inline;
   }
+  .desc {
+    align-self: stretch;
+  }
   .info :global(.buy) {
+    align-self: center;
     width: 160px;
+    margin-left: auto;
+    margin-right: auto;
     padding: 14px 20px;
     font-size: 18px;
     line-height: 25px;
-    text-transform: uppercase;
   }
 
   /* ---- Requirements ---- */
@@ -295,7 +307,6 @@ const images = { rectangle, circular, embosser, journal };
     padding: 14px 20px;
     font-size: 20px;
     line-height: 22px;
-    text-transform: uppercase;
   }
 
   /* Mobile parity (below 1024px): live type sizes and spacing at 390px. */
@@ -420,7 +431,7 @@ const images = { rectangle, circular, embosser, journal };
       display: none;
     }
     .info {
-      align-items: flex-start;
+      align-items: center;
       min-height: 587px;
       padding: 43px 20px 26px;
       text-align: left;
@@ -437,7 +448,8 @@ const images = { rectangle, circular, embosser, journal };
       font-size: 18px;
     }
     .info :global(.buy) {
-      margin-left: 27px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .req-list {
       width: 100%;

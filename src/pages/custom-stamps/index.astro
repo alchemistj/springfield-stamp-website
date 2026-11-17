@@ -8,6 +8,7 @@ import ProductRows from "../../components/ProductRows.astro";
 import ProductRow from "../../components/ProductRow.astro";
 import WhyCards from "../../components/WhyCards.astro";
 import Rich from "../../components/Rich.astro";
+import Icon from "../../components/Icon.astro";
 import { Picture } from "astro:assets";
 import { routeByKey } from "../../lib/routes";
 import { customStamps as d } from "../../data/custom-stamps";
@@ -111,7 +112,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     <WhyCards
       items={d.why.items.map((it) => ({ icon: icons[it.icon], title: it.title, body: it.body }))}
       tones={["grey", "white", "white", "grey"]}
-      iconSizes={[44, 38, 44, 44]}
       rowHeights={[343, 375]}
     />
   </Section>
@@ -122,7 +122,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       <div class="mark-copy">
         <p class="mark-lead">{d.mark.lead}</p>
         <p class="mark-p">
-          <span class="ph" aria-hidden="true">{d.mark.contactLabel.slice(0, 2)}</span><strong>{d.mark.contactLabel.slice(3)}</strong>{d.mark.contactBody}
+          <Icon name="phone" class="mark-ico" /><strong><span class="mark-emoji" aria-hidden="true">📞</span> {d.mark.contactLabel.replace(/^\p{Extended_Pictographic}\s*/u, "")}</strong>{d.mark.contactBody}
         </p>
         <p class="mark-p">
           {d.mark.callPrefix}<a href={site.phone.tel}>{site.phone.display}</a>{d.mark.callMiddle}<a href={`mailto:${site.email}`}>{site.email}</a>.
@@ -246,9 +246,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     font-size: 18px;
     line-height: 22px;
   }
-  .rows :global(.row-cta) {
-    text-transform: uppercase;
-  }
 
   /* ---- Ready band ---- */
   .ready-text {
@@ -278,7 +275,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     font-size: 18px;
     font-weight: 600;
     line-height: 22px;
-    text-transform: uppercase;
   }
   .custom-pg :global(.ready-sec .section-title),
   .custom-pg :global(.why-sec .section-title),
@@ -334,14 +330,30 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     color: #151515;
   }
   .mark-p a {
-    color: #1975e0; /* live #1e7be6 darkened just enough for 4.5:1 on white (delta E 2.4) */
-    text-decoration: none;
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .mark-p strong {
     font-weight: 600;
   }
-  .ph {
+  .mark-p :global(.mark-ico) {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
     margin-right: 6px;
+    vertical-align: -3px;
+    color: var(--color-ss-ink);
+  }
+  /* The phone character stays in the paragraph so the copy check still finds it. The icon is what shows. */
+  .mark-emoji {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip: rect(0, 0, 0, 0);
   }
   .mark-img {
     order: -1;
@@ -375,7 +387,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       padding-bottom: 22px;
     }
     .find-text {
-      margin: 0 22px 0 30px;
+      margin: 0;
       padding: 0;
     }
     .rows {

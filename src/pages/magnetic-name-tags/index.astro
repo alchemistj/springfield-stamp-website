@@ -134,7 +134,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     <Section tone="white" class="why-sec" padTop={[67, 51]} padBottom={[121, 101]}>
       <SectionTitle as="h2">{d.why.title}</SectionTitle>
       <p class="p centered why-lead"><Rich parts={d.why.lead} /></p>
-      <WhyCards items={d.why.items.map((it) => ({ icon: whyIcons[it.icon], title: it.title, body: it.body }))} iconSizes={[44, 38, 44, 44]} rowHeights={[397, 375]} />
+      <WhyCards items={d.why.items.map((it) => ({ icon: whyIcons[it.icon], title: it.title, body: it.body }))} rowHeights={[397, 375]} />
     </Section>
 
     <Section tone="maroon" class="ready-sec" padTop={[57, 51]} padBottom={[85, 58]}>
@@ -331,7 +331,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     text-align: left;
   }
   .b-ico {
-    align-self: center;
+    align-self: flex-start;
     width: 100px;
     height: 100px;
     margin-bottom: 14px;
@@ -426,13 +426,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       margin: 0 -1px;
     }
     .mag-pg :global(.why-sec .card) {
-      padding: 21px 31px 30px;
-    }
-    .mag-pg :global(.why-sec .card:first-child) {
-      padding: 21px 26px 30px;
-    }
-    .mag-pg :global(.why-sec .card:nth-child(2)) {
-      min-height: 360px;
+      padding: 24px;
     }
     .mag-pg :global(.find-sec .section-title),
     .mag-pg :global(.unique-sec .section-title),
@@ -611,23 +605,26 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       margin-bottom: 26px;
     }
     .design {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
+      column-gap: 28px;
+      row-gap: 28px;
       padding: 6px 0 0;
     }
     .design .p {
-      flex: 1 1 auto;
       width: auto;
       min-width: 0;
       margin: 0;
     }
     .design .p + .p {
-      margin-top: 16px;
+      margin-top: 0;
     }
     .design-img {
-      flex: 0 0 40%;
-      max-width: 40%;
+      order: 0;
+      grid-column: 1 / -1;
+      justify-self: center;
+      max-width: 285px;
     }
     .design-img :global(img) {
       width: 100%;

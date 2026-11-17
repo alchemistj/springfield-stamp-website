@@ -52,7 +52,7 @@ const iconFor = homeIcons;
     </div>
   </section>
 
-  <Section tone="surface" padTop={[81, 51]} padBottom={[80, 70]}>
+  <Section tone="surface" class="help-sec" padTop={[81, 51]} padBottom={[80, 70]}>
     <SectionTitle as="h2">{home.help.title}</SectionTitle>
     <div class="help-gap"></div>
     <ProductRows>
@@ -121,7 +121,7 @@ const iconFor = homeIcons;
           </p>
         ))}
         <div class="about-cta">
-          <Button href={home.about.cta.href} size="xl" weight={600} width={300} shadow>{home.about.cta.label}</Button>
+          <Button href={home.about.cta.href} size="xl" weight={600} width={300}>{home.about.cta.label}</Button>
         </div>
       </div>
     </div>
@@ -226,17 +226,10 @@ const iconFor = homeIcons;
   .cards {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
   }
-  /* Live mobile card heights. */
-  .cards > :global(:nth-child(1)) {
-    min-height: 407px;
-  }
-  .cards > :global(:nth-child(2)) {
-    min-height: 449px;
-  }
-  .cards > :global(:nth-child(3)) {
-    min-height: 427px;
+  :global(.help-sec .row-title) {
+    text-align: left;
   }
   .outro {
     margin: 31px 0 0;
@@ -274,7 +267,6 @@ const iconFor = homeIcons;
     display: block;
     width: 100%;
     height: auto;
-    border-radius: var(--radius-card);
   }
   .about-copy {
     order: 1;

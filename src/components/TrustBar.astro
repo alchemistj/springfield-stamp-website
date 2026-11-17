@@ -89,14 +89,11 @@ import Icon from "./Icon.astro";
     display: none;
   }
   .place {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 6px;
+    display: block;
     max-width: 100%;
   }
   .place-text {
-    min-width: 0;
+    display: inline;
   }
   /* Keep the city and state on one line at 390px. "MO" was wrapping onto a line by itself. */
   .place-city {
@@ -128,7 +125,9 @@ import Icon from "./Icon.astro";
     height: 16px;
   }
   .place :global(.trust-ico) {
-    margin-top: 3px;
+    display: inline-block;
+    margin: 0 6px 0 0;
+    vertical-align: -2px;
   }
 
   @media (min-width: 1024px) {
@@ -153,11 +152,8 @@ import Icon from "./Icon.astro";
       margin: 0 0.55em;
       color: rgba(255, 255, 255, 0.72);
     }
-    .place {
-      align-items: center;
-    }
     .place :global(.trust-ico) {
-      margin-top: 0;
+      vertical-align: -3px;
     }
     .trust-bar a {
       min-width: 0;

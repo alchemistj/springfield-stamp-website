@@ -65,8 +65,10 @@ const c = contact;
   </section>
 
   <section class="form-sec">
-    <h2 class="form-h content-col">{c.form.heading}</h2>
-    <ContactForm />
+    <div class="form-wrap content-col">
+      <h2 class="form-h">{c.form.heading}</h2>
+      <ContactForm />
+    </div>
   </section>
 </BaseLayout>
 
@@ -156,8 +158,11 @@ const c = contact;
     display: flex;
     flex-direction: column;
     gap: 34px;
-    align-items: center;
+    align-items: stretch;
     margin: 45px auto 0;
+  }
+  .map-col {
+    width: 100%;
   }
   .addr {
     align-self: stretch;
@@ -200,8 +205,11 @@ const c = contact;
   .form-sec {
     padding: 48px 0 66px;
   }
+  .form-wrap :global(.cf) {
+    width: 100%;
+  }
   .form-h {
-    margin: 0 0 42px;
+    margin: 0 0 24px;
     text-align: center;
     font-family: var(--font-display);
     font-weight: 400;
@@ -305,9 +313,12 @@ const c = contact;
       padding: 49px 0 66px;
     }
     .form-h {
-      margin-bottom: 45px;
+      margin-bottom: 28px;
       font-size: 30px;
       line-height: 39px;
+    }
+    .form-wrap :global(.cf) {
+      width: 100%;
     }
   }
 
