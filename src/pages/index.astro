@@ -8,17 +8,16 @@ import ProductRows from "../components/ProductRows.astro";
 import ProductRow from "../components/ProductRow.astro";
 import Testimonial from "../components/Testimonial.astro";
 import FeatureRow from "../components/FeatureRow.astro";
+import FinalCta from "../components/FinalCta.astro";
 import Rich from "../components/Rich.astro";
 import { Picture } from "astro:assets";
 import { routeByKey } from "../lib/routes";
 import { home } from "../data/home";
-import { site } from "../data/site";
 import { aboutStorefront, homeIcons, homeProductImages } from "../lib/home-images";
 
 const route = routeByKey("home");
-// Live desktop row heights (px) and the text-panel shade of each row.
-const rowHeights = [399, 420, 400, 378, 350, 433];
-const [callLead = ""] = home.hero.callCta.label.split(site.phone.display);
+const [sarah, john, jane] = home.workflow.testimonials;
+if (!sarah || !john || !jane) throw new Error("Home page expects three testimonials");
 const iconFor = homeIcons;
 ---
 
@@ -36,16 +35,17 @@ const iconFor = homeIcons;
         <div class="hero-copy">
           <p class="kicker">{home.hero.kicker}</p>
           <h1 id="hero-title" class="h1">
-            {home.hero.h1Lead}<br class="mb" />
-            <span class="up">{home.hero.h1Rest}</span>
+            {home.hero.h1Lead} {home.hero.h1Rest}
           </h1>
           <p class="sub">
-            {home.hero.sub[0]}<br class="db" />
-            {home.hero.sub[1]}
+            {home.hero.sub[0]} {home.hero.sub[1]}
           </p>
           <div class="ctas">
-            <Button href={home.hero.callCta.href} size="hero" compact width={380}>{callLead}<span class="nowrap">{site.phone.display}</span></Button>
-            <Button href={home.hero.emailCta.href} size="hero" width={450}>{home.hero.emailCta.label}</Button>
+            <Button href={home.hero.callCta.href}>
+              <span class="hero-call-long">{home.hero.callCta.label}</span>
+              <span class="hero-call-short">Call Now</span>
+            </Button>
+            <Button href={home.hero.emailCta.href}>{home.hero.emailCta.label}</Button>
           </div>
         </div>
       </div>
@@ -55,22 +55,17 @@ const iconFor = homeIcons;
   <Section tone="surface" class="help-sec" padTop={[81, 51]} padBottom={[80, 70]}>
     <SectionTitle as="h2">{home.help.title}</SectionTitle>
     <div class="help-gap"></div>
-    <ProductRows>
+    <ProductRows boxed>
       {
         home.help.products.map((p, i) => (
           <ProductRow
             title={p.title}
             image={p.image ? homeProductImages[p.image] : undefined}
             imageAlt={p.imageAlt}
-            fit={p.fit}
             reverse={i % 2 === 0}
-            minHeight={rowHeights[i]}
             tone={i >= 4 ? "card-alt" : "card"}
-            padTop={i === 0 ? 30 : undefined}
             ctaHref={p.cta?.href}
             ctaLabel={p.cta?.label}
-            ctaTight={i === 1}
-            ctaWeight={p.image === "notaryEmbosser" ? 600 : 700}
           >
             {p.body.map((para) => (
               <p>
@@ -82,6 +77,19 @@ const iconFor = homeIcons;
       }
     </ProductRows>
   </Section>
+
+  <Testimonial quote={sarah.quote} name={sarah.name} role={sarah.role} />
+
+  <Section tone="maroon" padTop={[56, 48]} padBottom={[56, 48]}>
+    <SectionTitle as="h2" tone="white">{home.workflow.title}</SectionTitle>
+    <p class="intro">{home.workflow.intro}</p>
+    <p class="outro"><Rich parts={home.workflow.outro} /></p>
+    <div class="outro-cta">
+      <Button href={home.workflow.cta.href}>{home.workflow.cta.label}</Button>
+    </div>
+  </Section>
+
+  <Testimonial quote={john.quote} name={john.name} role={john.role} />
 
   <Section tone="white" padTop={[79, 51]} padBottom={[85, 41]}>
     <SectionTitle as="h2">{home.why.title}</SectionTitle>
@@ -100,16 +108,18 @@ const iconFor = homeIcons;
     </div>
   </Section>
 
+  <Testimonial quote={jane.quote} name={jane.name} role={jane.role} />
+
   <Section tone="about" padTop={[80, 64]} padBottom={[80, 82]}>
     <div class="about">
       <div class="about-media">
         <Picture
           src={aboutStorefront}
-          alt=""
+          alt="Springfield Stamp & Engraving storefront on S. Glenstone Ave. with red lettering, an open sign and a 1 Day Service sign"
           formats={["avif", "webp"]}
           fallbackFormat="webp"
           widths={[303, 513, 1026]}
-          sizes="(min-width: 1024px) 400px, 303px"
+          sizes="(min-width: 1024px) 420px, 100vw"
           quality={75}
         />
       </div>
@@ -121,23 +131,20 @@ const iconFor = homeIcons;
           </p>
         ))}
         <div class="about-cta">
-          <Button href={home.about.cta.href} size="xl" weight={600} width={300}>{home.about.cta.label}</Button>
+          <Button href={home.about.cta.href}>{home.about.cta.label}</Button>
         </div>
       </div>
     </div>
   </Section>
 
-  <Section tone="maroon" padTop={[81, 51]} padBottom={[79, 50]}>
-    <SectionTitle as="h2" tone="white">{home.workflow.title}</SectionTitle>
-    <p class="intro">{home.workflow.intro}</p>
-    <div class="cards">
-      {home.workflow.testimonials.map((t) => <Testimonial quote={t.quote} name={t.name} role={t.role} />)}
+  <FinalCta>
+    <SectionTitle as="h2" tone="white">{home.finalCta.title}</SectionTitle>
+    <p>{home.finalCta.body}</p>
+    <div class="final-actions">
+      <Button href={home.finalCta.call.href}>{home.finalCta.call.label}</Button>
+      <Button href={home.finalCta.email.href} variant="secondary">{home.finalCta.email.label}</Button>
     </div>
-    <p class="outro"><Rich parts={home.workflow.outro} /></p>
-    <div class="outro-cta">
-      <Button href={home.workflow.cta.href} size="xl" weight={600} width={400} shadow>{home.workflow.cta.label}</Button>
-    </div>
-  </Section>
+  </FinalCta>
 </BaseLayout>
 
 <style>
@@ -184,8 +191,8 @@ const iconFor = homeIcons;
     line-height: 32.5px;
     color: var(--color-ss-red);
   }
-  .up {
-    text-transform: uppercase;
+  .hero-call-short {
+    display: none;
   }
   .sub {
     margin: 0;
@@ -194,13 +201,6 @@ const iconFor = homeIcons;
     font-size: 18px;
     line-height: 27.9px;
     color: #fff;
-  }
-  .db {
-    display: none;
-  }
-  /* Keep the phone number on one line; the label before it may wrap. */
-  .nowrap {
-    white-space: nowrap;
   }
   .ctas {
     display: flex;
@@ -222,11 +222,6 @@ const iconFor = homeIcons;
     font-family: var(--font-heading);
     font-size: 19px;
     line-height: 33.25px;
-  }
-  .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
   }
   :global(.help-sec .row-title) {
     text-align: left;
@@ -290,8 +285,8 @@ const iconFor = homeIcons;
     font-weight: 600;
   }
   .about-cta {
-    max-width: 200px;
-    margin: 0 auto;
+    display: flex;
+    justify-content: center;
   }
 
   @media (min-width: 1024px) {
@@ -329,7 +324,8 @@ const iconFor = homeIcons;
     }
     /* Stay on the dark left side. The products begin at the horizontal midpoint. */
     .hero-copy {
-      max-width: min(580px, calc(50vw - 48px));
+      /* Wide enough for the H1 to settle on three lines at 1440 without shrinking the type. */
+      max-width: min(610px, calc(50vw - 56px));
     }
     .kicker,
     .h1,
@@ -347,20 +343,11 @@ const iconFor = homeIcons;
       font-size: 36px;
       line-height: 44px;
     }
-    .mb {
-      display: none;
-    }
     .sub {
       padding-bottom: 8px;
       font-size: 18px;
       line-height: 26px;
       color: #fff;
-    }
-    .ctas :global(.btn-fixed) {
-      max-width: 100%;
-    }
-    .db {
-      display: inline;
     }
     .ctas {
       gap: 8px;
@@ -371,10 +358,6 @@ const iconFor = homeIcons;
       height: 16px;
     }
 
-    .cards {
-      gap: 24px;
-      padding-top: 23px;
-    }
     .intro,
     .outro {
       width: 100%;
@@ -408,8 +391,10 @@ const iconFor = homeIcons;
       order: 2;
     }
     .about-media :global(img) {
-      height: 100%;
-      object-fit: cover;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      object-position: center top;
     }
     .about-copy {
       order: 1;
@@ -419,8 +404,16 @@ const iconFor = homeIcons;
       padding-bottom: 24px;
     }
     .about-cta {
-      max-width: none;
-      margin: 0;
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero-call-long {
+      display: none;
+    }
+    .hero-call-short {
+      display: inline;
     }
   }
 
@@ -440,6 +433,18 @@ const iconFor = homeIcons;
       padding-bottom: 24px;
       font-size: 22px;
       line-height: 31.9px;
+    }
+  }
+
+  /* At 1440 the 45px H1 needs a 680px measure to land on three lines. The text column
+     stays centred, and the copy's right edge stays at or left of 52% of the viewport
+     so it does not cross onto the product group. */
+  @media (min-width: 1440px) {
+    .hero-in {
+      width: 1304px;
+    }
+    .hero-copy {
+      max-width: 680px;
     }
   }
 </style>

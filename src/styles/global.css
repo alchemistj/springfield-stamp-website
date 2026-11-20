@@ -98,10 +98,14 @@ a {
   color: inherit;
 }
 
-/* Keep a short last line from sitting alone. Balance is for headings; pretty is for paragraphs. */
+/* One heading treatment: every H1, H2 and card title (H3) is uppercase, whatever the source case.
+   Buttons are not headings and are not uppercased. Grey magnetic headings keep their grey color. */
 h1,
 h2,
-h3,
+h3 {
+  text-transform: uppercase;
+  text-wrap: balance;
+}
 h4,
 h5,
 h6 {

@@ -1,0 +1,42 @@
+---
+// Last band before the footer: deep red, centred headline, one or two sentences, two buttons.
+import Section from "./Section.astro";
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<Section tone="maroon" class:list={["final-cta", className]} padTop={[56, 48]} padBottom={[56, 48]}>
+  <div class="final-in">
+    <slot />
+  </div>
+</Section>
+
+<style>
+  .final-in {
+    text-align: center;
+  }
+  .final-in :global(.section-title) {
+    color: #fff;
+  }
+  .final-in :global(p) {
+    margin: 0 auto;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 1.6;
+    color: #fff;
+  }
+  .final-in :global(.final-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .final-in :global(.final-actions .btn) {
+    flex: 0 1 auto;
+  }
+</style>

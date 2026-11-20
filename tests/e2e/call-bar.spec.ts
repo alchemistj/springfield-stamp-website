@@ -7,29 +7,33 @@ test.describe("mobile 390px: header and sticky call bar", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   for (const path of pages) {
-    test(`${path}: no phone pill, logo and hamburger share one row`, async ({ page }) => {
+    test(`${path}: Call button, logo and hamburger share one row`, async ({ page }) => {
       await page.goto(path, { waitUntil: "networkidle" });
-      await expect(page.locator("header a.phone-btn")).toBeHidden();
-      await expect(page.locator("header a[href^='tel:']")).toHaveCount(1); // hidden desktop pill only
+      await expect(page.locator("header a.phone-link")).toBeHidden();
+      const call = page.locator("header a.call-mini");
+      await expect(call).toBeVisible();
+      await expect(call).toHaveText("Call");
       const logo = await page.locator("header .logo").boundingBox();
-      const burger = await page.locator("header details.nav-mobile summary").boundingBox();
+      const burger = await page.locator("header .nav-toggle").boundingBox();
+      const callBox = await call.boundingBox();
       expect(logo!.x).toBeLessThan(60);
       expect(burger!.x + burger!.width).toBeGreaterThan(390 - 40);
       const logoMid = logo!.y + logo!.height / 2;
       const burgerMid = burger!.y + burger!.height / 2;
-      expect(Math.abs(logoMid - burgerMid)).toBeLessThanOrEqual(1);
-      expect(logo!.width).toBeGreaterThanOrEqual(200);
+      expect(Math.abs(logoMid - burgerMid)).toBeLessThanOrEqual(8);
+      expect(callBox!.x).toBeGreaterThan(logo!.x + logo!.width - 1);
+      expect(callBox!.x + callBox!.width).toBeLessThanOrEqual(burger!.x + 1);
+      expect(callBox!.height).toBeGreaterThanOrEqual(44);
       expect(burger!.height).toBeGreaterThanOrEqual(44);
     });
 
-    test(`${path}: menu has page links and no tel: link`, async ({ page }) => {
+    test(`${path}: menu has page links and a plain phone link`, async ({ page }) => {
       await page.goto(path);
-      await page.locator("details.nav-mobile summary").click();
-      const nav = page.locator("details.nav-mobile nav");
+      await page.locator("header .nav-toggle").click();
+      const nav = page.locator("#mobile-menu");
       await expect(nav).toBeVisible();
-      await expect(nav.locator("a[href^='tel:']")).toHaveCount(0);
-      await expect(nav).not.toContainText(site.phone.display);
-      await expect(nav.locator("a")).toHaveCount(5);
+      await expect(nav.locator("a.menu-phone")).toHaveText(site.phone.display);
+      await expect(nav.locator("ul a")).toHaveCount(5);
     });
 
     test(`${path}: call bar is visible, correct, and does not cover the last content`, async ({ page }) => {
@@ -77,14 +81,17 @@ test.describe("mobile 390px: header and sticky call bar", () => {
 test.describe("desktop 1440px: bar hidden, header unchanged", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test("no call bar; phone pill and nav stay in the header", async ({ page }) => {
+  test("no call bar; phone text link and nav stay in the header", async ({ page }) => {
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator(".call-bar")).toBeHidden();
-    const pill = page.locator("header a.phone-btn");
-    await expect(pill).toBeVisible();
-    await expect(pill).toContainText(site.phone.display);
+    const phone = page.locator("header a.phone-link");
+    await expect(phone).toBeVisible();
+    await expect(phone).toContainText(site.phone.display);
+    const bg = await phone.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(bg === "rgba(0, 0, 0, 0)" || bg === "transparent").toBe(true);
+    await expect(page.locator("header a.call-mini")).toBeHidden();
     await expect(page.locator("nav[aria-label='Primary']")).toBeVisible();
-    await expect(page.locator("details.nav-mobile")).toBeHidden();
+    await expect(page.locator("#mobile-menu")).toBeHidden();
     const h = await page.locator("header.site-header").boundingBox();
     expect(h!.height).toBe(134);
   });

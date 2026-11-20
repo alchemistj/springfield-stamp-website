@@ -1,9 +1,9 @@
 // Route registry: the single list of pages. The sitemap, robots, llms.txt, nav checks,
 // vercel.json checks and tests all read from it. Add a page here first.
 //
-// Titles and descriptions are the live site's, with the spec's copy fixes ("60 years" -> "50 years").
-// Contact had no meta description on the live site; the one below is the spec's.
-import { site, SITE_URL } from "../data/site";
+// Titles and descriptions are COPY 6 in docs/SPEC-audit-punch-list.md. og:title and
+// og:description use the same strings. Visible H1 text is unchanged; CSS uppercases it.
+import { SITE_URL } from "../data/site";
 
 export interface Route {
   /** Stable key, used by components and tests. */
@@ -30,9 +30,9 @@ export const routes: readonly Route[] = [
   {
     key: "home",
     path: "/",
-    title: "Springfield Stamp & Engraving in Springfield Missouri",
+    title: "Custom Stamps & Name Tags in Springfield, MO | Springfield Stamp",
     description:
-      "High-quality custom stamps, name tags, awards & more. Fast turnaround, friendly service & expert advice. Family-owned, 50+ years experience.",
+      "Family-owned Springfield, MO shop for custom stamps, name tags, signs, name plates and awards. Friendly service and fast turnaround.",
     h1: "Springfield Stamp: Your Trusted Partner for Custom Products",
     name: "Home",
     ogType: "website",
@@ -42,9 +42,9 @@ export const routes: readonly Route[] = [
   {
     key: "custom-stamps",
     path: "/custom-stamps/",
-    title: "Get Your Custom Rubber Stamps Fast!",
+    title: "Custom Stamps in Springfield, MO | Springfield Stamp & Engraving",
     description:
-      "Springfield Stamps: your best custom stamp source. Get self-inking, signature, logo, daters & more. Enjoy friendly service, fast turnaround, and top quality.",
+      "Self-inking, signature, logo and dater stamps, custom made in Springfield, MO. Friendly service and fast turnaround. Call (417) 881-8828 to get started.",
     h1: "Your Friendly Neighborhood CUSTOM STAMP Experts!",
     name: "Custom Stamps",
     ogType: "article",
@@ -54,9 +54,9 @@ export const routes: readonly Route[] = [
   {
     key: "missouri-notary-stamp",
     path: "/missouri-notary-stamp/",
-    title: "Missouri Notary Stamps and Embossers | Springfield Stamp",
+    title: "Missouri Notary Stamps in Springfield, MO | Springfield Stamp",
     description:
-      "Shop high-quality Missouri notary stamps, seals, embossers, and journals that meet all state requirements. Fast shipping and full compliance guaranteed.",
+      "Missouri notary stamps and embossers from Springfield Stamp & Engraving in Springfield, MO. Call (417) 881-8828 or email to order.",
     h1: "Your One-Stop Spot for Missouri Notary Stamps",
     name: "Missouri Notary Stamp",
     ogType: "article",
@@ -66,9 +66,9 @@ export const routes: readonly Route[] = [
   {
     key: "magnetic-name-tags",
     path: "/magnetic-name-tags/",
-    title: "Magnetic Name Tags & Badges Springfield Stamps: Friendly, Fast Service",
+    title: "Magnetic Name Tags in Springfield, MO | Springfield Stamp",
     description:
-      "Find the perfect magnetic name tags for your business at Springfield Stamps! Customizable, durable, & professional. Shop now & make a lasting impression!",
+      "Classic, logo, engraved, full-color and photo magnetic name tags in Springfield, MO. Friendly, fast service. Call (417) 881-8828 to start your order.",
     h1: "MAGNETIC NAME TAGS that Make Connections Count!",
     name: "Magnetic Name Tags",
     ogType: "article",
@@ -78,9 +78,9 @@ export const routes: readonly Route[] = [
   {
     key: "about",
     path: "/about/",
-    title: "Springfield Stamp - Family Tradition & Quality Service",
+    title: "About Springfield Stamp | Family-Owned in Springfield, MO",
     description:
-      "Discover the 50-year legacy of Springfield Stamp. Family-owned, we pride ourselves on rapid service, meticulous care, and delivering the perfection you need.",
+      "Meet Adam and Bri, the family owners of Springfield Stamp & Engraving in Springfield, MO. Friendly service, careful work and quick turnaround.",
     h1: "Springfield Stamp",
     name: "About",
     ogType: "article",
@@ -90,9 +90,10 @@ export const routes: readonly Route[] = [
   {
     key: "contact",
     path: "/contact/",
-    title: "Contact Us",
-    description: `Contact Springfield Stamp & Engraving at ${site.address.street}, ${site.address.city}, ${site.address.region}. Call ${site.phone.display} or email ${site.email}.`,
-    h1: "CONTACT US",
+    title: "Contact Springfield Stamp & Engraving | Springfield, MO",
+    description:
+      "Visit Springfield Stamp & Engraving at 1416 S. Glenstone Ave., Springfield, MO. Open Monday through Friday, 8:00am to 4:30pm. Call (417) 881-8828.",
+    h1: "Contact Us",
     name: "Contact Us",
     ogType: "article",
     priority: 0.6,

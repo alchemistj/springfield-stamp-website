@@ -1,11 +1,11 @@
 ---
-// Site header: logo (inline palette PNG, 600x195, about 3.9 KB, so it is in the first frame),
-// "1-Day Service!" banner, phone pill, nav. Desktop shows the nav in a row. Below 1024px the header
-// is one row (logo left, hamburger right) with no phone pill; the number lives in the sticky call
-// bar (StickyCallBar.astro). The <details> hamburger opens the page links as a dropdown (no JS).
+// Site header. Desktop: logo, "1-Day Service!" banner, the phone as plain text (not a button), and the nav.
+// Below 1024px: logo, a small Call button, and a hamburger, in one row. The Call button sits outside
+// the menu. The menu lists the pages, then the phone as a plain text link.
 import { headerNav, site } from "../data/site";
 import { logoImage } from "../lib/inline-image";
 import Icon from "./Icon.astro";
+import Button from "./Button.astro";
 
 interface Props {
   /** Current page path, to mark the active link with aria-current. */
@@ -28,10 +28,15 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
       />
     </a>
     <p class="banner">{site.banner}</p>
-    <a class="phone-btn" href={site.phone.tel}>
+    <a class="phone-link" href={site.phone.tel}>
       <Icon name="phone-alt" class="phone-ico" />
-      <strong>{site.phone.display}</strong>
+      <span>{site.phone.display}</span>
     </a>
+    <Button href={site.phone.tel} class="call-mini">Call</Button>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu">
+      <Icon name="menu" class="i-menu" />
+      <Icon name="close" class="i-close" />
+    </button>
     <nav class="nav-desktop" aria-label="Primary">
       <ul>
         {
@@ -45,26 +50,35 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
         }
       </ul>
     </nav>
-    <details class="nav-mobile">
-      <summary aria-label="Menu">
-        <Icon name="menu" class="i-menu" />
-        <Icon name="close" class="i-close" />
-      </summary>
-      <nav aria-label="Primary (mobile)">
-        <ul>
-          {
-            headerNav.map((item) => (
-              <li>
-                <a href={item.path} aria-current={current === item.path ? "page" : undefined}>
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-    </details>
+    <nav id="mobile-menu" class="nav-mobile" aria-label="Primary (mobile)" hidden>
+      <ul>
+        {
+          headerNav.map((item) => (
+            <li>
+              <a href={item.path} aria-current={current === item.path ? "page" : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="menu-phone" href={site.phone.tel}>{site.phone.display}</a>
+    </nav>
   </div>
+  <noscript>
+    <nav class="nav-noscript" aria-label="Primary">
+      <ul>
+        {
+          headerNav.map((item) => (
+            <li>
+              <a href={item.path}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <a href={site.phone.tel}>{site.phone.display}</a>
+    </nav>
+  </noscript>
 </header>
 <div class="header-spacer" data-header-spacer></div>
 
@@ -73,13 +87,26 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
   // changes nothing until the first scroll, so the first frame stays the in-flow header.
   const header = document.querySelector<HTMLElement>("[data-site-header]");
   const spacer = document.querySelector<HTMLElement>("[data-header-spacer]");
-  if (header && spacer) {
+  const toggle = header?.querySelector<HTMLButtonElement>(".nav-toggle");
+  const menu = header?.querySelector<HTMLElement>("#mobile-menu");
+  if (header && spacer && toggle && menu) {
     const THRESHOLD = 8;
     let lastY = window.scrollY;
     let ticking = false;
-    const menu = header.querySelector("details.nav-mobile");
+    const open = () => toggle.getAttribute("aria-expanded") === "true";
+    const setOpen = (next: boolean) => {
+      toggle.setAttribute("aria-expanded", next ? "true" : "false");
+      menu.hidden = !next;
+      header.classList.toggle("menu-open", next);
+    };
+    toggle.addEventListener("click", () => {
+      const next = !open();
+      setOpen(next);
+      if (next) show();
+      else if (window.scrollY <= 0) atTop();
+    });
     const locked = () => {
-      if (menu instanceof HTMLDetailsElement && menu.open) return true;
+      if (open()) return true;
       const active = document.activeElement;
       return active instanceof Element && header.contains(active);
     };
@@ -106,15 +133,15 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
       else if (dy < -THRESHOLD) show();
       lastY = y;
     };
-    window.addEventListener("scroll", () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
-    }, { passive: true });
-    menu?.addEventListener("toggle", () => {
-      if (menu instanceof HTMLDetailsElement && menu.open) show();
-      else if (window.scrollY <= 0) atTop();
-    });
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+      },
+      { passive: true },
+    );
     header.addEventListener("focusin", () => {
       if (window.scrollY > 0) show();
     });
@@ -157,90 +184,63 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
     height: 100%;
     margin: 0 auto;
-    padding: 0;
-    width: min(var(--content-max), calc(100% - 2 * var(--content-pad)));
+    padding: 0 16px;
+    width: 100%;
   }
   .logo {
     display: block;
-    flex: none;
-    width: 220px;
+    flex: 1 1 auto;
+    width: auto;
+    max-width: 200px;
+    min-width: 0;
   }
   .logo img {
     display: block;
     width: 100%;
     height: auto;
   }
-  .banner {
+  .banner,
+  .phone-link {
     display: none;
-    margin: 0;
   }
-  .phone-btn {
-    position: absolute;
-    top: 143px;
-    left: 20px;
-    box-sizing: border-box;
-    display: none;
-    align-items: center;
-    gap: 16px;
-    width: 235px;
-    height: 41px;
-    padding: 0 23px;
-    border-radius: var(--radius-pill);
-    background: var(--color-ss-yellow);
-    color: #3a3a3a;
-    font-family: var(--font-heading);
-    font-size: 18px;
-    line-height: 21.6px;
-    letter-spacing: 1px;
-    text-decoration: none;
-    transition:
-      transform 0.15s ease,
-      box-shadow 0.15s ease;
-  }
-  .phone-btn:hover {
-    transform: translateY(-1px);
-  }
-  .phone-btn strong {
-    font-weight: 700;
-    white-space: nowrap;
-  }
-  .phone-btn :global(.phone-ico) {
+  .hd-inner :global(.call-mini) {
     flex: none;
-    width: 24px;
-    height: 24px;
-    color: var(--color-ss-phone-icon);
+    margin-left: auto;
+  }
+  .nav-toggle {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -6px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #111;
+    cursor: pointer;
+  }
+  .nav-toggle :global(svg) {
+    width: 28px;
+    height: 28px;
+  }
+  .nav-toggle :global(.i-close) {
+    display: none;
+  }
+  .site-header.menu-open .nav-toggle :global(.i-menu) {
+    display: none;
+  }
+  .site-header.menu-open .nav-toggle :global(.i-close) {
+    display: block;
   }
   .nav-desktop {
     display: none;
   }
-
-  /* Mobile menu */
-  .nav-mobile summary {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    margin-right: -7px;
-    list-style: none;
-    cursor: pointer;
-    color: #111;
-  }
-  .nav-mobile summary::-webkit-details-marker {
-    display: none;
-  }
-  .nav-mobile summary :global(svg) {
-    width: 33px;
-    height: 33px;
-  }
-  .nav-mobile:not([open]) :global(.i-close),
-  .nav-mobile[open] :global(.i-menu) {
-    display: none;
-  }
-  .nav-mobile nav {
+  .nav-mobile {
     position: absolute;
     top: 100%;
     left: 0;
@@ -249,13 +249,18 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     background: #fff;
     box-shadow: var(--shadow-header);
   }
+  .nav-mobile[hidden] {
+    display: none;
+  }
   .nav-mobile ul,
-  .nav-desktop ul {
+  .nav-desktop ul,
+  .nav-noscript ul {
     margin: 0;
     padding: 0;
     list-style: none;
   }
-  .nav-mobile a {
+  .nav-mobile a,
+  .nav-noscript a {
     display: block;
     padding: 10px 32px;
     font-family: var(--font-heading);
@@ -266,25 +271,34 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     text-decoration: none;
     color: rgba(10, 10, 10, 0.85);
   }
+  .menu-phone {
+    text-transform: none;
+    font-weight: 600;
+  }
+  .nav-noscript {
+    background: #fff;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
 
   @media (min-width: 1024px) {
     .hd-inner {
       display: block;
       padding: 0;
       width: min(var(--w-header), calc(100% - 2 * var(--content-pad)));
-      max-width: none;
     }
     .logo {
       position: absolute;
       top: 25px;
       left: 0;
       width: 249px;
+      max-width: none;
     }
     .banner {
       position: absolute;
       top: 24px;
-      right: 244px;
+      right: 220px;
       display: block;
+      margin: 0;
       font-family: var(--font-heading);
       font-weight: 600;
       font-size: 21px;
@@ -292,12 +306,31 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
       color: #746b6a;
       white-space: nowrap;
     }
-    .phone-btn {
-      display: flex;
-      top: 22px;
+    .phone-link {
+      position: absolute;
+      top: 28px;
       right: 0;
-      left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #3a3a3a;
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: normal;
+      text-decoration: none;
+      background: none;
+      white-space: nowrap;
     }
+    .phone-link :global(.phone-ico) {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      color: var(--color-ss-phone-icon);
+    }
+    .hd-inner :global(.call-mini),
+    .nav-toggle,
     .nav-mobile {
       display: none;
     }
@@ -325,7 +358,6 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     .nav-desktop a[aria-current="page"] {
       color: var(--color-ss-red);
     }
-    /* Live site: a red bar under the current page's link (not shown on the home page). */
     .nav-desktop a[aria-current="page"] {
       position: relative;
     }
@@ -338,9 +370,11 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
       height: 3px;
       background: var(--color-ss-red);
     }
+    .nav-noscript {
+      display: none;
+    }
   }
 
-  /* From 1280px the 1200px bar has room for the original nav spacing. */
   @media (min-width: 1280px) {
     .nav-desktop ul {
       gap: 24px;

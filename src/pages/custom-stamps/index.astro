@@ -7,6 +7,7 @@ import SectionTitle from "../../components/SectionTitle.astro";
 import ProductRows from "../../components/ProductRows.astro";
 import ProductRow from "../../components/ProductRow.astro";
 import WhyCards from "../../components/WhyCards.astro";
+import FinalCta from "../../components/FinalCta.astro";
 import Rich from "../../components/Rich.astro";
 import Icon from "../../components/Icon.astro";
 import { Picture } from "astro:assets";
@@ -27,10 +28,6 @@ import community from "../../assets/community-1.png";
 
 const route = routeByKey("custom-stamps");
 const rowImages = { selfInking: idealLine, signature: maxlight, logo: logoStamp, daters: datersInks, notary: notary4913 };
-const rowHeights = [350, 351, 352, 414, 439];
-// The live mobile title breaks after "for" (a <br> in the original). Same words, break shown below 1024px only.
-const findTitle = d.find.title.split(/(?<=\bfor) /) as [string, string];
-const readyTitle = d.ready.title.split(/(?<=\bown) /) as [string, string];
 const icons = { detail: stampGrey, turnaround, service: csGrey, community };
 ---
 
@@ -51,12 +48,12 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
   </section>
 
   <div class="custom-pg">
-  <Section tone="white" class="intro-sec" padTop={[60, 91]} padBottom={[85, 90]}>
+  <Section tone="white" class="intro-sec" padTop={[48, 40]} padBottom={[32, 28]}>
     <p class="intro"><Rich parts={d.intro} /></p>
   </Section>
 
-  <Section tone="surface" bg="#f4f4f4" class="find-sec" padTop={[69, 57]} padBottom={[92, 45]}>
-    <SectionTitle as="h2" class="bal">{findTitle[0]}{" "}<br class="mbr" />{findTitle[1]}</SectionTitle>
+  <Section tone="surface" bg="#f4f4f4" class="find-sec" padTop={[40, 32]} padBottom={[64, 40]}>
+    <SectionTitle as="h2" class="bal">{d.find.title}</SectionTitle>
     <div class="find-intro">
       <div class="find-text">
         {d.find.body.map((para) => (
@@ -66,7 +63,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
         ))}
       </div>
       <div class="find-img">
-        <Picture src={premium} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[214, 428]} sizes="214px" quality={80} />
+        <Picture src={premium} alt='Round "Premium Quality" stamp mark with a smudged postmark across the top' formats={["avif", "webp"]} fallbackFormat="webp" widths={[214, 428]} sizes="214px" quality={80} />
       </div>
     </div>
     <div class="rows">
@@ -76,11 +73,9 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
             <ProductRow
               title={r.title}
               image={rowImages[r.image]}
+              imageAlt={r.imageAlt}
               reverse={i % 2 === 0}
-              minHeight={rowHeights[i]}
-              ctaWeight={600}
-              upperTitle
-              titleWeight={500}
+              tone="plain"
               ctaHref={r.cta?.href}
               ctaLabel={r.cta?.label}
             >
@@ -96,24 +91,11 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     </div>
   </Section>
 
-  <Section tone="maroon" class="ready-sec" padTop={[81, 56]} padBottom={[60, 49]}>
-    <SectionTitle as="h2" tone="white" class="bal">{readyTitle[0]}{" "}<br class="mbr" />{readyTitle[1]}</SectionTitle>
-    <p class="ready-text">{d.ready.body}</p>
-    <p class="call-h">{d.ready.callHeading}</p>
-    <div class="ready-cta">
-      <Button href={d.ready.cta.href} size="lg" weight={600} width={384}>{d.ready.cta.label}</Button>
-    </div>
-  </Section>
-
-  <Section tone="surface" bg="#f6f6f6" class="why-sec" padTop={[69, 51]} padBottom={[90, 76]}>
+  <Section tone="surface" bg="#f6f6f6" class="why-sec" padTop={[56, 40]} padBottom={[64, 48]}>
     <SectionTitle as="h2">{d.why.title}</SectionTitle>
     <p class="why-intro"><Rich parts={d.why.intro} /></p>
     <p class="why-lead">{d.why.lead}</p>
-    <WhyCards
-      items={d.why.items.map((it) => ({ icon: icons[it.icon], title: it.title, body: it.body }))}
-      tones={["grey", "white", "white", "grey"]}
-      rowHeights={[343, 375]}
-    />
+    <WhyCards items={d.why.items.map((it) => ({ icon: icons[it.icon], title: it.title, body: it.body }))} />
   </Section>
 
   <Section tone="white" class="mark-sec" padTop={[70, 51]} padBottom={[50, 50]}>
@@ -122,17 +104,27 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       <div class="mark-copy">
         <p class="mark-lead">{d.mark.lead}</p>
         <p class="mark-p">
-          <Icon name="phone" class="mark-ico" /><strong><span class="mark-emoji" aria-hidden="true">📞</span> {d.mark.contactLabel.replace(/^\p{Extended_Pictographic}\s*/u, "")}</strong>{d.mark.contactBody}
+          <Icon name="phone" class="mark-ico" /><strong>{d.mark.contactLabel}</strong>{d.mark.contactBody}
         </p>
         <p class="mark-p">
           {d.mark.callPrefix}<a href={site.phone.tel}>{site.phone.display}</a>{d.mark.callMiddle}<a href={`mailto:${site.email}`}>{site.email}</a>.
         </p>
       </div>
       <div class="mark-img">
-        <Picture src={makeYourMark} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[354, 400, 800]} sizes="(min-width: 1024px) 380px, 100vw" quality={75} />
+        <Picture src={makeYourMark} alt="Group of stamps: a dater, a Trodat COMPLETED stamp, a pink notary embosser, a slim black stamp and a red pocket stamp" formats={["avif", "webp"]} fallbackFormat="webp" widths={[354, 400, 800]} sizes="(min-width: 1024px) 380px, 100vw" quality={75} />
       </div>
     </div>
   </Section>
+
+  <FinalCta class="ready-sec">
+    <SectionTitle as="h2" tone="white">{d.ready.title}</SectionTitle>
+    <p class="ready-text">{d.ready.body}</p>
+    <p class="call-h">{d.ready.callHeading}</p>
+    <div class="final-actions">
+      <Button href={d.ready.cta.href}>{d.ready.cta.label}</Button>
+      <Button href={`mailto:${site.email}`} variant="secondary">Email Us</Button>
+    </div>
+  </FinalCta>
   </div>
 </BaseLayout>
 
@@ -145,7 +137,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
   }
   .hero-body {
     background: #fff;
-    padding: 33px 0 0;
+    padding: 16px 0 0;
     text-align: center;
   }
   .brand {
@@ -209,15 +201,13 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
   .find-img {
     order: -1;
     width: 190px;
-    padding: 0 0 30px;
+    margin-inline: auto;
+    padding: 8px 0 24px;
   }
   .find-img :global(img) {
     display: block;
     width: 100%;
     height: auto;
-  }
-  .mbr {
-    display: inline;
   }
   .rows {
     width: 100%;
@@ -236,15 +226,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     padding: 0 3px;
   }
   .rows :global(.row-body) {
-    text-align: center;
-    line-height: 31.5px;
-  }
-  .rows :global(.row-cta) {
-    width: 262px;
-    margin: 0 auto;
-    padding: 18px 20px;
-    font-size: 18px;
-    line-height: 22px;
+    text-align: left;
   }
 
   /* ---- Ready band ---- */
@@ -269,12 +251,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
   .ready-cta {
     display: flex;
     justify-content: center;
-  }
-  .ready-cta :global(.btn) {
-    width: 262px;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 22px;
   }
   .custom-pg :global(.ready-sec .section-title),
   .custom-pg :global(.why-sec .section-title),
@@ -346,15 +322,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     vertical-align: -3px;
     color: var(--color-ss-ink);
   }
-  /* The phone character stays in the paragraph so the copy check still finds it. The icon is what shows. */
-  .mark-emoji {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    white-space: nowrap;
-    clip: rect(0, 0, 0, 0);
-  }
   .mark-img {
     order: -1;
   }
@@ -369,8 +336,9 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     .custom-pg :global(.why-sec .section-title),
     .custom-pg :global(.find-sec .section-title),
     .custom-pg :global(.mark-sec .section-title) {
-      font-size: 28px;
-      line-height: 36.4px;
+      /* 26px keeps "Springfield Stamp" on one line at 390. 28px left "Stamp" alone. */
+      font-size: 26px;
+      line-height: 34px;
     }
     .custom-pg :global(.ready-sec .section-title) {
       font-size: 30px;
@@ -381,10 +349,10 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       padding-bottom: 51px;
     }
     .find-img {
-      align-self: flex-start;
-      width: 248px;
-      margin-left: 29px;
-      padding-bottom: 22px;
+      align-self: center;
+      width: 190px;
+      margin-inline: auto;
+      padding-bottom: 16px;
     }
     .find-text {
       margin: 0;
@@ -403,15 +371,8 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       margin: 20px 0 13px;
       line-height: 35px;
     }
-    .rows :global(.row-cta) {
-      font-size: 20px;
-      line-height: 23.4px;
-    }
     .custom-pg :global(.ready-sec .section-title) {
-      text-wrap: wrap;
-    }
-    .custom-pg :global(.ready-sec .section-title) {
-      padding-bottom: 32px;
+      padding-bottom: 16px;
     }
     .call-h {
       margin-top: 12px;
@@ -424,10 +385,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       font-size: 19px;
       line-height: 30.4px;
     }
-    .ready-cta :global(.btn) {
-      padding: 18px 20px;
-      line-height: 23.4px;
-    }
     .call-h {
       font-size: 21px;
       line-height: 26.25px;
@@ -435,15 +392,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     .why-intro,
     .why-lead {
       line-height: 31.5px;
-    }
-    .custom-pg :global(.why-sec .card:nth-child(1)) {
-      min-height: 260px;
-    }
-    .custom-pg :global(.why-sec .card:nth-child(2)) {
-      min-height: 271px;
-    }
-    .custom-pg :global(.why-sec .card:nth-child(4)) {
-      min-height: 321px;
     }
     .mark-lead,
     .mark-p {
@@ -487,9 +435,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     .custom-pg :global(.find-sec.has-bg) {
       background: #f4f4f4;
     }
-    .mbr {
-      display: none;
-    }
     .rows > :global(.rows) {
       gap: 0;
     }
@@ -503,16 +448,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       text-align: left;
     }
     .rows :global(.row-cta) {
-      width: 380px;
-      margin: 0;
-      padding: 14px 22px;
-      font-size: 20px;
-      line-height: 28.8px;
-    }
-    .ready-cta :global(.btn) {
-      width: 384px;
-      font-size: 16px;
-      font-weight: 500;
+      align-self: flex-start;
     }
     .find-text {
       padding: 0;
@@ -548,9 +484,6 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     }
     .ready-text {
       margin: 0 auto;
-    }
-    .ready-cta :global(.btn) {
-      padding: 12px 22px;
     }
     .why-intro,
     .why-lead {

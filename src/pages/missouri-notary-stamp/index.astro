@@ -15,7 +15,15 @@ import embosser from "../../assets/springfield-stamps-notary-embosser.jpg";
 import journal from "../../assets/springfield-stamps-mobile.jpg";
 
 const route = routeByKey("missouri-notary-stamp");
+const oneStop = "One-Stop";
+const [leadBefore, leadAfter] = d.hero.lead.split(oneStop);
 const images = { rectangle, circular, embosser, journal };
+const alts = {
+  rectangle: "Gray Ideal 4913 rectangular self-inking stamp",
+  circular: "Round black Ideal 400R self-inking notary stamp with a Notary Public seal on top",
+  embosser: "Black desk notary embosser with a chrome seal plate and a black handle",
+  journal: "Display of stamps, daters and name tags on a gold round table in front of the shop sign",
+} as const;
 ---
 
 <BaseLayout route={route} heroHeight={{ desktop: 490, mobile: 303 }}>
@@ -29,7 +37,7 @@ const images = { rectangle, circular, embosser, journal };
     <div class="hero-body">
       <div class="hero-in content-col">
         <h1 id="hero-title" class="h1">
-          <span class="dark">{d.hero.lead}</span>
+          <span class="dark">{leadBefore}<span class="one-stop">{oneStop}</span>{leadAfter}</span>
           <span class="red">{d.hero.accent}</span>
         </h1>
       </div>
@@ -48,20 +56,18 @@ const images = { rectangle, circular, embosser, journal };
           d.products.items.map((p) => (
             <article class:list={["card", { "m-only": p.mobileOnly }]}>
               <div class="pic">
-                <Picture src={images[p.image]} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[343, 686]} sizes="(min-width: 1024px) 343px, 90vw" quality={75} />
+                <Picture src={images[p.image]} alt={alts[p.image]} formats={["avif", "webp"]} fallbackFormat="webp" widths={[343, 686]} sizes="(min-width: 1024px) 343px, 100vw" quality={75} />
               </div>
               <div class="info">
                 <h3 class="name">{p.name}</h3>
                 <p class="price">{p.price}</p>
                 <div class="desc">
-                  {(Array.isArray(p.body) ? p.body : [p.body]).map((para, i, all) => (
-                    <p>
-                      {para}
-                      {p.mobileExtra && i === all.length - 1 && <span class="m-only-inline"> {p.mobileExtra}</span>}
-                    </p>
+                  {(Array.isArray(p.body) ? p.body : [p.body]).map((para) => (
+                    <p>{para}</p>
                   ))}
+                  {p.mobileExtra && <p>{p.mobileExtra}</p>}
                 </div>
-                <Button href={d.products.buy.href} weight={700} class="buy">{d.products.buy.label}</Button>
+                <Button href={p.image === "journal" ? d.products.buy.href : site.phone.tel} class="buy">{p.image === "journal" ? d.products.buy.label : "Call to Order"}</Button>
               </div>
             </article>
           ))
@@ -86,8 +92,8 @@ const images = { rectangle, circular, embosser, journal };
         <p class="cl"><Icon name="mail" class="cl-ico" /><span>{site.email}</span></p>
       </div>
       <div class="buy-ctas">
-        <Button href={site.phone.tel} weight={700} class="cta">{d.buy.callLabel}</Button>
-        <Button href={`mailto:${site.email}`} weight={700} class="cta">{d.buy.emailLabel}</Button>
+        <Button href={site.phone.tel}>{d.buy.callLabel}</Button>
+        <Button href={`mailto:${site.email}`} variant="secondary">{d.buy.emailLabel}</Button>
       </div>
     </Section>
   </div>
@@ -114,11 +120,14 @@ const images = { rectangle, circular, embosser, journal };
     line-height: 42px;
     text-transform: uppercase;
   }
+  .one-stop {
+    white-space: nowrap;
+  }
   .dark {
     color: var(--color-ss-text);
   }
   .red {
-    color: #c81626;
+    color: var(--color-ss-red);
   }
 
   .notary-pg :global(.section-title) {
@@ -126,8 +135,9 @@ const images = { rectangle, circular, embosser, journal };
     text-wrap: balance;
   }
   .notary-pg :global(.cards-sec .section-title),
-  .notary-pg :global(.req-sec .section-title) {
-    color: #c81626;
+  .notary-pg :global(.req-sec .section-title),
+  .notary-pg :global(.buy-sec .section-title) {
+    color: var(--color-ss-red);
   }
 
   /* ---- Intro ---- */
@@ -177,9 +187,9 @@ const images = { rectangle, circular, embosser, journal };
     display: flex;
     flex: 1;
     flex-direction: column;
-    align-items: center;
-    padding: 20px 21px 48px;
-    text-align: center;
+    align-items: flex-start;
+    padding: 16px 21px 24px;
+    text-align: left;
   }
   .name {
     margin: 0;
@@ -187,7 +197,7 @@ const images = { rectangle, circular, embosser, journal };
     font-weight: 700;
     font-size: 23px;
     line-height: 30px;
-    color: #c81626;
+    color: var(--color-ss-red);
   }
   .price {
     margin: 0;
@@ -214,20 +224,11 @@ const images = { rectangle, circular, embosser, journal };
   .desc p + p {
     margin-top: 12px;
   }
-  .m-only-inline {
-    display: inline;
-  }
   .desc {
     align-self: stretch;
   }
   .info :global(.buy) {
     align-self: center;
-    width: 160px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 14px 20px;
-    font-size: 18px;
-    line-height: 25px;
   }
 
   /* ---- Requirements ---- */
@@ -275,9 +276,9 @@ const images = { rectangle, circular, embosser, journal };
   .contact-lines {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
     width: max-content;
-    margin: 36px auto 30px;
+    margin: 20px auto;
   }
   .cl {
     display: flex;
@@ -302,11 +303,8 @@ const images = { rectangle, circular, embosser, journal };
     align-items: center;
     gap: 15px;
   }
-  .buy-ctas :global(.cta) {
-    width: 185px;
-    padding: 14px 20px;
-    font-size: 20px;
-    line-height: 22px;
+  .buy-ctas :global(.btn) {
+    max-width: 100%;
   }
 
   /* Mobile parity (below 1024px): live type sizes and spacing at 390px. */
@@ -315,8 +313,12 @@ const images = { rectangle, circular, embosser, journal };
       font-size: 30px;
     }
     .cards {
-      gap: 50px;
-      padding-top: 16px;
+      gap: 20px;
+      padding-top: 8px;
+    }
+    .pic :global(img) {
+      height: 220px;
+      object-fit: cover;
     }
     .info {
       padding: 43px 21px 52px;
@@ -339,7 +341,6 @@ const images = { rectangle, circular, embosser, journal };
     }
     .notary-pg :global(.req-sec .section-title) {
       margin: 0 auto;
-      text-wrap: wrap;
     }
     .card:nth-child(2) .desc {
       font-size: 17px;
@@ -352,17 +353,15 @@ const images = { rectangle, circular, embosser, journal };
       padding-bottom: 20px;
     }
     .contact-lines {
-      gap: 53px;
-      margin: 27px auto 56px;
+      gap: 12px;
+      margin: 16px auto;
     }
     .cl {
       gap: 20px;
       font-size: 18px;
     }
-    .buy-ctas :global(.cta) {
-      width: 204px;
-      padding: 18px 20px;
-      line-height: 21.6px;
+    .buy-ctas :global(.btn) {
+      max-width: 100%;
     }
     .req-list li {
       margin-bottom: 15px;
@@ -378,8 +377,9 @@ const images = { rectangle, circular, embosser, journal };
       line-height: 32.5px;
     }
     .notary-pg :global(.req-sec .section-title) {
-      font-size: 25px;
-      line-height: 35px;
+      /* 24px keeps "Stamp Requirements" on one line at 390. */
+      font-size: 24px;
+      line-height: 32px;
     }
     .notary-pg :global(.buy-sec .section-title) {
       font-size: 28px;
@@ -403,7 +403,7 @@ const images = { rectangle, circular, embosser, journal };
       text-align: left;
     }
     .h1 {
-      max-width: 440px;
+      max-width: 560px;
       padding-bottom: 8px;
       font-size: 41px;
       line-height: 53px;
@@ -427,13 +427,9 @@ const images = { rectangle, circular, embosser, journal };
     .m-only {
       display: none;
     }
-    .m-only-inline {
-      display: none;
-    }
     .info {
-      align-items: center;
-      min-height: 587px;
-      padding: 43px 20px 26px;
+      align-items: flex-start;
+      padding: 24px 20px 20px;
       text-align: left;
     }
     .name {
@@ -474,8 +470,8 @@ const images = { rectangle, circular, embosser, journal };
     }
     .contact-lines {
       flex-direction: row;
-      gap: 62px;
-      margin: 60px auto 70px;
+      gap: 32px;
+      margin: 20px auto;
     }
     .cl {
       font-size: 25px;
@@ -485,10 +481,11 @@ const images = { rectangle, circular, embosser, journal };
       flex-direction: row;
       justify-content: center;
     }
-    .buy-ctas :global(.cta) {
-      width: 180px;
-      padding: 18px 15px;
-      font-size: 20px;
+  }
+
+  @media (min-width: 1440px) {
+    .notary-pg :global(.buy-sec .section-title) {
+      white-space: nowrap;
     }
   }
 </style>

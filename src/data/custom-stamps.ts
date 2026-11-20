@@ -6,10 +6,11 @@ import type { Cta, Rich } from "./types";
 
 export interface CustomStampRow {
   title: string;
-  /** One entry per paragraph. Splits fall on sentence ends. */
+  /** One paragraph, the same words the live page runs as one block. */
   body: readonly Rich[];
   /** Key into the images imported by the page. */
   image: "selfInking" | "signature" | "logo" | "daters" | "notary";
+  imageAlt: string;
   cta?: Cta;
 }
 
@@ -34,14 +35,17 @@ export const customStamps: {
   intro: [
     "Howdy from ",
     { strong: "Springfield Stamp" },
-    ", your one-stop shop for custom rubber stamps, personalized stamps, and all things that help you make a lasting impression! Whether you're a bustling bakery needing custom logo stamps for your packaging or a freelance artist adding a unique touch with art stamps, we've got the perfect tool for your small business.",
+    ", your one-stop shop for custom rubber stamps, personalized stamps, and all things that help you make a lasting impression! Whether you're a bustling bakery needing ",
+    { strong: "custom logo stamps" },
+    " for your packaging or a freelance artist adding a unique touch with ",
+    { strong: "art stamps" },
+    ", we've got the perfect tool for your small business.",
   ],
   find: {
     title: "Find the Perfect Stamp for Your Unique Needs",
     body: [
-      ["We take pride in being your friendly neighborhood stamp experts."],
       [
-        "That means we offer ",
+        "We take pride in being your friendly neighborhood stamp experts. That means we offer ",
         { strong: "premium quality stamps" },
         " crafted with care, lightning-fast turnaround time, and personalized customer service that feels just like chatting over a cup of coffee!",
       ],
@@ -50,55 +54,79 @@ export const customStamps: {
       {
         title: "Self-Inking Stamps",
         body: [
-          ["Stay efficient with ", { strong: "quick, clean impressions" }, "."],
-          ["Perfect for invoices, receipts, and adding a ", { strong: "personalized touch" }, " to packaging."],
-          ["Choose from a variety of sizes, colors, and ink types to match your brand."],
+          [
+            "Stay efficient with ",
+            { strong: "quick, clean impressions" },
+            ". Perfect for invoices, receipts, and adding a ",
+            { strong: "personalized touch" },
+            " to packaging. Choose from a variety of sizes, colors, and ink types to match your brand.",
+          ],
         ],
         image: "selfInking",
+        imageAlt: "Black Ideal 4931 self-inking stamp with a clear ink window at the base",
       },
       {
         title: "Signature Stamps",
         body: [
-          ["Replicate your handwritten signature with perfect accuracy, saving you time and adding a ", { strong: "personal touch" }, " to documents."],
-          ["Ideal for contracts, handwritten notes, proposals, and checks."],
+          [
+            "Replicate your handwritten signature with perfect accuracy, saving you time and adding a ",
+            { strong: "personal touch" },
+            " to documents. Ideal for contracts, handwritten notes, proposals, and checks.",
+          ],
         ],
         image: "signature",
+        imageAlt: "Gray and black MaxLight by Trodat pre-inked stamp with a round base",
       },
       {
         title: "Logo Stamps",
         body: [
-          ["Showcase your brand with a professional-looking ", { strong: "logo stamp" }, "."],
-          ["Upload your own logo or let our design partners create one for you, ensuring a ", { strong: "consistent and memorable brand image" }, "."],
+          [
+            "Showcase your brand with a professional-looking ",
+            { strong: "logo stamp" },
+            ". Upload your own logo or let our design partners create one for you, ensuring a ",
+            { strong: "consistent and memorable brand image" },
+            ".",
+          ],
         ],
         image: "logo",
+        imageAlt: "Round black Ideal 500R self-inking stamp with its protective cap set beside it",
       },
       {
         title: "Daters & Inks",
         body: [
-          ["Keep track of important dates with our handy daters, available in various styles and ink colors."],
-          ["We also offer a variety of high-quality inks to keep your stamps looking their best, ensuring ", { strong: "professionalism and accuracy" }, " on every document."],
+          [
+            "Keep track of important dates with our handy daters, available in various styles and ink colors. We also offer a variety of high-quality inks to keep your stamps looking their best, ensuring ",
+            { strong: "professionalism and accuracy" },
+            " on every document.",
+          ],
         ],
         image: "daters",
+        imageAlt: "Trodat Professional 55510 band stamp with rows of turning number wheels",
       },
       {
-        title: "NOTARY STAMPS",
+        title: "Notary Stamps",
         body: [
-          [{ strong: "Notarize documents" }, " with ease and professionalism using your very own ", { strong: "notary stamp" }, "."],
-          ["No more messy ink pads or missed details plus –  we have all the supplies: the stamp, journal, and embosser!"],
+          [
+            { strong: "Notarize documents" },
+            " with ease and professionalism using your very own ",
+            { strong: "notary stamp" },
+            ". No more messy ink pads or missed details plus – we have all the supplies: the stamp, journal, and embosser!",
+          ],
         ],
         image: "notary",
+        imageAlt: "Gray Ideal 4913 rectangular self-inking stamp with a clear base",
         cta: { label: "Get Your Notary Stamp", href: "/missouri-notary-stamp/" },
       },
     ],
   },
   ready: {
-    title: "Ready to create your own custom stamp?",
+    title: "Ready to Create Your Own Custom Stamp?",
     body: "It’s easy—just give us a call! We’ll help you simplify your stamp design decisions, choose your ink color, and place your order. We'll then ship your stamp right away, so you can start making your mark in no time!",
     callHeading: "Give us a call today",
     cta: { label: `Call ${site.phone.display} to Get Started`, href: site.phone.tel },
   },
   why: {
-    title: "why choose springfield stamp?",
+    title: "Why Choose Springfield Stamp?",
     intro: [
       "In a world of faceless online retailers, we believe in the power of ",
       { strong: "personal connection" },
@@ -110,30 +138,30 @@ export const customStamps: {
     items: [
       {
         icon: "detail",
-        title: "Attention to detail",
+        title: "Attention to Detail",
         body: ["We handcraft each stamp with care, ensuring ", { strong: "superior quality and durability" }, "."],
       },
       {
         icon: "turnaround",
-        title: "Lightning-fast turnaround",
+        title: "Lightning-Fast Turnaround",
         body: ["We know time is precious, so we get your stamps to you ", { strong: "quickly and efficiently" }, "."],
       },
       {
         icon: "service",
-        title: "Personalized customer service",
+        title: "Personalized Customer Service",
         body: ["Our friendly U.S.-based team is always happy to answer your questions and help you find the perfect stamp for your needs."],
       },
       {
         icon: "community",
-        title: "Community focus",
+        title: "Community Focus",
         body: ["We're proud to support local businesses and be an active part of the small business community."],
       },
     ],
   },
   mark: {
-    title: "Make your mark with Springfield Stamp",
+    title: "Make Your Mark with Springfield Stamp",
     lead: "Don't settle for ordinary when you can have extraordinary with Springfield Stamp – where quality meets creativity, and every impression counts!",
-    contactLabel: "📞 Contact Our US-Based Team",
+    contactLabel: "Contact Our US-Based Team",
     contactBody: ": Do you have questions or need assistance with your order? Our friendly team is here to help!",
     callPrefix: "Call us at ",
     callMiddle: " or email us at ",

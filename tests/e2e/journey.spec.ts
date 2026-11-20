@@ -60,7 +60,7 @@ test.describe("journey tracking", () => {
     await page.goto("/", { waitUntil: "networkidle" });
     await expect.poll(() => events.some((e) => e.event === "page_view")).toBe(true);
     const before = events.length;
-    await page.locator("header .phone-btn").click();
+    await page.locator("header a.phone-link").click();
     await expect.poll(() => events.filter((e) => e.event === "click_to_call").length).toBe(1);
     await page.locator("nav.nav-desktop a[href='/contact/']").click();
     await expect.poll(() => events.filter((e) => e.event === "contact_click").length).toBe(1);

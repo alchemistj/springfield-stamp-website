@@ -16,7 +16,7 @@ const m = contact.map;
       <Image src={mapImage} alt="Map showing Springfield Stamp & Engraving, 1416 S. Glenstone Ave., Springfield, MO" width={460} height={450} format="webp" quality={78} loading="lazy" decoding="async" />
     </button>
   </div>
-  <a class="map-link" href={m.linkHref} target="_blank" rel="noopener">{m.linkLabel}</a>
+  <a class="map-link btn btn-secondary" href={m.linkHref} target="_blank" rel="noopener">{m.linkLabel}</a>
 </div>
 
 <script>
@@ -51,15 +51,22 @@ const m = contact.map;
 
 <style>
   .map-block {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
   }
   .map {
+    position: relative;
     width: 100%;
-    height: 450px;
+    flex: 1 1 0;
+    min-height: 220px;
     overflow: hidden;
     background: #e8eaed;
   }
   .facade {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
@@ -76,24 +83,15 @@ const m = contact.map;
     object-position: 50% 50%;
   }
   .map :global(.map-frame) {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
     border: 0;
   }
   .map-link {
-    display: block;
-    width: max-content;
-    max-width: 100%;
-    margin: 12px auto 0;
-    padding: 8px 14px;
-    font: 600 14px/1.2 var(--font-heading);
-    color: #1a1a1a;
-    background: #fff;
-    border: 1px solid #d0d0d0;
-    border-radius: 4px;
-    box-shadow: none;
-    text-decoration: none;
-    white-space: nowrap;
+    align-self: flex-start;
+    margin: 12px 0 0;
   }
 </style>

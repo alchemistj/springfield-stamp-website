@@ -83,7 +83,8 @@ test.describe("contact map facade", () => {
     await page.mouse.wheel(0, 300);
     await expect(page.locator("[data-map-facade] iframe")).toHaveCount(1);
     const after = await page.locator("[data-map-facade]").boundingBox();
-    expect(before!.height).toBe(450);
-    expect(after!.height).toBe(450);
+    // The map fills the details column (M28). The reserved box must not move when the iframe arrives.
+    expect(before!.height).toBe(after!.height);
+    expect(before!.height).toBeGreaterThanOrEqual(220);
   });
 });

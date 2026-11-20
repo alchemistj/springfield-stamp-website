@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { about } from "../../src/data/about";
 import { contact } from "../../src/data/contact";
+import { routeByKey } from "../../src/lib/routes";
 
 const DIST = path.resolve("dist");
 const read = (p: string) => fs.readFileSync(path.join(DIST, p), "utf8");
@@ -28,9 +29,7 @@ describe("contact page build", () => {
     expect(html).toContain("View on Google Maps");
   });
   it("has the spec's meta description and one H1", () => {
-    expect(html).toContain(
-      "Contact Springfield Stamp &#38; Engraving at 1416 S. Glenstone Ave., Springfield, MO. Call (417) 881-8828 or email orders@springfieldstamp.com.",
-    );
+    expect(decode(html.match(/<meta name="description" content="([^"]*)"/)![1]!)).toBe(routeByKey("contact").description);
     expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
   });
   it("carries the copy word for word", () => {

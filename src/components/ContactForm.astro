@@ -40,7 +40,7 @@ const phone = site.phone;
     <input type="text" name="website_url" id="cf-website" tabindex="-1" autocomplete="off" />
     <span>{f.honeypotNote}</span>
   </div>
-  <button type="submit" class="submit" disabled data-submit>{f.submit}</button>
+  <button type="submit" class="btn btn-primary submit" disabled data-submit>{f.submit}</button>
   <p class="status" role="status" aria-live="polite" data-status></p>
   <p class="loading" data-loading>{formMessages.loading} <a href={phone.tel}>{phone.display}</a></p>
   <noscript><p class="status">{formMessages.noscript} <a href={phone.tel}>{phone.display}</a>.</p></noscript>
@@ -224,19 +224,7 @@ const phone = site.phone;
     overflow: hidden;
   }
   .submit {
-    display: inline-block;
-    padding: 0 17px;
-    height: 38px;
-    font: 400 14px/38px var(--font-body);
-    color: #fff;
-    background: var(--color-ss-red);
-    border: 0;
-    border-radius: 2px;
-    cursor: pointer;
-  }
-  .submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    margin-top: 4px;
   }
   .status,
   .loading {

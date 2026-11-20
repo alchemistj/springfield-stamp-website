@@ -9,6 +9,7 @@ export interface TagRow {
   /** One string, or one string per paragraph when a row is split on sentence ends. */
   body: string | readonly string[];
   image: "classic" | "logo" | "engraved" | "fullColor" | "photo";
+  imageAlt: string;
 }
 export interface Benefit {
   icon: "breakTheIce" | "boostBrand" | "promote" | "improve" | "enhance";
@@ -37,7 +38,7 @@ export const magneticNameTags: {
     hello: [
       "Howdy from",
       { strong: " Springfield Stamp," },
-      " your friendly neighborhood experts in making names stick — literally!",
+      " your friendly neighborhood experts in making names stick\u00a0— literally!",
     ],
     pride: [
       "We take pride in offering ",
@@ -64,6 +65,7 @@ export const magneticNameTags: {
         title: "Classic Magnetic Name Tags",
         body: "Simple and functional, perfect for everyday use. Choose from a variety of sizes, shapes, and colors.",
         image: "classic",
+        imageAlt: "Silver name tag reading Jennifer Linders with a Fresh Gallery logo",
       },
       {
         title: "Magnetic Name Tags with Logo",
@@ -73,21 +75,25 @@ export const magneticNameTags: {
           "Make a lasting impression whenever you meet someone new.",
         ],
         image: "logo",
+        imageAlt: "Black name tag reading Taylor Sloan, Vice President, Community Relations, with a university logo",
       },
       {
         title: "Engraved Magnetic Name Tags",
         body: "Add a touch of elegance with personalized engraved name tags. Perfect for executives, professionals, or special events.",
         image: "engraved",
+        imageAlt: "Silver name tag with a black border reading Jeff Williams, Shift Manager, with a Sonic logo",
       },
       {
         title: "Full-Color Magnetic Name Tags",
         body: "Make a bold statement with vibrant, full-color designs. Ideal for creative businesses, marketing campaigns, or team-building events.",
         image: "fullColor",
+        imageAlt: "White name tag with a red border and full-color Andy's Frozen Custard logo, reading John Brown, Springfield, Missouri",
       },
       {
         title: "Magnetic Photo Name Tags",
         body: "Put a face to the name with personalized photo name tags. Great for schools, healthcare facilities, or customer service teams.",
         image: "photo",
+        imageAlt: "Vertical white ID badge with a Solera Energy logo, a portrait photo and the name Bryan Thompson, Territory Director",
       },
     ],
   },
@@ -102,7 +108,7 @@ export const magneticNameTags: {
     ],
     contact: "Contact us today to discuss your customization options and get started.",
     callLine: `Call ${site.phone.display} to Start Creating`,
-    cta: { label: "CALL US", href: site.phone.tel },
+    cta: { label: "Call Us", href: site.phone.tel },
   },
   design: {
     title: "Design Your Own in Minutes: It's Easy!",
@@ -122,7 +128,7 @@ export const magneticNameTags: {
     benefits: [
       {
         icon: "breakTheIce",
-        title: "BREAK THE ICE",
+        title: "Break the Ice",
         body: [
           { strong: "Name tags " },
           "instantly ",
@@ -199,7 +205,7 @@ export const magneticNameTags: {
       },
       {
         icon: "community",
-        title: "Community focus",
+        title: "Community Focus",
         body: ["We're proud to support local businesses and be an active part of the small business community."],
       },
     ],

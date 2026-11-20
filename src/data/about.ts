@@ -39,11 +39,11 @@ export const about: {
       ["We can’t even go to bed at night if there are dirty dishes in the sink…(despite a toddler dominating our evening routine!)"],
       ["So if there’s work to be done, we don’t rest until it’s done."],
       ["So you can be assured that we process your order as efficiently as possible."],
-      ["Plus, as a family business, we bring mid-western family values to work every day.\u00a0 Our customers are an extension of our community, even though they may come from the farthest reaches of the country."],
+      ["Plus, as a family business, we bring mid-western family values to work every day. Our customers are an extension of our community, even though they may come from the farthest reaches of the country."],
     ],
   },
   closing: {
     body: ["We want everything to be ", { strong: "PERFECT" }, "…so we take the time to ask the right questions and ", { strong: "deliver exactly what our clients want and need" }, "."],
-    cta: { label: "Click Here to Get in Touch", href: "/contact/" },
+    cta: { label: "Get in Touch", href: "/contact/" },
   },
 };
