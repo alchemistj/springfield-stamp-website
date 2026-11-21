@@ -33,7 +33,7 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
       <span>{site.phone.display}</span>
     </a>
     <Button href={site.phone.tel} class="call-mini">Call</Button>
-    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu">
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
       <Icon name="menu" class="i-menu" />
       <Icon name="close" class="i-close" />
     </button>
@@ -96,9 +96,15 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     const open = () => toggle.getAttribute("aria-expanded") === "true";
     const setOpen = (next: boolean) => {
       toggle.setAttribute("aria-expanded", next ? "true" : "false");
+      toggle.setAttribute("aria-label", next ? "Close menu" : "Open menu");
       menu.hidden = !next;
       header.classList.toggle("menu-open", next);
     };
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !open()) return;
+      setOpen(false);
+      toggle.focus();
+    });
     toggle.addEventListener("click", () => {
       const next = !open();
       setOpen(next);
@@ -191,11 +197,12 @@ const logo = await logoImage("springfield-stamp-logo-black.png", 600, 6);
     width: 100%;
   }
   .logo {
-    display: block;
-    flex: 1 1 auto;
-    width: auto;
+    display: flex;
+    align-items: center;
+    flex: 0 0 200px;
+    width: 200px;
     max-width: 200px;
-    min-width: 0;
+    min-width: 200px;
   }
   .logo img {
     display: block;

@@ -1,8 +1,7 @@
 ---
 // Alternating image / text product row. Put several inside <ProductRows>.
 // `reverse` puts the picture on the right on desktop. Both columns are equal.
-// `fit` "cover" crops to the cell (homepage photos). "contain" shows the whole
-// cut-out, centred, at `photoScale` percent of the cell.
+// The photo fills its cell edge to edge (object-fit: cover). The row height comes from the text.
 // `tone` "card" / "card-alt" is the homepage boxed row. "plain" is a white row with no card.
 import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
@@ -21,14 +20,6 @@ interface Props {
   ctaLabel?: string;
   /** CSS object-position when the cover crop would cut the product. */
   objectPosition?: string;
-  /** cover crops. contain shows the whole photo, centred on white. */
-  fit?: "cover" | "contain";
-  /** Percent of the cell a contained photo may fill. 100 fills the cell. */
-  photoScale?: number;
-  /** Phone max-height for a contained photo. Desktop uses the cell instead. */
-  phoneMaxHeight?: number;
-  /** Phone only: photo at 80% of the card, max 300px, with this much white above and below. */
-  phoneInset?: number;
 }
 const {
   title,
@@ -40,18 +31,10 @@ const {
   ctaHref,
   ctaLabel,
   objectPosition = "50% 50%",
-  fit = "cover",
-  photoScale = 80,
-  phoneMaxHeight,
-  phoneInset,
 } = Astro.props;
-const contain = fit === "contain";
 ---
 
-<article
-  class:list={["row", { reverse, "fit-contain": contain, "scale-full": contain && photoScale >= 100, cap: contain && phoneMaxHeight != null, "phone-inset": phoneInset != null }]}
-  style={`--obj:${objectPosition};--photo-scale:${photoScale}%;${phoneMaxHeight != null ? `--photo-cap:${phoneMaxHeight}px;` : ""}${phoneInset != null ? `--phone-inset:${phoneInset}px;` : ""}`}
->
+<article class:list={["row", { reverse }]} style={`--obj:${objectPosition}`}>
   <div class="media">
     {
       image && (
@@ -80,13 +63,17 @@ const contain = fit === "contain";
     margin: 0;
     background: #fff;
   }
+  /* 4:3 reserves the phone box before the file arrives. The picture fills it. */
   .media {
+    position: relative;
     overflow: hidden;
     aspect-ratio: 4 / 3;
     background: #fff;
   }
   .media :global(picture),
   .media :global(img) {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
@@ -103,79 +90,6 @@ const contain = fit === "contain";
   }
   .tone-card-alt {
     background: var(--color-ss-card-alt);
-  }
-  /* Contained photos sit on white, centred, at their own height. No 4:3 band. */
-  .fit-contain .media {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: auto;
-    height: auto;
-    background: #fff;
-  }
-  .fit-contain .media :global(picture) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: auto;
-  }
-  .fit-contain .media :global(img) {
-    width: auto;
-    height: auto;
-    max-width: var(--photo-scale, 80%);
-    object-fit: contain;
-    object-position: center;
-  }
-  @media (max-width: 1023px) {
-    .copy.tone-card,
-    .copy.tone-card-alt {
-      box-sizing: border-box;
-      padding: 20px;
-    }
-    .copy.tone-card .row-title,
-    .copy.tone-card-alt .row-title {
-      margin-top: 0;
-    }
-    .copy.tone-card .row-body,
-    .copy.tone-card-alt .row-body {
-      margin-bottom: 16px;
-    }
-    /* A definite width plus height:auto lets the width/height attributes reserve the box before the file arrives. */
-    .fit-contain.cap .media {
-      display: block;
-    }
-    .fit-contain.cap .media :global(picture) {
-      display: block;
-      width: min(var(--photo-scale, 80%), 100%);
-      margin-inline: auto;
-    }
-    .fit-contain.cap .media :global(img) {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-width: 100%;
-      max-height: var(--photo-cap, 220px);
-    }
-    .fit-contain.phone-inset .media {
-      display: block;
-      box-sizing: border-box;
-      padding: var(--phone-inset, 24px) 0;
-      aspect-ratio: auto;
-      height: auto;
-    }
-    .fit-contain.phone-inset .media :global(picture) {
-      display: block;
-      width: min(80%, 300px);
-      margin-inline: auto;
-    }
-    .fit-contain.phone-inset .media :global(img) {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-width: 100%;
-      max-height: none;
-    }
   }
   .row-title {
     margin: 16px 0 12px;
@@ -202,6 +116,27 @@ const contain = fit === "contain";
   .row-body :global(strong) {
     font-weight: 600;
   }
+  .copy :global(.row-cta) {
+    align-self: flex-start;
+    width: auto;
+    max-width: 100%;
+  }
+
+  @media (max-width: 1023px) {
+    .copy.tone-card,
+    .copy.tone-card-alt {
+      box-sizing: border-box;
+      padding: 20px;
+    }
+    .copy.tone-card .row-title,
+    .copy.tone-card-alt .row-title {
+      margin-top: 0;
+    }
+    .copy.tone-card .row-body,
+    .copy.tone-card-alt .row-body {
+      margin-bottom: 16px;
+    }
+  }
 
   @media (min-width: 1024px) {
     .row {
@@ -213,48 +148,6 @@ const contain = fit === "contain";
       aspect-ratio: auto;
       height: 100%;
       min-height: 0;
-    }
-    .fit-contain .media {
-      height: 100%;
-    }
-    .fit-contain .media :global(picture) {
-      height: 100%;
-    }
-    .fit-contain .media :global(img) {
-      width: var(--photo-scale, 80%);
-      height: var(--photo-scale, 80%);
-      max-width: var(--photo-scale, 80%);
-      max-height: var(--photo-scale, 80%);
-    }
-    .fit-contain.scale-full .media :global(img) {
-      width: 100%;
-      height: 100%;
-      max-width: 100%;
-      max-height: 100%;
-    }
-    /* Product-page photos must not set the row height. The text column does.
-       The picture is taken out of flow so a landscape file cannot stretch the row. */
-    .fit-contain.cap .media {
-      position: relative;
-      min-height: 240px;
-      height: auto;
-    }
-    .fit-contain.cap .media :global(picture) {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-    }
-    .fit-contain.cap .media :global(img) {
-      width: auto;
-      height: auto;
-      max-width: var(--photo-scale, 80%);
-      max-height: 100%;
-      object-fit: contain;
     }
     .reverse .media {
       order: 2;

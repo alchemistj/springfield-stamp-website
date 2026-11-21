@@ -9,7 +9,7 @@ export const about: {
   story: readonly Rich[];
   storyMobile: Rich;
   why: { title: string; paragraphs: readonly Rich[] };
-  closing: { body: Rich; cta: { label: string; href: string } };
+  closing: { title: string; body: Rich; cta: { label: string; href: string } };
 } = {
   kicker: "ABOUT",
   h1: "Springfield Stamp",
@@ -43,6 +43,7 @@ export const about: {
     ],
   },
   closing: {
+    title: "Ready to Get Your Order Just Right?",
     body: ["We want everything to be ", { strong: "PERFECT" }, "…so we take the time to ask the right questions and ", { strong: "deliver exactly what our clients want and need" }, "."],
     cta: { label: "Get in Touch", href: "/contact/" },
   },

@@ -85,6 +85,7 @@ test.describe("contact map facade", () => {
     const after = await page.locator("[data-map-facade]").boundingBox();
     // The map fills the details column (M28). The reserved box must not move when the iframe arrives.
     expect(before!.height).toBe(after!.height);
-    expect(before!.height).toBeGreaterThanOrEqual(220);
+    expect(before!.height).toBe(450);
+    expect(after!.height).toBe(450);
   });
 });

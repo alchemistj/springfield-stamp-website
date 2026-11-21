@@ -54,7 +54,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   </section>
 
   <div class="mag-pg">
-    <Section tone="white" class="intro-sec" padTop={[53, 37]} padBottom={[70, 0]}>
+    <Section tone="white" class="intro-sec" padTop={[53, 37]} padBottom={[8, 0]}>
       <p class="p intro-p"><Rich parts={d.intro.hello} /></p>
       <p class="p intro-p"><Rich parts={d.intro.pride} /></p>
       <div class="call-plain">
@@ -64,14 +64,14 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       <p class="p intro-p"><Rich parts={d.intro.whether} /></p>
     </Section>
 
-    <Section tone="white" class="find-sec" padTop={[76, 0]} padBottom={[79, 42]}>
+    <Section tone="white" class="find-sec" padTop={[16, 0]} padBottom={[48, 32]}>
       <SectionTitle as="h2">{d.find.title}</SectionTitle>
       <p class="p centered find-lead">{d.find.lead}</p>
       <div class="rows">
         <ProductRows>
           {
             d.find.rows.map((r, i) => (
-              <ProductRow title={r.title} image={rowImages[r.image]} imageAlt={r.imageAlt} reverse={i % 2 === 0} tone="plain" fit="contain" photoScale={80} phoneMaxHeight={220}>
+              <ProductRow title={r.title} image={rowImages[r.image]} imageAlt={r.imageAlt} reverse={i % 2 === 0} tone="plain" objectPosition="center">
                 {(Array.isArray(r.body) ? r.body : [r.body]).map((para) => (
                   <p>{para}</p>
                 ))}
@@ -119,8 +119,8 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       </div>
     </Section>
 
-    <Section tone="surface" bg="#f8f8f8" class="more-sec" padTop={[67, 61]} padBottom={[59, 59]}>
-      <SectionTitle as="h2">{d.more.title}</SectionTitle>
+    <Section tone="surface" bg="#f8f8f8" class="more-sec" padTop={[48, 40]} padBottom={[16, 16]}>
+      <SectionTitle as="h2" class="more-title">{d.more.title}</SectionTitle>
       <div class="more">
         <div class="more-copy">
           {d.more.body.map((para) => (
@@ -130,14 +130,29 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
             {d.more.bullets.map((t) => <li>{t}</li>)}
           </ul>
         </div>
-        <div class="more-photos">
-          <Picture src={strip} alt="Three photos of people wearing name tags: a man in a T-shirt, two coworkers in black suits with a clipboard, and a woman in a lab coat" formats={["avif", "webp"]} fallbackFormat="webp" widths={[400, 800]} sizes="(min-width: 1024px) 360px, 100vw" quality={75} />
+        <div class="more-wall">
           <Picture src={wall} alt="Wall display of many sample name tags in different colors, shapes and materials, including wood, metal and photo ID badges" formats={["avif", "webp"]} fallbackFormat="webp" widths={[400, 800]} sizes="(min-width: 1024px) 360px, 100vw" quality={75} />
         </div>
       </div>
+      <div class="trio">
+        {
+          (["left", "center", "right"] as const).map((side, i) => (
+            <div class:list={["panel", side]}>
+              <Image
+                src={strip}
+                alt={i === 0 ? "Three photos of people wearing name tags: a man in a T-shirt, two coworkers in black suits with a clipboard, and a woman in a lab coat" : ""}
+                width={428}
+                height={323}
+                densities={[1, 2]}
+                format="webp"
+              />
+            </div>
+          ))
+        }
+      </div>
     </Section>
 
-    <Section tone="white" class="why-sec" padTop={[67, 51]} padBottom={[121, 101]}>
+    <Section tone="white" class="why-sec" padTop={[16, 24]} padBottom={[32, 32]}>
       <SectionTitle as="h2">{d.why.title}</SectionTitle>
       <p class="p centered why-lead"><Rich parts={d.why.lead} /></p>
       <WhyCards items={d.why.items.map((it) => ({ icon: whyIcons[it.icon], title: it.title, body: it.body }))} />
@@ -253,6 +268,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   .u-text,
   .u-call {
     margin: 0 0 20px;
+    padding: 0;
     text-align: center;
     font-family: var(--font-heading);
     font-size: 18px;
@@ -299,6 +315,9 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     flex-direction: column;
     gap: 16px;
   }
+  .design-steps .p {
+    margin: 0;
+  }
   .mag-pg :global(.section-title) {
     font-size: 28px;
     line-height: 33.6px;
@@ -306,10 +325,6 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   .design-img {
     order: 0;
     margin: 0 auto;
-  }
-  .u-text,
-  .u-call {
-    padding: 0;
   }
   .design-img :global(img) {
     display: block;
@@ -364,16 +379,44 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     flex-direction: column;
     gap: 24px;
   }
-  .more-photos {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .more-photos :global(img) {
+  .more-wall :global(img) {
     display: block;
     width: 100%;
-    height: auto;
-    object-fit: contain;
+    height: 220px;
+    object-fit: cover;
+    object-position: center;
+  }
+  .trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .panel {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 428 / 323;
+  }
+  .panel :global(img) {
+    position: absolute;
+    top: 0;
+    display: block;
+    width: 300%;
+    max-width: none;
+    height: 100%;
+    object-fit: fill;
+  }
+  .panel.left :global(img) {
+    left: 0;
+  }
+  .panel.center :global(img) {
+    left: -100%;
+  }
+  .panel.right :global(img) {
+    left: -200%;
+  }
+  :global(h2.more-title) {
+    text-wrap: wrap;
   }
   .bullets {
     margin: 0;
@@ -428,14 +471,10 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       padding-bottom: 32px;
     }
     .why-lead {
-      margin-bottom: 40px;
+      margin-bottom: 16px;
     }
     .mag-pg :global(.ready-sec .section-title) {
       padding-bottom: 23px;
-    }
-    .more-photos :global(img) {
-      height: auto;
-      object-fit: contain;
     }
     .mag-pg :global(.why-sec .card) {
       padding: 24px;
@@ -454,10 +493,10 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       padding-bottom: 32px;
     }
     .more {
-      gap: 32px;
+      gap: 16px;
     }
     .more-copy .p {
-      margin-bottom: 28px;
+      margin-bottom: 16px;
     }
     .bullets li {
       margin-bottom: 10px;
@@ -473,16 +512,16 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       top: 6px;
     }
     .benefits {
-      gap: 67px;
+      gap: 24px;
     }
     .b-ico {
-      margin-bottom: 18px;
+      margin-bottom: 12px;
     }
     .b-title {
       margin-bottom: 9px;
     }
     .u-text {
-      margin-bottom: 32px;
+      margin-bottom: 16px;
       font-size: 19px;
       line-height: 33.25px;
     }
@@ -495,10 +534,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       margin-bottom: 21px;
     }
     .intro-sec .intro-p:last-child {
-      margin-bottom: 19px;
-    }
-    .callbox {
-      padding: 17px 20px 19px;
+      margin-bottom: 16px;
     }
     .call-h {
       padding-bottom: 25px;
@@ -543,6 +579,9 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     .intro-p {
       text-align: left;
     }
+    .intro-sec .intro-p:last-child {
+      margin-bottom: 0;
+    }
     .call-plain {
       margin: 0 0 28px;
     }
@@ -556,7 +595,6 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       line-height: 41.25px;
       text-wrap: balance;
     }
-    .u-text,
     .u-call {
       padding: 0;
     }
@@ -584,6 +622,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     .u-text {
       margin-left: auto;
       margin-right: auto;
+      padding: 0;
       line-height: 32.5px;
     }
     .u-text + .u-text {
@@ -643,33 +682,52 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     }
     .more {
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      padding-top: 10px;
-    }
-    .more {
       width: 100%;
+      padding-top: 0;
+      gap: 24px;
     }
     .more-copy {
       flex: 1 1 auto;
       width: auto;
       min-width: 0;
     }
-    .more-photos {
+    .more-wall {
       flex: 0 0 42%;
       width: auto;
       max-width: 42%;
     }
-    .more-photos :global(img) {
+    .more-wall :global(img) {
       width: 100%;
-      height: auto;
-      object-fit: contain;
+      height: 100%;
+      min-height: 220px;
+      object-fit: cover;
+    }
+    .trio {
+      gap: 24px;
+      margin-top: 24px;
+    }
+    .mag-pg :global(.why-sec .inner) {
+      width: min(1100px, calc(100% - 48px));
     }
     .why-lead {
       margin-bottom: 38px;
     }
     .r-text {
       margin: 0 auto;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    :global(.more-sec .inner) {
+      width: min(1160px, calc(100% - 48px));
+    }
+    :global(h2.more-title) {
+      white-space: nowrap;
+    }
+    .mag-pg :global(.why-sec .ttl) {
+      white-space: nowrap;
     }
   }
 </style>

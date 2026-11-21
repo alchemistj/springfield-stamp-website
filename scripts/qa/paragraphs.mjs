@@ -81,8 +81,10 @@ function collect({ maxLines, withReviews, minChars }) {
     .replace(/\b60 years\b/g, "50 years")
     .replace(/\bavaailable\b/g, "available")
     .replace("wide variety of custom stamps to meet your specific business needs", "wide variety of magnetic name tags to meet your specific business needs")
-    // The rebuild draws the phone emoji in its own span, so the space after it is not in the text node.
-    .replace(/([\u{1F300}-\u{1FAFF}])(?=\S)/gu, "$1 ");
+    // 2026-11-20: phone emoji removed (audit L7); words unchanged. Strip it, then the space it left.
+    .replace(/\p{Extended_Pictographic}/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
   const out = [];
   for (const p of document.querySelectorAll("p")) {
     if (p.closest(SKIP)) continue;
@@ -150,8 +152,7 @@ for (const [slug, pagePath] of pages) {
   const live = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await live.route("**/*", (r) => r.abort());
   await live.setContent(readFileSync(path.join("docs/reference/raw", `${slug}.html`), "utf8"), { waitUntil: "domcontentloaded" }).catch(() => {});
-  // 2026-11-20: phone emoji removed (audit L7); words unchanged
-  const IGNORE = [/indicates required fields/i, /Contact Our US-Based Team/];
+  const IGNORE = [/indicates required fields/i];
   const seenLive = new Set();
   const liveParas = (await live.evaluate(collect, { maxLines: 0, withReviews: true, minChars: MIN_CHARS })).filter((l) => {
     if (IGNORE.some((re) => re.test(l.text)) || seenLive.has(l.text)) return false;

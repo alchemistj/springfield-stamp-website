@@ -45,7 +45,7 @@ const iconFor = homeIcons;
               <span class="hero-call-long">{home.hero.callCta.label}</span>
               <span class="hero-call-short">Call Now</span>
             </Button>
-            <Button href={home.hero.emailCta.href}>{home.hero.emailCta.label}</Button>
+            <Button href={home.hero.emailCta.href} variant="secondary">{home.hero.emailCta.label}</Button>
           </div>
         </div>
       </div>
@@ -66,9 +66,7 @@ const iconFor = homeIcons;
             tone={i >= 4 ? "card-alt" : "card"}
             ctaHref={p.cta?.href}
             ctaLabel={p.cta?.label}
-            fit={p.image === "customStamps" || p.image === "magneticNameTags" ? "contain" : "cover"}
-            photoScale={p.image === "customStamps" ? 100 : 80}
-            phoneInset={p.image === "magneticNameTags" ? 24 : undefined}
+            objectPosition={p.image === "customStamps" ? "center bottom" : "center"}
           >
             {p.body.map((para) => (
               <p>
@@ -100,8 +98,8 @@ const iconFor = homeIcons;
       {
         home.why.items.map((f) => (
           <FeatureRow title={f.title} icon={iconFor[f.icon]}>
-            {f.body.map((para) => (
-              <p>
+            {f.body.map((para, i) => (
+              <p class:list={{ "cs-fill": f.title === "Customer Service" && i === 2 }}>
                 <Rich parts={para} />
               </p>
             ))}
@@ -208,8 +206,19 @@ const iconFor = homeIcons;
   .ctas {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     gap: 20px;
     margin: 21px -1px 0;
+  }
+  .hero :global(.btn-secondary) {
+    color: #fff;
+    border-color: #fff;
+  }
+  /* The last full line ends ~100px early because "requirements." does not fit.
+     Justify pulls that line out to the column edge, the same as the rows above. */
+  .cs-fill {
+    text-align: justify;
+    text-wrap: wrap;
   }
 
   /* ---- How we can help ---- */
@@ -355,8 +364,16 @@ const iconFor = homeIcons;
       color: #fff;
     }
     .ctas {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
       gap: 8px;
       margin: 0 0 0 -1px;
+    }
+    .ctas :global(.btn) {
+      width: auto;
+      flex: 0 0 auto;
     }
 
     .help-gap {

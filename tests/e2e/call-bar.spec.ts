@@ -17,10 +17,11 @@ test.describe("mobile 390px: header and sticky call bar", () => {
       const burger = await page.locator("header .nav-toggle").boundingBox();
       const callBox = await call.boundingBox();
       expect(logo!.x).toBeLessThan(60);
+      expect(logo!.width).toBeGreaterThanOrEqual(200);
       expect(burger!.x + burger!.width).toBeGreaterThan(390 - 40);
       const logoMid = logo!.y + logo!.height / 2;
       const burgerMid = burger!.y + burger!.height / 2;
-      expect(Math.abs(logoMid - burgerMid)).toBeLessThanOrEqual(8);
+      expect(Math.abs(logoMid - burgerMid)).toBeLessThanOrEqual(1);
       expect(callBox!.x).toBeGreaterThan(logo!.x + logo!.width - 1);
       expect(callBox!.x + callBox!.width).toBeLessThanOrEqual(burger!.x + 1);
       expect(callBox!.height).toBeGreaterThanOrEqual(44);

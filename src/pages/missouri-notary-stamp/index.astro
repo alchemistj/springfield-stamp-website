@@ -5,6 +5,8 @@ import Button from "../../components/Button.astro";
 import Section from "../../components/Section.astro";
 import SectionTitle from "../../components/SectionTitle.astro";
 import Icon from "../../components/Icon.astro";
+import ProductRows from "../../components/ProductRows.astro";
+import ProductRow from "../../components/ProductRow.astro";
 import { Picture } from "astro:assets";
 import { routeByKey } from "../../lib/routes";
 import { notaryStamp as d } from "../../data/missouri-notary-stamp";
@@ -49,30 +51,50 @@ const alts = {
       <p class="intro">{d.intro}</p>
     </Section>
 
-    <Section tone="white" class="cards-sec" padTop={[44, 26]} padBottom={[84, 45]}>
+    <Section tone="white" class="cards-sec" padTop={[44, 26]} padBottom={[48, 40]}>
       <SectionTitle as="h2">{d.products.title}</SectionTitle>
-      <div class="cards">
+      <ProductRows>
         {
-          d.products.items.map((p) => (
-            <article class:list={["card", { "m-only": p.mobileOnly }]}>
-              <div class="pic">
-                <Picture src={images[p.image]} alt={alts[p.image]} formats={["avif", "webp"]} fallbackFormat="webp" widths={[343, 686]} sizes="(min-width: 1024px) 343px, 100vw" quality={75} />
-              </div>
-              <div class="info">
-                <h3 class="name">{p.name}</h3>
-                <p class="price">{p.price}</p>
-                <div class="desc">
-                  {(Array.isArray(p.body) ? p.body : [p.body]).map((para) => (
-                    <p>{para}</p>
-                  ))}
-                  {p.mobileExtra && <p>{p.mobileExtra}</p>}
-                </div>
-                <Button href={p.image === "journal" ? d.products.buy.href : site.phone.tel} class="buy">{p.image === "journal" ? d.products.buy.label : "Call to Order"}</Button>
-              </div>
-            </article>
+          d.products.items.filter((p) => !p.mobileOnly).map((p, i) => (
+            <ProductRow
+              title={p.name}
+              image={images[p.image]}
+              imageAlt={alts[p.image]}
+              reverse={i % 2 === 0}
+              tone="plain"
+              objectPosition={p.image === "circular" ? "center top" : "center"}
+              ctaHref={site.phone.tel}
+              ctaLabel="Call to Order"
+            >
+              <p class="price">{p.price}</p>
+              {(Array.isArray(p.body) ? p.body : [p.body]).map((para) => (
+                <p>{para}</p>
+              ))}
+              {p.mobileExtra && <p>{p.mobileExtra}</p>}
+            </ProductRow>
           ))
         }
-      </div>
+      </ProductRows>
+      {
+        d.products.items.filter((p) => p.mobileOnly).map((p) => (
+          <article class:list={["card", "m-only"]}>
+            <div class="pic">
+              <Picture src={images[p.image]} alt={alts[p.image]} formats={["avif", "webp"]} fallbackFormat="webp" widths={[343, 686]} sizes="(min-width: 1024px) 343px, 100vw" quality={75} />
+            </div>
+            <div class="info">
+              <h3 class="name">{p.name}</h3>
+              <p class="price">{p.price}</p>
+              <div class="desc">
+                {(Array.isArray(p.body) ? p.body : [p.body]).map((para) => (
+                  <p>{para}</p>
+                ))}
+                {p.mobileExtra && <p>{p.mobileExtra}</p>}
+              </div>
+              <Button href={d.products.buy.href} class="buy">{d.products.buy.label}</Button>
+            </div>
+          </article>
+        ))
+      }
     </Section>
 
     <Section tone="surface" bg="#f7f7f7" class="req-sec" padTop={[62, 41]} padBottom={[75, 17]}>
@@ -151,17 +173,7 @@ const alts = {
     line-height: 31.5px;
     color: #151515;
   }
-  .req-sec-note {
-    display: none;
-  }
-
-  /* ---- Product cards ---- */
-  .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    padding-top: 10px;
-  }
+  /* ---- Journal card (mobile only). The other products are plain rows. ---- */
   .card {
     display: flex;
     flex-direction: column;
@@ -302,18 +314,14 @@ const alts = {
     align-items: center;
     gap: 15px;
   }
-  .buy-ctas :global(.btn) {
-    max-width: 100%;
-  }
 
   /* Mobile parity (below 1024px): live type sizes and spacing at 390px. */
   @media (max-width: 1023px) {
     .h1 {
       font-size: 30px;
     }
-    .cards {
-      gap: 20px;
-      padding-top: 8px;
+    .m-only {
+      margin-top: 20px;
     }
     .pic :global(img) {
       height: 220px;
@@ -329,18 +337,11 @@ const alts = {
       padding-bottom: 20px;
       line-height: 30.6px;
     }
-    .card:nth-child(1) .desc {
-      padding-bottom: 30px;
-    }
     .card.m-only .info {
       padding-top: 23px;
     }
     .notary-pg :global(.req-sec .section-title) {
       margin: 0 auto;
-    }
-    .card:nth-child(2) .desc {
-      font-size: 17px;
-      line-height: 28.9px;
     }
     .req-list {
       padding-bottom: 30px;
@@ -355,9 +356,6 @@ const alts = {
     .cl {
       gap: 20px;
       font-size: 18px;
-    }
-    .buy-ctas :global(.btn) {
-      max-width: 100%;
     }
     .req-list li {
       margin-bottom: 15px;
@@ -411,14 +409,6 @@ const alts = {
     .notary-pg :global(.section-title) {
       font-size: 33px;
       line-height: 41.25px;
-    }
-    .cards {
-      flex-direction: row;
-      gap: 25px;
-      padding-top: 6px;
-    }
-    .card {
-      flex: 1 1 0;
     }
     .m-only {
       display: none;

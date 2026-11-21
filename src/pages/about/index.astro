@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import HeroPhoto from "../../components/HeroPhoto.astro";
 import Button from "../../components/Button.astro";
 import FinalCta from "../../components/FinalCta.astro";
+import SectionTitle from "../../components/SectionTitle.astro";
 import Rich from "../../components/Rich.astro";
 import { routeByKey } from "../../lib/routes";
 import { about } from "../../data/about";
@@ -42,6 +43,7 @@ const route = routeByKey("about");
   </section>
 
   <FinalCta class="closing">
+    <SectionTitle as="h2" tone="white">{about.closing.title}</SectionTitle>
     <p class="closing-text"><Rich parts={about.closing.body} /></p>
     <div class="final-actions">
       <Button href={about.closing.cta.href}>{about.closing.cta.label}</Button>
@@ -84,8 +86,7 @@ const route = routeByKey("about");
     padding: 65px 0 67px;
   }
   .story-in,
-  .why-in,
-  .closing-in {
+  .why-in {
     text-align: center;
   }
   .p {
@@ -129,7 +130,7 @@ const route = routeByKey("about");
   /* ---- Closing band ---- */
   .closing-text {
     margin: 0;
-    padding-bottom: 35px;
+    padding-bottom: 0;
     font-family: var(--font-heading);
     font-size: 24px;
     line-height: 34.8px;
@@ -189,7 +190,7 @@ const route = routeByKey("about");
       margin: 0 auto;
       font-size: 27px;
       line-height: 43.2px;
-      padding-bottom: 39px;
+      padding-bottom: 0;
     }
   }
 

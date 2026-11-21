@@ -16,6 +16,17 @@ import Button from "./Button.astro";
   </div>
 </div>
 
+<script>
+  const bar = document.querySelector<HTMLElement>(".call-bar");
+  if (bar) {
+    const apply = () => {
+      document.documentElement.style.setProperty("--callbar-h", `${Math.ceil(bar.getBoundingClientRect().height)}px`);
+    };
+    apply();
+    new ResizeObserver(apply).observe(bar);
+  }
+</script>
+
 <style>
   .call-bar {
     position: fixed;
