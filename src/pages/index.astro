@@ -68,6 +68,7 @@ const iconFor = homeIcons;
             ctaLabel={p.cta?.label}
             fit={p.image === "customStamps" || p.image === "magneticNameTags" ? "contain" : "cover"}
             photoScale={p.image === "customStamps" ? 100 : 80}
+            phoneInset={p.image === "magneticNameTags" ? 24 : undefined}
           >
             {p.body.map((para) => (
               <p>
