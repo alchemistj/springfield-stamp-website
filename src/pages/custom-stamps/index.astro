@@ -49,10 +49,12 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
 
   <div class="custom-pg">
   <Section tone="white" class="intro-sec" padTop={[48, 40]} padBottom={[32, 28]}>
-    <p class="intro"><Rich parts={d.intro} /></p>
+    {d.intro.map((para) => (
+      <p class="intro"><Rich parts={para} /></p>
+    ))}
   </Section>
 
-  <Section tone="surface" bg="#f4f4f4" class="find-sec" padTop={[40, 32]} padBottom={[64, 40]}>
+  <Section tone="white" class="find-sec" padTop={[40, 32]} padBottom={[64, 40]}>
     <SectionTitle as="h2" class="bal">{d.find.title}</SectionTitle>
     <div class="find-intro">
       <div class="find-text">
@@ -76,6 +78,9 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
               imageAlt={r.imageAlt}
               reverse={i % 2 === 0}
               tone="plain"
+              fit="contain"
+              photoScale={80}
+              phoneMaxHeight={220}
               ctaHref={r.cta?.href}
               ctaLabel={r.cta?.label}
             >
@@ -121,7 +126,10 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     <p class="ready-text">{d.ready.body}</p>
     <p class="call-h">{d.ready.callHeading}</p>
     <div class="final-actions">
-      <Button href={d.ready.cta.href}>{d.ready.cta.label}</Button>
+      <Button href={d.ready.cta.href}>
+        <span class="ready-long">{d.ready.cta.label}</span>
+        <span class="ready-short">Call Now</span>
+      </Button>
       <Button href={`mailto:${site.email}`} variant="secondary">Email Us</Button>
     </div>
   </FinalCta>
@@ -137,7 +145,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
   }
   .hero-body {
     background: #fff;
-    padding: 16px 0 0;
+    padding: 16px 0 24px;
     text-align: center;
   }
   .brand {
@@ -157,6 +165,22 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     font-size: 28px;
     line-height: 36.5px;
     color: var(--color-ss-ink);
+    /* Balance parks "CUSTOM" on its own line at 390. Greedy wrap keeps it with a neighbor. */
+    text-wrap: wrap;
+  }
+  .intro + .intro {
+    margin-top: 16px;
+  }
+  .ready-short {
+    display: none;
+  }
+  @media (max-width: 479px) {
+    .ready-long {
+      display: none;
+    }
+    .ready-short {
+      display: inline;
+    }
   }
 
   /* ---- Intro ---- */
@@ -213,14 +237,11 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     width: 100%;
     margin: 0 auto;
   }
-  .custom-pg :global(.find-sec.has-bg) {
-    background: #fff;
-  }
   .rows > :global(.rows) {
-    gap: 20px;
+    gap: 48px;
   }
   .rows :global(.row-title) {
-    margin: 36px 0 17px;
+    margin: 16px 0 17px;
   }
   .rows :global(.copy) {
     padding: 0 3px;
@@ -368,7 +389,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
       padding: 0 1px;
     }
     .rows :global(.row-title) {
-      margin: 20px 0 13px;
+      margin: 16px 0 13px;
       line-height: 35px;
     }
     .custom-pg :global(.ready-sec .section-title) {
@@ -432,11 +453,8 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     .intro {
       text-align: left;
     }
-    .custom-pg :global(.find-sec.has-bg) {
-      background: #f4f4f4;
-    }
     .rows > :global(.rows) {
-      gap: 0;
+      gap: 48px;
     }
     .rows :global(.row-title) {
       margin: 4px 0 16px;

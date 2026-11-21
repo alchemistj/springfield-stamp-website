@@ -64,14 +64,14 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       <p class="p intro-p"><Rich parts={d.intro.whether} /></p>
     </Section>
 
-    <Section tone="surface" bg="#f9f9f9" class="find-sec" padTop={[76, 0]} padBottom={[79, 42]}>
+    <Section tone="white" class="find-sec" padTop={[76, 0]} padBottom={[79, 42]}>
       <SectionTitle as="h2">{d.find.title}</SectionTitle>
       <p class="p centered find-lead">{d.find.lead}</p>
       <div class="rows">
         <ProductRows>
           {
             d.find.rows.map((r, i) => (
-              <ProductRow title={r.title} image={rowImages[r.image]} imageAlt={r.imageAlt} reverse={i % 2 === 0} tone="plain">
+              <ProductRow title={r.title} image={rowImages[r.image]} imageAlt={r.imageAlt} reverse={i % 2 === 0} tone="plain" fit="contain" photoScale={80} phoneMaxHeight={220}>
                 {(Array.isArray(r.body) ? r.body : [r.body]).map((para) => (
                   <p>{para}</p>
                 ))}
@@ -163,7 +163,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   }
   .hero-body {
     background: #fff;
-    padding: 33px 0 0;
+    padding: 33px 0 24px;
     text-align: center;
   }
   .brand {
@@ -235,18 +235,15 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     margin: 0 auto;
   }
   .rows :global(.rows) {
-    gap: 20px;
+    gap: 48px;
   }
   .rows :global(.copy) {
     padding: 0;
   }
   .rows :global(.row-title) {
-    margin: 30px 0 14px;
+    margin: 16px 0 14px;
     font-size: 16px;
     line-height: 24px;
-  }
-  .mag-pg :global(.find-sec.has-bg) {
-    background: #fff;
   }
   .rows :global(.row-body) {
     text-align: left;
@@ -256,7 +253,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   .u-text,
   .u-call {
     margin: 0 0 20px;
-    text-align: left;
+    text-align: center;
     font-family: var(--font-heading);
     font-size: 18px;
     line-height: 1.65;
@@ -492,7 +489,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     .u-call {
       margin-bottom: 16px;
       padding: 0;
-      text-align: left;
+      text-align: center;
     }
     .intro-p {
       margin-bottom: 21px;
@@ -511,7 +508,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       padding: 0 1px;
     }
     .rows :global(.row-title) {
-      margin: 20px 0 12.5px;
+      margin: 16px 0 12.5px;
       font-size: 18px;
       line-height: 25.2px;
     }
@@ -567,7 +564,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       margin-bottom: 40px;
     }
     .rows :global(.rows) {
-      gap: 0;
+      gap: 48px;
     }
     .rows :global(.copy) {
       display: flex;
@@ -579,9 +576,6 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       margin: 0 0 14px;
       font-size: 24px;
       line-height: 30px;
-    }
-    .mag-pg :global(.find-sec.has-bg) {
-      background: #f9f9f9;
     }
     .rows :global(.row-body) {
       margin: 0;
@@ -600,17 +594,22 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
       align-items: start;
       column-gap: 28px;
+      margin-bottom: 40px;
     }
     .design-steps {
       display: grid;
+      width: 100%;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       align-items: start;
+      justify-items: stretch;
       column-gap: 20px;
     }
     .design .p {
-      width: auto;
+      width: 100%;
+      max-width: none;
       min-width: 0;
       margin: 0;
+      justify-self: stretch;
     }
     .design-img {
       max-width: 240px;

@@ -66,6 +66,8 @@ const iconFor = homeIcons;
             tone={i >= 4 ? "card-alt" : "card"}
             ctaHref={p.cta?.href}
             ctaLabel={p.cta?.label}
+            fit={p.image === "customStamps" || p.image === "magneticNameTags" ? "contain" : "cover"}
+            photoScale={p.image === "customStamps" ? 100 : 80}
           >
             {p.body.map((para) => (
               <p>
@@ -217,7 +219,7 @@ const iconFor = homeIcons;
   /* ---- Workflow band ---- */
   .intro {
     margin: 0;
-    padding-bottom: 20px;
+    padding-bottom: 0;
     text-align: center;
     font-family: var(--font-heading);
     font-size: 19px;
@@ -227,7 +229,7 @@ const iconFor = homeIcons;
     text-align: left;
   }
   .outro {
-    margin: 31px 0 0;
+    margin: 16px 0 0;
     padding: 0 0 20px;
     text-align: center;
     font-family: var(--font-heading);
@@ -238,6 +240,8 @@ const iconFor = homeIcons;
     font-weight: 600;
   }
   .outro-cta {
+    display: flex;
+    justify-content: center;
     padding-top: 17px;
   }
 

@@ -135,8 +135,7 @@ const alts = {
     text-wrap: balance;
   }
   .notary-pg :global(.cards-sec .section-title),
-  .notary-pg :global(.req-sec .section-title),
-  .notary-pg :global(.buy-sec .section-title) {
+  .notary-pg :global(.req-sec .section-title) {
     color: var(--color-ss-red);
   }
 
@@ -333,9 +332,6 @@ const alts = {
     .card:nth-child(1) .desc {
       padding-bottom: 30px;
     }
-    .card.m-only {
-      margin-top: -20px;
-    }
     .card.m-only .info {
       padding-top: 23px;
     }
@@ -484,6 +480,10 @@ const alts = {
   }
 
   @media (min-width: 1440px) {
+    .h1 {
+      /* The first line stays at least 24px clear of the circular photo. */
+      max-width: 510px;
+    }
     .notary-pg :global(.buy-sec .section-title) {
       white-space: nowrap;
     }

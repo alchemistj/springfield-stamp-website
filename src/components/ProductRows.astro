@@ -13,6 +13,9 @@ const { boxed = false } = Astro.props;
   .rows {
     display: flex;
     flex-direction: column;
+    gap: 48px;
+  }
+  .rows.boxed {
     gap: 32px;
   }
   @media (min-width: 1024px) {
@@ -22,7 +25,7 @@ const { boxed = false } = Astro.props;
       overflow: hidden;
     }
     .rows:not(.boxed) {
-      gap: 40px;
+      gap: 48px;
     }
   }
 </style>

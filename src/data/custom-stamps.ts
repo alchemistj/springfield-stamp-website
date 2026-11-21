@@ -6,7 +6,7 @@ import type { Cta, Rich } from "./types";
 
 export interface CustomStampRow {
   title: string;
-  /** One paragraph, the same words the live page runs as one block. */
+  /** Paragraphs split on sentence ends so none runs past four lines. */
   body: readonly Rich[];
   /** Key into the images imported by the page. */
   image: "selfInking" | "signature" | "logo" | "daters" | "notary";
@@ -22,7 +22,7 @@ export interface WhyItem {
 
 export const customStamps: {
   hero: { brand: string; h1: string };
-  intro: Rich;
+  intro: readonly Rich[];
   find: { title: string; body: readonly Rich[]; rows: readonly CustomStampRow[] };
   ready: { title: string; body: string; callHeading: string; cta: Cta };
   why: { title: string; intro: Rich; lead: string; items: readonly WhyItem[] };
@@ -33,19 +33,25 @@ export const customStamps: {
     h1: "Your Friendly Neighborhood CUSTOM STAMP Experts!",
   },
   intro: [
-    "Howdy from ",
-    { strong: "Springfield Stamp" },
-    ", your one-stop shop for custom rubber stamps, personalized stamps, and all things that help you make a lasting impression! Whether you're a bustling bakery needing ",
-    { strong: "custom logo stamps" },
-    " for your packaging or a freelance artist adding a unique touch with ",
-    { strong: "art stamps" },
-    ", we've got the perfect tool for your small business.",
+    [
+      "Howdy from ",
+      { strong: "Springfield Stamp" },
+      ", your one-stop shop for custom rubber stamps, personalized stamps, and all things that help you make a lasting impression!",
+    ],
+    [
+      "Whether you're a bustling bakery needing ",
+      { strong: "custom logo stamps" },
+      " for your packaging or a freelance artist adding a unique touch with ",
+      { strong: "art stamps" },
+      ", we've got the perfect tool for your small business.",
+    ],
   ],
   find: {
     title: "Find the Perfect Stamp for Your Unique Needs",
     body: [
+      ["We take pride in being your friendly neighborhood stamp experts."],
       [
-        "We take pride in being your friendly neighborhood stamp experts. That means we offer ",
+        "That means we offer ",
         { strong: "premium quality stamps" },
         " crafted with care, lightning-fast turnaround time, and personalized customer service that feels just like chatting over a cup of coffee!",
       ],
@@ -54,13 +60,9 @@ export const customStamps: {
       {
         title: "Self-Inking Stamps",
         body: [
-          [
-            "Stay efficient with ",
-            { strong: "quick, clean impressions" },
-            ". Perfect for invoices, receipts, and adding a ",
-            { strong: "personalized touch" },
-            " to packaging. Choose from a variety of sizes, colors, and ink types to match your brand.",
-          ],
+          ["Stay efficient with ", { strong: "quick, clean impressions" }, "."],
+          ["Perfect for invoices, receipts, and adding a ", { strong: "personalized touch" }, " to packaging."],
+          ["Choose from a variety of sizes, colors, and ink types to match your brand."],
         ],
         image: "selfInking",
         imageAlt: "Black Ideal 4931 self-inking stamp with a clear ink window at the base",
@@ -71,8 +73,9 @@ export const customStamps: {
           [
             "Replicate your handwritten signature with perfect accuracy, saving you time and adding a ",
             { strong: "personal touch" },
-            " to documents. Ideal for contracts, handwritten notes, proposals, and checks.",
+            " to documents.",
           ],
+          ["Ideal for contracts, handwritten notes, proposals, and checks."],
         ],
         image: "signature",
         imageAlt: "Gray and black MaxLight by Trodat pre-inked stamp with a round base",
@@ -80,10 +83,9 @@ export const customStamps: {
       {
         title: "Logo Stamps",
         body: [
+          ["Showcase your brand with a professional-looking ", { strong: "logo stamp" }, "."],
           [
-            "Showcase your brand with a professional-looking ",
-            { strong: "logo stamp" },
-            ". Upload your own logo or let our design partners create one for you, ensuring a ",
+            "Upload your own logo or let our design partners create one for you, ensuring a ",
             { strong: "consistent and memorable brand image" },
             ".",
           ],
@@ -94,8 +96,9 @@ export const customStamps: {
       {
         title: "Daters & Inks",
         body: [
+          ["Keep track of important dates with our handy daters, available in various styles and ink colors."],
           [
-            "Keep track of important dates with our handy daters, available in various styles and ink colors. We also offer a variety of high-quality inks to keep your stamps looking their best, ensuring ",
+            "We also offer a variety of high-quality inks to keep your stamps looking their best, ensuring ",
             { strong: "professionalism and accuracy" },
             " on every document.",
           ],
@@ -110,8 +113,9 @@ export const customStamps: {
             { strong: "Notarize documents" },
             " with ease and professionalism using your very own ",
             { strong: "notary stamp" },
-            ". No more messy ink pads or missed details plus – we have all the supplies: the stamp, journal, and embosser!",
+            ".",
           ],
+          ["No more messy ink pads or missed details plus – we have all the supplies: the stamp, journal, and embosser!"],
         ],
         image: "notary",
         imageAlt: "Gray Ideal 4913 rectangular self-inking stamp with a clear base",

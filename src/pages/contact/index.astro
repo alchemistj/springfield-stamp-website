@@ -28,9 +28,9 @@ const c = contact;
         <em>{c.intro.aside}</em>
       </p>
       <div class="reach">
-        <Image class="arrow" src={arrowRight} alt="call springfield stamp" width={50} height={50} format="webp" densities={[1, 2]} loading="eager" />
+        <Image class="arrow" src={arrowRight} alt="" width={50} height={50} format="webp" densities={[1, 2]} loading="eager" />
         <p class="reach-t">{c.reach.label} <a href={c.reach.href}>{c.reach.phone}</a></p>
-        <Image class="arrow" src={arrowLeft} alt="call springfield stamp" width={50} height={50} format="webp" densities={[1, 2]} loading="eager" />
+        <Image class="arrow" src={arrowLeft} alt="" width={50} height={50} format="webp" densities={[1, 2]} loading="eager" />
       </div>
       <p class="plain">{c.allows}</p>
       <p class="plain">{c.lookForward}</p>
@@ -330,6 +330,24 @@ const c = contact;
     .reach-t {
       font-size: 23px;
       line-height: 32px;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    /* The second arrow stays at least 24px clear of the MaxLight stamp. */
+    .hero-in {
+      width: min(520px, calc(100% - 48px));
+    }
+    .reach {
+      gap: 8px;
+    }
+    .arrow {
+      width: 32px;
+      height: 32px;
+    }
+    .reach-t {
+      font-size: 20px;
+      line-height: 28px;
     }
   }
 </style>

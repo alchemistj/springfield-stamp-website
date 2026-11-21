@@ -150,7 +150,8 @@ for (const [slug, pagePath] of pages) {
   const live = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await live.route("**/*", (r) => r.abort());
   await live.setContent(readFileSync(path.join("docs/reference/raw", `${slug}.html`), "utf8"), { waitUntil: "domcontentloaded" }).catch(() => {});
-  const IGNORE = [/indicates required fields/i];
+  // 2026-11-20: phone emoji removed (audit L7); words unchanged
+  const IGNORE = [/indicates required fields/i, /Contact Our US-Based Team/];
   const seenLive = new Set();
   const liveParas = (await live.evaluate(collect, { maxLines: 0, withReviews: true, minChars: MIN_CHARS })).filter((l) => {
     if (IGNORE.some((re) => re.test(l.text)) || seenLive.has(l.text)) return false;
