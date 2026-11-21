@@ -22,6 +22,8 @@ interface Props {
   objectPosition?: string;
   /** A product cut-out on white. Natural aspect, not a cover crop. */
   cutout?: boolean;
+  /** Show the whole image width, anchored to the bottom of the cell. */
+  banner?: boolean;
 }
 const {
   title,
@@ -34,10 +36,11 @@ const {
   ctaLabel,
   objectPosition = "50% 50%",
   cutout = false,
+  banner = false,
 } = Astro.props;
 ---
 
-<article class:list={["row", { reverse, cutout }]} style={`--obj:${objectPosition}`}>
+<article class:list={["row", { reverse, cutout, banner }]} style={`--obj:${objectPosition}`}>
   <div class="media">
     {
       image && (
@@ -124,6 +127,16 @@ const {
     width: auto;
     max-width: 100%;
   }
+  /* One homepage photo: the whole width, sitting on the bottom of a taller cell.
+     The band above matches the grey at the top of the picture. */
+  .banner .media {
+    background: linear-gradient(90deg, #c1c1c1 0%, #ebebeb 50%, #d6d6d6 100%);
+  }
+  .banner .media :global(picture),
+  .banner .media :global(img) {
+    object-fit: contain;
+    object-position: center bottom;
+  }
   /* Phones: a trimmed cut-out at its own shape, centred, no tall empty cell. */
   .cutout .media {
     aspect-ratio: auto;
@@ -163,6 +176,10 @@ const {
     .copy.tone-card-alt .row-body {
       margin-bottom: 16px;
     }
+    /* The stamp banner is almost square. Match it so the full width shows. */
+    .banner .media {
+      aspect-ratio: 1024 / 992;
+    }
   }
 
   @media (min-width: 1024px) {
@@ -196,6 +213,16 @@ const {
     }
     .row-body {
       margin-bottom: 20px;
+    }
+    /* At least as tall as the banner photo, so the full width still shows
+       when the text column is the shorter one. A taller column leaves grey above. */
+    .banner .media {
+      height: auto;
+    }
+    .banner .media::before {
+      content: "";
+      display: block;
+      padding-top: calc(992 / 1024 * 100%);
     }
     /* Desktop: the text still sets the row. The cut-out sits centred, uncropped. */
     .cutout .media {

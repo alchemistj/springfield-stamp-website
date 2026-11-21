@@ -1,5 +1,5 @@
 // Pictures used only by the home page (live desktop mapping, used at every width).
-import customStamps from "../assets/custom-stamps-2026.jpg";
+import customStamps from "../assets/cutouts/custom-stamps-2026.jpg";
 import magneticNameTags from "../assets/springfield-stamp-name-tags.jpg";
 import deskNamePlates from "../assets/desk-name-plate.webp";
 import signs from "../assets/signs.jpg";

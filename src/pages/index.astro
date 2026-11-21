@@ -67,6 +67,7 @@ const iconFor = homeIcons;
             ctaHref={p.cta?.href}
             ctaLabel={p.cta?.label}
             objectPosition={p.image === "customStamps" ? "center bottom" : "center"}
+            banner={p.image === "customStamps"}
           >
             {p.body.map((para) => (
               <p>
