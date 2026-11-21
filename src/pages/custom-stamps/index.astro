@@ -14,11 +14,11 @@ import { Picture } from "astro:assets";
 import { routeByKey } from "../../lib/routes";
 import { customStamps as d } from "../../data/custom-stamps";
 import { site } from "../../data/site";
-import idealLine from "../../assets/springfield-stamp-ideal-line.jpg";
-import maxlight from "../../assets/springfield-stamp-maxlight.jpg";
-import logoStamp from "../../assets/springfield-stamp-logo-stamp-2.png";
-import datersInks from "../../assets/springfield-stamp-daters-inks.jpg";
-import notary4913 from "../../assets/springfield-stamp-4913.jpg";
+import idealLine from "../../assets/cutouts/ideal-line.jpg";
+import maxlight from "../../assets/cutouts/maxlight.jpg";
+import logoStamp from "../../assets/cutouts/logo-stamp.png";
+import datersInks from "../../assets/cutouts/daters.jpg";
+import notary4913 from "../../assets/cutouts/notary-4913.jpg";
 import premium from "../../assets/springfield-stamps-premium.png";
 import makeYourMark from "../../assets/make-your-mark-2.jpg";
 import stampGrey from "../../assets/stamp-grey.png";
@@ -78,6 +78,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
               imageAlt={r.imageAlt}
               reverse={i % 2 === 0}
               tone="plain"
+              cutout
               ctaHref={r.cta?.href}
               ctaLabel={r.cta?.label}
             >
@@ -221,7 +222,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     margin: 0 auto;
   }
   .rows > :global(.rows) {
-    gap: 48px;
+    gap: 32px;
   }
   .rows :global(.row-title) {
     margin: 16px 0 17px;
@@ -349,7 +350,7 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     }
     .find-intro {
       margin-top: -10px;
-      padding-bottom: 51px;
+      padding-bottom: 24px;
     }
     .find-img {
       align-self: center;

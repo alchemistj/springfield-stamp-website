@@ -13,7 +13,8 @@ const { boxed = false } = Astro.props;
   .rows {
     display: flex;
     flex-direction: column;
-    gap: 48px;
+    /* 32px keeps the next cut-out within 40px of the text above it on phones. */
+    gap: 32px;
   }
   .rows.boxed {
     gap: 32px;

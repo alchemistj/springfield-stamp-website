@@ -77,7 +77,7 @@ export const home: {
         ],
         image: "magneticNameTags",
         imageAlt:
-          "Black magnetic name tag reading Taylor Sloan, Vice President, Community Relations, with a university logo",
+          "Wall display of many sample name tags in different colors, shapes and materials, including wood, metal and photo ID badges",
         cta: { label: "See Magnetic Name Tags", href: "/magnetic-name-tags/" },
       },
       {

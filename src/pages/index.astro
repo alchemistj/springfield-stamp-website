@@ -98,8 +98,8 @@ const iconFor = homeIcons;
       {
         home.why.items.map((f) => (
           <FeatureRow title={f.title} icon={iconFor[f.icon]}>
-            {f.body.map((para, i) => (
-              <p class:list={{ "cs-fill": f.title === "Customer Service" && i === 2 }}>
+            {f.body.map((para) => (
+              <p>
                 <Rich parts={para} />
               </p>
             ))}
@@ -214,13 +214,6 @@ const iconFor = homeIcons;
     color: #fff;
     border-color: #fff;
   }
-  /* The last full line ends ~100px early because "requirements." does not fit.
-     Justify pulls that line out to the column edge, the same as the rows above. */
-  .cs-fill {
-    text-align: justify;
-    text-wrap: wrap;
-  }
-
   /* ---- How we can help ---- */
   .help-gap {
     height: 21px;

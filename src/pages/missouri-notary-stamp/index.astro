@@ -11,9 +11,9 @@ import { Picture } from "astro:assets";
 import { routeByKey } from "../../lib/routes";
 import { notaryStamp as d } from "../../data/missouri-notary-stamp";
 import { site } from "../../data/site";
-import rectangle from "../../assets/springfield-stamps-rectangular.jpg";
-import circular from "../../assets/springfield-stamps-circular.jpg";
-import embosser from "../../assets/springfield-stamps-notary-embosser.jpg";
+import rectangle from "../../assets/cutouts/rectangle.jpg";
+import circular from "../../assets/cutouts/circular.jpg";
+import embosser from "../../assets/cutouts/embosser.jpg";
 import journal from "../../assets/springfield-stamps-mobile.jpg";
 
 const route = routeByKey("missouri-notary-stamp");
@@ -62,7 +62,7 @@ const alts = {
               imageAlt={alts[p.image]}
               reverse={i % 2 === 0}
               tone="plain"
-              objectPosition={p.image === "circular" ? "center top" : "center"}
+              cutout
               ctaHref={site.phone.tel}
               ctaLabel="Call to Order"
             >

@@ -20,6 +20,8 @@ interface Props {
   ctaLabel?: string;
   /** CSS object-position when the cover crop would cut the product. */
   objectPosition?: string;
+  /** A product cut-out on white. Natural aspect, not a cover crop. */
+  cutout?: boolean;
 }
 const {
   title,
@@ -31,10 +33,11 @@ const {
   ctaHref,
   ctaLabel,
   objectPosition = "50% 50%",
+  cutout = false,
 } = Astro.props;
 ---
 
-<article class:list={["row", { reverse }]} style={`--obj:${objectPosition}`}>
+<article class:list={["row", { reverse, cutout }]} style={`--obj:${objectPosition}`}>
   <div class="media">
     {
       image && (
@@ -121,6 +124,33 @@ const {
     width: auto;
     max-width: 100%;
   }
+  /* Phones: a trimmed cut-out at its own shape, centred, no tall empty cell. */
+  .cutout .media {
+    aspect-ratio: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    background: transparent;
+  }
+  .cutout .media :global(picture) {
+    position: static;
+    inset: auto;
+    width: min(80%, 320px);
+    max-width: 80%;
+    height: auto;
+  }
+  .cutout .media :global(img) {
+    position: static;
+    inset: auto;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    object-fit: contain;
+  }
+  .cutout .row-body {
+    margin-bottom: 0;
+  }
 
   @media (max-width: 1023px) {
     .copy.tone-card,
@@ -169,6 +199,22 @@ const {
     }
     .row-body {
       margin-bottom: 20px;
+    }
+    /* Desktop: the text still sets the row. The cut-out sits centred, uncropped. */
+    .cutout .media {
+      display: block;
+      height: 100%;
+      overflow: hidden;
+    }
+    .cutout .media :global(picture),
+    .cutout .media :global(img) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
     }
   }
 </style>
