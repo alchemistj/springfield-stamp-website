@@ -80,8 +80,8 @@ export const notaryStamp: {
   buy: {
     title: "Buy Your Missouri Notary Supplies Today",
     body: "Ready to get your Missouri notary stamp? Contact us now and take advantage of fast shipping, high-quality products, and excellent customer service.",
-    callLabel: "call us",
-    emailLabel: "email us",
+    callLabel: "Call Us",
+    emailLabel: "Email Us",
   },
 };
 

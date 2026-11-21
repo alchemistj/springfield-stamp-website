@@ -36,6 +36,7 @@ export const home: {
   workflow: { title: string; intro: string; testimonials: readonly Testimonial[]; outro: Rich; cta: Cta };
   why: { title: string; items: readonly HomeFeature[] };
   about: { title: string; body: readonly Rich[]; cta: Cta };
+  finalCta: { title: string; body: string; call: Cta; email: Cta };
 } = {
   hero: {
     kicker: "Make a Lasting Impression…",
@@ -65,7 +66,7 @@ export const home: {
         image: "customStamps",
         imageAlt: "Large Trodat professional stamp next to a small round self-inking stamp, with the banner \"Big to small, we have it all!\"",
         fit: "contain",
-        cta: { label: "See Our Custom Stamp Options", href: "/custom-stamps/" },
+        cta: { label: "See Custom Stamps", href: "/custom-stamps/" },
       },
       {
         title: "Name Tags",
@@ -75,7 +76,9 @@ export const home: {
           ["Our customizable options allow you to showcase your brand logo, personalize with employee names, and choose from various styles and materials to match your needs."],
         ],
         image: "magneticNameTags",
-        cta: { label: "Explore Magnetic Name Tags Here", href: "/magnetic-name-tags/" },
+        imageAlt:
+          "Wall display of many sample name tags in different colors, shapes and materials, including wood, metal and photo ID badges",
+        cta: { label: "See Magnetic Name Tags", href: "/magnetic-name-tags/" },
       },
       {
         title: "Signs",
@@ -95,6 +98,7 @@ export const home: {
           ["You'll make a lasting impression on visitors and colleagues."],
         ],
         image: "deskNamePlates",
+        imageAlt: "Black wedge desk name plate with a silver engraved plate reading Patrick Wisdom, on a wood desk",
       },
       {
         title: "Awards & Plaques",
@@ -110,7 +114,7 @@ export const home: {
         title: "Notary Stamps & Embossers",
         body: [
           [{ strong: "Notarize documents" }, " with ease and professionalism using your very own ", { strong: "notary stamp" }, "."],
-          ["No more messy ink pads or missed details plus –  we have all the supplies: the stamp, journal, and embosser!"],
+          ["No more messy ink pads or missed details plus – we have all the supplies: the stamp, journal, and embosser!"],
         ],
         image: "notaryEmbosser",
         imageAlt: "Notary embosser pressing a raised seal into paper",
@@ -125,7 +129,7 @@ export const home: {
     testimonials: [
       {
         quote:
-          "\"I needed custom stamps in a hurry, and Springfield Stamp & Engraving came to the rescue! They had my order ready in just a few days, and the quality is fantastic.",
+          "I needed custom stamps in a hurry, and Springfield Stamp & Engraving came to the rescue! They had my order ready in just a few days, and the quality is fantastic.",
         name: "Sarah B.",
         role: "Business Owner",
       },
@@ -146,7 +150,7 @@ export const home: {
       "Just give us a call, tell us what you need, and our friendly team guides you through the process. We'll clarify any details, offer valuable suggestions based on our 50 years of experience, and get started on fulfilling your order right away. In most cases, you'll receive your products within ",
       { strong: "a few short days!" },
     ],
-    cta: { label: `Click to Call ${site.phone.display}`, href: site.phone.tel },
+    cta: { label: `Call ${site.phone.display}`, href: site.phone.tel },
   },
 
   why: {
@@ -154,7 +158,7 @@ export const home: {
     items: [
       {
         icon: "breakTheIce",
-        title: "FAST TURNAROUND",
+        title: "Fast Turnaround",
         body: [
           [
             "Need your order quickly? No problem! We understand tight deadlines. Our ",
@@ -169,8 +173,8 @@ export const home: {
         body: [
           [
             "At Springfield Stamp & Engraving, we don't just sell products, we ",
-            { strong: "build relationship" },
-            "s.",
+            { strong: "build relationships" },
+            ".",
           ],
           ["Our friendly and knowledgeable team is dedicated to providing exceptional customer service."],
           ["We'll take the time to understand your needs, answer your questions, and offer expert suggestions to ensure you get the perfect product for your specific requirements."],
@@ -178,7 +182,7 @@ export const home: {
       },
       {
         icon: "boostBrand",
-        title: "QUALITY WORK",
+        title: "Quality Work",
         body: [
           [
             "We take pride in offering ",
@@ -199,6 +203,13 @@ export const home: {
       ["Now in the hands of Adam and Bri, the founder's nephew and niece-in-law, we carry on the tradition of exceptional quality, personalized service, and fast turnaround times."],
       ["We're passionate about helping our customers make a lasting impression, and we're dedicated to providing the best possible experience every step of the way."],
     ],
-    cta: { label: "Read Our STORY", href: "/about/" },
+    cta: { label: "Read Our Story", href: "/about/" },
+  },
+
+  finalCta: {
+    title: "Ready to Start Your Order?",
+    body: "Give us a call or send us an email, tell us what you need, and our friendly team will walk you through the rest. We're right here on S. Glenstone Ave. in Springfield.",
+    call: { label: "Call Now", href: site.phone.tel },
+    email: { label: "Email Us", href: `mailto:${site.email}` },
   },
 };

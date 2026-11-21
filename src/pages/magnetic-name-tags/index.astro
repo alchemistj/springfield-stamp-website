@@ -7,18 +7,21 @@ import SectionTitle from "../../components/SectionTitle.astro";
 import ProductRows from "../../components/ProductRows.astro";
 import ProductRow from "../../components/ProductRow.astro";
 import WhyCards from "../../components/WhyCards.astro";
+import FinalCta from "../../components/FinalCta.astro";
 import Rich from "../../components/Rich.astro";
 import { Picture, Image } from "astro:assets";
 import { routeByKey } from "../../lib/routes";
 import { magneticNameTags as d } from "../../data/magnetic-name-tags";
 import { site } from "../../data/site";
-import classic from "../../assets/springfield-magnetic-tags.jpg";
-import logoTag from "../../assets/springfield-logo-magnetic-tags.jpg";
-import engraved from "../../assets/springfield-engraved-magnetic-tags.jpg";
-import fullColor from "../../assets/springfield-full-color-magnetic-tags3.jpg";
-import photoTag from "../../assets/photo-name-tags.png";
+import classic from "../../assets/cutouts/classic.jpg";
+import logoTag from "../../assets/cutouts/logo.jpg";
+import engraved from "../../assets/cutouts/engraved.jpg";
+import fullColor from "../../assets/cutouts/full-color.jpg";
+import photoTag from "../../assets/cutouts/photo.png";
 import designTags from "../../assets/magnetic-tags-4.png";
-import strip from "../../assets/springfield-prof-nametags2.png";
+import personShirt from "../../assets/people/shirt.png";
+import personOffice from "../../assets/people/office.png";
+import personLab from "../../assets/people/lab.png";
 import wall from "../../assets/springfield-stamp-name-tags.jpg";
 import breakTheIce from "../../assets/break-the-ice.png";
 import boostBrand from "../../assets/boost-brand.png";
@@ -32,7 +35,17 @@ import community from "../../assets/community-1.png";
 
 const route = routeByKey("magnetic-name-tags");
 const rowImages = { classic, logo: logoTag, engraved, fullColor, photo: photoTag };
-const rowHeights = [350, 370, 350, 350, 350];
+const people = [
+  { src: personShirt, pos: "center 55%" },
+  { src: personOffice, pos: "center" },
+  { src: personLab, pos: "center top" },
+];
+const moreColon = d.more.title.indexOf(":");
+const moreLead = d.more.title.slice(0, moreColon + 1);
+const moreRest = d.more.title.slice(moreColon + 1).trim();
+const nameAt = moreLead.indexOf("Name Tags");
+const moreBefore = moreLead.slice(0, nameAt);
+const moreName = moreLead.slice(nameAt);
 const benefitIcons = { breakTheIce, boostBrand, promote, improve, enhance };
 const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, community };
 ---
@@ -48,30 +61,30 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     <div class="hero-body">
       <div class="hero-in content-col">
         <p class="brand">{d.hero.brand}</p>
-        <h1 id="hero-title" class="h1">{d.hero.lead}<br class="db" /> <span class="cap">{d.hero.rest}</span></h1>
+        <h1 id="hero-title" class="h1">{d.hero.lead} {d.hero.rest}</h1>
       </div>
     </div>
   </section>
 
   <div class="mag-pg">
-    <Section tone="white" class="intro-sec" padTop={[53, 37]} padBottom={[70, 0]}>
+    <Section tone="white" class="intro-sec" padTop={[53, 37]} padBottom={[8, 0]}>
       <p class="p intro-p"><Rich parts={d.intro.hello} /></p>
       <p class="p intro-p"><Rich parts={d.intro.pride} /></p>
-      <div class="callbox">
+      <div class="call-plain">
         <p class="call-h">{d.intro.callHeading}</p>
-        <div class="call-btn"><Button href={d.intro.callCta.href} size="xl" weight={600} width={232} shadow>{d.intro.callCta.label}</Button></div>
+        <div class="call-btn"><Button href={d.intro.callCta.href}>{d.intro.callCta.label}</Button></div>
       </div>
       <p class="p intro-p"><Rich parts={d.intro.whether} /></p>
     </Section>
 
-    <Section tone="surface" bg="#f9f9f9" class="find-sec" padTop={[76, 0]} padBottom={[79, 42]}>
+    <Section tone="white" class="find-sec" padTop={[16, 0]} padBottom={[48, 32]}>
       <SectionTitle as="h2">{d.find.title}</SectionTitle>
       <p class="p centered find-lead">{d.find.lead}</p>
       <div class="rows">
         <ProductRows>
           {
             d.find.rows.map((r, i) => (
-              <ProductRow title={r.title} image={rowImages[r.image]} reverse={i % 2 === 0} minHeight={rowHeights[i]} fit="contain" upperTitle titleWeight={500}>
+              <ProductRow title={r.title} image={rowImages[r.image]} imageAlt={r.imageAlt} reverse={i % 2 === 0} tone="plain" cutout>
                 {(Array.isArray(r.body) ? r.body : [r.body]).map((para) => (
                   <p>{para}</p>
                 ))}
@@ -87,18 +100,21 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       <p class="u-text"><Rich parts={d.unique.body} /></p>
       <p class="u-text">{d.unique.contact}</p>
       <p class="u-call">{d.unique.callLine}</p>
-      <div class="u-btn"><Button href={d.unique.cta.href} weight={700} width={160}>{d.unique.cta.label}</Button></div>
+      <div class="u-btn"><Button href={d.unique.cta.href}>{d.unique.cta.label}</Button></div>
     </Section>
 
     <Section tone="white" class="design-sec" padTop={[62, 51]} padBottom={[75, 77]}>
       <SectionTitle as="h2" class="grey-title">{d.design.title}</SectionTitle>
       <div class="design">
-        {d.design.body.map((para) => (
-          <p class="p"><Rich parts={para} /></p>
-        ))}
-        <div class="design-img"><Image src={designTags} alt="" width={285} height={274} densities={[1, 2]} format="webp" /></div>
+        <div class="design-img">
+          <Image src={designTags} alt="Two white name tags: a Humane Society tag for Mr. Poe Poe and a Missouri Master Gardener tag for Jerry Doughty" width={285} height={274} densities={[1, 2]} format="webp" />
+        </div>
+        <div class="design-steps">
+          {d.design.body.map((para) => (
+            <p class="p"><Rich parts={para} /></p>
+          ))}
+        </div>
       </div>
-      <div class="strip"><Picture src={strip} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[642, 900]} sizes="(min-width: 1024px) 900px, 100vw" quality={75} /></div>
       <SectionTitle as="h2" class="grey-title power-title">{d.power.title}</SectionTitle>
       <p class="p centered power-lead">{d.power.lead}</p>
       <div class="benefits">
@@ -116,8 +132,8 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       </div>
     </Section>
 
-    <Section tone="surface" bg="#f8f8f8" class="more-sec" padTop={[67, 61]} padBottom={[59, 59]}>
-      <SectionTitle as="h2">{d.more.title.split(": ")[0]}: <br />{d.more.title.split(": ")[1]}</SectionTitle>
+    <Section tone="surface" bg="#f8f8f8" class="more-sec" padTop={[48, 40]} padBottom={[16, 16]}>
+      <SectionTitle as="h2" class="more-title">{moreBefore}<span class="more-line">{moreName}</span>{" "}<br />{moreRest}</SectionTitle>
       <div class="more">
         <div class="more-copy">
           {d.more.body.map((para) => (
@@ -127,20 +143,42 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
             {d.more.bullets.map((t) => <li>{t}</li>)}
           </ul>
         </div>
-        <div class="more-img"><Picture src={wall} alt="" formats={["avif", "webp"]} fallbackFormat="webp" widths={[329, 658]} sizes="329px" quality={75} /></div>
+        <div class="more-wall">
+          <Picture src={wall} alt="Wall display of many sample name tags in different colors, shapes and materials, including wood, metal and photo ID badges" formats={["avif", "webp"]} fallbackFormat="webp" widths={[400, 800]} sizes="(min-width: 1024px) 360px, 100vw" quality={75} />
+        </div>
+      </div>
+      <div class="trio">
+        {
+          people.map((person, i) => (
+            <div class="panel" style={`--pos:${person.pos}`}>
+              <Image
+                src={person.src}
+                alt={i === 0 ? "Three photos of people wearing name tags: a man in a T-shirt, two coworkers in black suits with a clipboard, and a woman in a lab coat" : ""}
+                width={person.src.width}
+                height={person.src.height}
+                densities={[1, 2]}
+                format="webp"
+              />
+            </div>
+          ))
+        }
       </div>
     </Section>
 
-    <Section tone="white" class="why-sec" padTop={[67, 51]} padBottom={[121, 101]}>
+    <Section tone="white" class="why-sec" padTop={[16, 24]} padBottom={[32, 32]}>
       <SectionTitle as="h2">{d.why.title}</SectionTitle>
       <p class="p centered why-lead"><Rich parts={d.why.lead} /></p>
-      <WhyCards items={d.why.items.map((it) => ({ icon: whyIcons[it.icon], title: it.title, body: it.body }))} rowHeights={[397, 375]} />
+      <WhyCards items={d.why.items.map((it) => ({ icon: whyIcons[it.icon], title: it.title, body: it.body }))} />
     </Section>
 
-    <Section tone="maroon" class="ready-sec" padTop={[57, 51]} padBottom={[85, 58]}>
+    <FinalCta class="ready-sec">
       <SectionTitle as="h2" tone="white">{d.ready.title}</SectionTitle>
       <p class="r-text">{d.ready.before}<a href={site.phone.tel}>{site.phone.display}</a>{d.ready.after}</p>
-    </Section>
+      <div class="final-actions">
+        <Button href={site.phone.tel}>Call Now</Button>
+        <Button href={`mailto:${site.email}`} variant="secondary">Email Us</Button>
+      </div>
+    </FinalCta>
   </div>
 </BaseLayout>
 
@@ -153,7 +191,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   }
   .hero-body {
     background: #fff;
-    padding: 33px 0 0;
+    padding: 33px 0 24px;
     text-align: center;
   }
   .brand {
@@ -174,10 +212,6 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     line-height: 37px;
     color: var(--color-ss-ink);
   }
-  .db {
-    display: none;
-  }
-
   /* ---- Shared text ---- */
   .p {
     margin: 0 0 25px;
@@ -192,14 +226,14 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   .centered {
     text-align: center;
   }
-  .intro-p {
-    text-align: center;
+  .intro-p,
+  .find-lead,
+  .why-lead,
+  .power-lead {
+    text-align: left;
   }
-  .callbox {
-    margin: 0 0 31px;
-    padding: 30px 20px 20px;
-    background: #f0f0f0;
-    border-radius: 20px;
+  .call-plain {
+    margin: 0 0 24px;
     text-align: center;
   }
   .call-h {
@@ -217,9 +251,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   }
   .call-btn :global(.btn) {
     width: auto;
-    padding: 12px 24px;
-    font-size: 20px;
-    line-height: 21.6px;
+    max-width: 100%;
   }
 
   /* ---- Find ---- */
@@ -231,32 +263,37 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     margin: 0 auto;
   }
   .rows :global(.rows) {
-    gap: 20px;
+    gap: 32px;
   }
   .rows :global(.copy) {
     padding: 0;
   }
   .rows :global(.row-title) {
-    margin: 30px 0 14px;
+    margin: 16px 0 14px;
     font-size: 16px;
     line-height: 24px;
   }
-  .mag-pg :global(.find-sec.has-bg) {
-    background: #fff;
-  }
   .rows :global(.row-body) {
-    text-align: center;
+    text-align: left;
   }
 
   /* ---- Unique band ---- */
   .u-text,
-  .u-call,
-  .r-text {
-    margin: 0 0 26px;
+  .u-call {
+    margin: 0 0 20px;
+    padding: 0;
     text-align: center;
     font-family: var(--font-heading);
     font-size: 18px;
-    line-height: 32.5px;
+    line-height: 1.65;
+    color: #fff;
+  }
+  .r-text {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    line-height: 1.65;
     color: #fff;
   }
   .u-text :global(strong) {
@@ -273,10 +310,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     justify-content: center;
   }
   .u-btn :global(.btn) {
-    max-width: 160px;
-    padding: 14px 20px;
-    font-size: 20px;
-    line-height: 25px;
+    max-width: 100%;
   }
 
   /* ---- Design / power ---- */
@@ -286,35 +320,30 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
   .design {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 14px;
+    align-items: stretch;
+    gap: 20px;
+  }
+  .design-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .design-steps .p {
+    margin: 0;
   }
   .mag-pg :global(.section-title) {
     font-size: 28px;
     line-height: 33.6px;
   }
   .design-img {
-    order: -1;
-  }
-  .u-text,
-  .u-call {
-    padding: 0;
+    order: 0;
+    margin: 0 auto;
   }
   .design-img :global(img) {
     display: block;
-    width: 285px;
+    width: min(285px, 100%);
     height: auto;
-  }
-  .strip {
-    margin: 30px 0 40px;
-    overflow: hidden;
-  }
-  .strip :global(img) {
-    display: block;
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    object-position: 50% 50%;
+    object-fit: contain;
   }
   .power-lead {
     margin-bottom: 30px;
@@ -363,11 +392,39 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     flex-direction: column;
     gap: 24px;
   }
-  .more-img :global(img) {
+  .more-wall :global(img) {
     display: block;
     width: 100%;
-    height: auto;
-    border-radius: 20px;
+    height: 220px;
+    object-fit: cover;
+    object-position: center;
+  }
+  .trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .panel {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 8 / 5;
+    border-radius: 16px;
+  }
+  .panel :global(img) {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--pos, center);
+  }
+  :global(h2.more-title) {
+    text-wrap: wrap;
+  }
+  .more-line {
+    white-space: nowrap;
   }
   .bullets {
     margin: 0;
@@ -409,21 +466,23 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
 
   /* ---- Mobile parity (below 1024px): live paddings, type sizes and spacing at 390px ---- */
   @media (max-width: 1023px) {
+    /* The intro band's bottom padding is 0, so the last paragraph margin was
+       escaping and leaving a white strip above the grey product section. */
+    :global(.intro-sec) {
+      display: flow-root;
+    }
+    .mag-pg :global(.section-title) {
+      /* 24px lets "Building Connection", "Springfield Stamp?" and "they deserve?" share a line. */
+      font-size: 24px;
+    }
     .mag-pg :global(.why-sec .section-title) {
       padding-bottom: 32px;
     }
     .why-lead {
-      margin-bottom: 40px;
+      margin-bottom: 16px;
     }
     .mag-pg :global(.ready-sec .section-title) {
       padding-bottom: 23px;
-    }
-    .more-img :global(img) {
-      height: 343px;
-      object-fit: cover;
-    }
-    .more-img {
-      margin: 0 -1px;
     }
     .mag-pg :global(.why-sec .card) {
       padding: 24px;
@@ -438,17 +497,14 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     .mag-pg :global(.why-sec .section-title) {
       line-height: 35px;
     }
-    .strip :global(img) {
-      height: 305px;
-    }
     .mag-pg :global(.more-sec .section-title) {
       padding-bottom: 32px;
     }
     .more {
-      gap: 32px;
+      gap: 16px;
     }
     .more-copy .p {
-      margin-bottom: 28px;
+      margin-bottom: 16px;
     }
     .bullets li {
       margin-bottom: 10px;
@@ -464,45 +520,39 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       top: 6px;
     }
     .benefits {
-      gap: 67px;
+      gap: 24px;
     }
     .b-ico {
-      margin-bottom: 18px;
+      margin-bottom: 12px;
     }
     .b-title {
       margin-bottom: 9px;
     }
     .u-text {
-      margin-bottom: 32px;
+      margin-bottom: 16px;
       font-size: 19px;
       line-height: 33.25px;
     }
     .u-call {
-      margin-bottom: 23px;
-      padding: 0 40px;
-      line-height: 29.7px;
+      margin-bottom: 16px;
+      padding: 0;
+      text-align: center;
     }
     .intro-p {
       margin-bottom: 21px;
     }
     .intro-sec .intro-p:last-child {
-      margin-bottom: 19px;
-    }
-    .callbox {
-      padding: 17px 20px 19px;
+      margin-bottom: 16px;
     }
     .call-h {
       padding-bottom: 25px;
       font-size: 23px;
     }
-    .call-btn :global(.btn) {
-      padding: 13px 24px;
-    }
     .rows :global(.copy) {
       padding: 0 1px;
     }
     .rows :global(.row-title) {
-      margin: 20px 0 12.5px;
+      margin: 16px 0 12.5px;
       font-size: 18px;
       line-height: 25.2px;
     }
@@ -534,26 +584,14 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       line-height: 44px;
       color: #fff;
     }
-    .db {
-      display: inline;
-    }
-    .cap {
-      text-transform: capitalize;
-    }
     .intro-p {
       text-align: left;
     }
-    .callbox {
-      width: 100%;
-      box-sizing: border-box;
-      margin: 0 auto 36px;
-      padding: 30px 20px 31px;
+    .intro-sec .intro-p:last-child {
+      margin-bottom: 0;
     }
-    .call-btn :global(.btn) {
-      width: 232px;
-      padding: 18px;
-      font-size: 24px;
-      line-height: 21.6px;
+    .call-plain {
+      margin: 0 0 28px;
     }
     .call-h {
       padding-bottom: 20px;
@@ -565,10 +603,6 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       line-height: 41.25px;
       text-wrap: balance;
     }
-    .design-img {
-      order: 0;
-    }
-    .u-text,
     .u-call {
       padding: 0;
     }
@@ -576,7 +610,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       margin-bottom: 40px;
     }
     .rows :global(.rows) {
-      gap: 0;
+      gap: 48px;
     }
     .rows :global(.copy) {
       display: flex;
@@ -589,9 +623,6 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       font-size: 24px;
       line-height: 30px;
     }
-    .mag-pg :global(.find-sec.has-bg) {
-      background: #f9f9f9;
-    }
     .rows :global(.row-body) {
       margin: 0;
       text-align: left;
@@ -599,6 +630,7 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     .u-text {
       margin-left: auto;
       margin-right: auto;
+      padding: 0;
       line-height: 32.5px;
     }
     .u-text + .u-text {
@@ -606,37 +638,33 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     }
     .design {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
       align-items: start;
       column-gap: 28px;
-      row-gap: 28px;
-      padding: 6px 0 0;
+      margin-bottom: 40px;
+    }
+    .design-steps {
+      display: grid;
+      width: 100%;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
+      justify-items: stretch;
+      column-gap: 20px;
     }
     .design .p {
-      width: auto;
+      width: 100%;
+      max-width: none;
       min-width: 0;
       margin: 0;
-    }
-    .design .p + .p {
-      margin-top: 0;
+      justify-self: stretch;
     }
     .design-img {
-      order: 0;
-      grid-column: 1 / -1;
-      justify-self: center;
-      max-width: 285px;
+      max-width: 240px;
     }
     .design-img :global(img) {
       width: 100%;
-    }
-    .strip {
-      margin: 22px 0 62px;
-    }
-    .strip :global(img) {
-      width: 100%;
-      max-width: 100%;
       height: auto;
-      margin: 0 auto;
+      object-fit: contain;
     }
     .benefits {
       width: 100%;
@@ -662,26 +690,31 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
     }
     .more {
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      padding-top: 10px;
-    }
-    .more {
       width: 100%;
+      padding-top: 0;
+      gap: 24px;
     }
     .more-copy {
       flex: 1 1 auto;
       width: auto;
       min-width: 0;
     }
-    .more-img {
+    .more-wall {
       flex: 0 0 42%;
       width: auto;
       max-width: 42%;
     }
-    .more-img :global(img) {
-      height: 342px;
+    .more-wall :global(img) {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
       object-fit: cover;
+    }
+    .trio {
+      gap: 24px;
+      margin-top: 24px;
     }
     .why-lead {
       margin-bottom: 38px;
@@ -690,4 +723,5 @@ const whyIcons = { quality: stampGrey, speed: turnaround, touch: csGrey, communi
       margin: 0 auto;
     }
   }
+
 </style>

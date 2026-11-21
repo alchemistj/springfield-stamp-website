@@ -2,9 +2,12 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import HeroPhoto from "../../components/HeroPhoto.astro";
 import Button from "../../components/Button.astro";
+import FinalCta from "../../components/FinalCta.astro";
+import SectionTitle from "../../components/SectionTitle.astro";
 import Rich from "../../components/Rich.astro";
 import { routeByKey } from "../../lib/routes";
 import { about } from "../../data/about";
+import { site } from "../../data/site";
 
 const route = routeByKey("about");
 ---
@@ -39,14 +42,14 @@ const route = routeByKey("about");
     </div>
   </section>
 
-  <section class="closing">
-    <div class="closing-in content-col">
-      <p class="closing-text"><Rich parts={about.closing.body} /></p>
-      <div class="closing-cta">
-        <Button href={about.closing.cta.href} size="lg" weight={600} width={313} shadow>{about.closing.cta.label}</Button>
-      </div>
+  <FinalCta class="closing">
+    <SectionTitle as="h2" tone="white">{about.closing.title}</SectionTitle>
+    <p class="closing-text"><Rich parts={about.closing.body} /></p>
+    <div class="final-actions">
+      <Button href={about.closing.cta.href}>{about.closing.cta.label}</Button>
+      <Button href={`mailto:${site.email}`} variant="secondary">Email Us</Button>
     </div>
-  </section>
+  </FinalCta>
 </BaseLayout>
 
 <style>
@@ -71,6 +74,11 @@ const route = routeByKey("about");
     color: var(--color-ss-red);
     text-transform: uppercase;
   }
+  /* Both words of "Springfield Stamp" stay on one line inside the dark wedge. */
+  .h1 {
+    font-size: 27px;
+    line-height: 33px;
+  }
 
   /* ---- Story ---- */
   .story {
@@ -78,8 +86,7 @@ const route = routeByKey("about");
     padding: 65px 0 67px;
   }
   .story-in,
-  .why-in,
-  .closing-in {
+  .why-in {
     text-align: center;
   }
   .p {
@@ -93,10 +100,10 @@ const route = routeByKey("about");
     font-weight: 600;
   }
   .story-desktop {
-    display: none;
+    display: block;
   }
   .story-mobile {
-    margin: 0;
+    margin: 8px 0 0;
   }
 
   /* ---- Why choose ---- */
@@ -109,8 +116,8 @@ const route = routeByKey("about");
     padding-bottom: 32px;
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: 30px;
-    line-height: 39px;
+    font-size: 26px;
+    line-height: 34px;
     color: var(--color-ss-red);
   }
   .why .p {
@@ -121,14 +128,9 @@ const route = routeByKey("about");
   }
 
   /* ---- Closing band ---- */
-  .closing {
-    background: var(--color-ss-maroon);
-    color: #fff;
-    padding: 37px 0 20px;
-  }
   .closing-text {
     margin: 0;
-    padding-bottom: 35px;
+    padding-bottom: 0;
     font-family: var(--font-heading);
     font-size: 24px;
     line-height: 34.8px;
@@ -140,25 +142,6 @@ const route = routeByKey("about");
     font-family: var(--font-display);
     font-weight: 400;
   }
-  .closing-cta {
-    max-width: 313px;
-    margin: 0 auto;
-  }
-  .closing-cta :global(.btn) {
-    font-size: 20px;
-    padding: 13px 12px;
-    line-height: 28px;
-  }
-
-  @media (min-width: 768px) {
-    .story-desktop {
-      display: block;
-    }
-    .story-mobile {
-      display: none;
-    }
-  }
-
   @media (min-width: 1024px) {
     .hero {
       height: var(--hero-h);
@@ -177,8 +160,8 @@ const route = routeByKey("about");
     }
     .kicker,
     .h1 {
-      font-size: 26px;
-      line-height: 36px;
+      font-size: 18px;
+      line-height: 26px;
     }
     .story {
       padding: 63px 0 67px;
@@ -203,14 +186,11 @@ const route = routeByKey("about");
     .why {
       padding: 40px 0 65px;
     }
-    .closing {
-      padding: 47px 0 51px;
-    }
     .closing-text {
       margin: 0 auto;
       font-size: 27px;
       line-height: 43.2px;
-      padding-bottom: 39px;
+      padding-bottom: 0;
     }
   }
 
@@ -222,8 +202,8 @@ const route = routeByKey("about");
     }
     .kicker,
     .h1 {
-      font-size: 30px;
-      line-height: 42px;
+      font-size: 20px;
+      line-height: 28px;
     }
   }
 
@@ -233,8 +213,8 @@ const route = routeByKey("about");
     }
     .kicker,
     .h1 {
-      font-size: 32px;
-      line-height: 44px;
+      font-size: 23px;
+      line-height: 32px;
     }
   }
 
@@ -242,10 +222,14 @@ const route = routeByKey("about");
     .hero-in {
       width: 350px;
     }
-    .kicker,
+    .kicker {
+      font-size: 28px;
+      line-height: 38px;
+    }
     .h1 {
-      font-size: 40px;
-      line-height: 56px;
+      /* 26px ends the line short of the yellow slash. 28px ran into it. */
+      font-size: 26px;
+      line-height: 36px;
     }
   }
 

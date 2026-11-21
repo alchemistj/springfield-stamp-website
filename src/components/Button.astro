@@ -1,110 +1,89 @@
 ---
-// Yellow pill button used for every CTA on the live site.
-//   <Button href="/custom-stamps/">See Our Custom Stamp Options</Button>
-// size "lg":   product-row CTA (20px label, 14px 22px padding).
-// size "hero": hero CTAs (20px label on desktop, 18px on mobile when `compact`; 15px padding).
-// size "xl":   workflow and About CTAs (24px / 600 label on desktop, with a drop shadow).
-// Full width on mobile. On desktop `width` (px) fixes the width, otherwise the button fills its column.
+// The two button variants used everywhere.
+// primary: yellow pill. secondary: outline pill (white on a deep-red band, ink on a light page).
+// One size, weight 600, one letter spacing, no shadow, 48px tall (above the 44px minimum). The label sizes the pill.
+//   <Button href="/contact/">Get in Touch</Button>
+//   <Button href="mailto:orders@springfieldstamp.com" variant="secondary">Email Us</Button>
+//   <Button type="submit" disabled>Send Message</Button>
 interface Props {
-  href: string;
-  size?: "lg" | "hero" | "xl";
-  /** Weight of the label (the live site mixes 600 and 700). */
-  weight?: 600 | 700;
-  /** Desktop width in px. */
-  width?: number;
-  shadow?: boolean;
-  /** Smaller (18px) label on mobile, as on the live hero's first button. */
-  compact?: boolean;
-  /** 24px line height on desktop (the live "Explore Magnetic Name Tags Here" button is 5px shorter than the others). */
-  tight?: boolean;
+  href?: string;
+  variant?: "primary" | "secondary";
+  /** Render a <button> instead of a link (the contact form submit). */
+  type?: "submit" | "button";
+  disabled?: boolean;
   class?: string;
+  id?: string;
+  "aria-label"?: string;
 }
-const { href, size = "lg", weight = 700, width, shadow = false, compact = false, tight = false, class: className } = Astro.props;
-const style = width ? `--btn-w:${width}px` : undefined;
+const { href, variant = "primary", type, disabled = false, class: className, id, "aria-label": ariaLabel } = Astro.props;
+const classes = ["btn", variant === "secondary" ? "btn-secondary" : "btn-primary", className];
 ---
 
-<a
-  href={href}
-  class:list={["btn", `btn-${size}`, { "btn-shadow": shadow, "btn-fixed": !!width, "btn-compact": compact, "btn-tight": tight }, className]}
-  style={style}
-  data-weight={weight}><span class="btn-label"><slot /></span></a
->
+{
+  href ? (
+    <a href={href} id={id} class:list={classes} aria-label={ariaLabel}>
+      <span class="btn-label"><slot /></span>
+    </a>
+  ) : (
+    <button type={type ?? "button"} id={id} class:list={classes} disabled={disabled} data-submit={type === "submit" ? true : undefined}>
+      <span class="btn-label"><slot /></span>
+    </button>
+  )
+}
 
-<style>
+<style is:global>
   .btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    width: 100%;
+    width: auto;
+    max-width: 100%;
+    min-height: 48px;
+    margin: 0;
+    padding: 10px 22px;
+    border: 2px solid transparent;
+    border-radius: var(--radius-pill);
     background: var(--color-ss-yellow);
     color: var(--color-ss-ink);
     font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: normal;
+    line-height: 1.25;
     text-align: center;
     text-decoration: none;
-    border-radius: var(--radius-pill);
-    /* Narrow transition on purpose: no `transition: all` above the fold. */
-    transition:
-      transform 0.15s ease,
-      box-shadow 0.15s ease;
+    text-transform: none;
+    white-space: normal;
+    box-shadow: none;
+    cursor: pointer;
+    transition: transform 0.15s ease;
   }
-  .btn[data-weight="700"] {
-    font-weight: 700;
+  .btn-primary {
+    background: var(--color-ss-yellow);
+    border-color: var(--color-ss-yellow);
+    color: var(--color-ss-ink);
   }
-  .btn[data-weight="600"] {
-    font-weight: 600;
+  .btn-secondary {
+    background: transparent;
+    border-color: currentColor;
+    color: var(--color-ss-ink);
+  }
+  .tone-maroon .btn-secondary,
+  .final-cta .btn-secondary,
+  .closing .btn-secondary {
+    color: #fff;
+    border-color: #fff;
+  }
+  .btn-label {
+    display: block;
   }
   .btn:hover {
     transform: translateY(-1px);
   }
-  .btn-shadow {
-    box-shadow: var(--shadow-button);
-  }
-
-  /* Mobile (below 1024px) */
-  .btn-lg,
-  .btn-hero,
-  .btn-xl {
-    padding: 18px 30px;
-    font-size: 20px;
-    line-height: 23.6px;
-  }
-  .btn-xl {
-    padding: 18px;
-    line-height: 26px;
-  }
-  .btn-hero {
-    padding: 18px 20px;
-    line-height: 21.6px;
-  }
-  .btn-compact {
-    font-size: 18px;
-  }
-
-  @media (min-width: 1024px) {
-    .btn {
-      border-radius: 32px;
-    }
-    .btn-fixed {
-      width: var(--btn-w);
-    }
-    .btn-lg {
-      padding: 14px 22px;
-      font-size: 20px;
-      line-height: 28.8px;
-    }
-    .btn-lg.btn-tight {
-      line-height: 24px;
-    }
-    .btn-hero {
-      padding: 15px;
-      font-size: 20px;
-      line-height: 21.6px;
-    }
-    .btn-xl {
-      padding: 18px;
-      font-size: 24px;
-      line-height: 21.6px;
-    }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
   }
 </style>
