@@ -1,12 +1,8 @@
 ---
-// Alternating image / text product row (the home "How We Can Help..." rows, and the product
-// rows on the other pages). Put several inside <ProductRows>. Pass `reverse` on every second row
-// so the picture alternates left/right on desktop. Both columns are equal, so the edges line up
-// in a checkerboard. On mobile the picture is always on top, full width.
-//
-//   <ProductRow title="Custom Stamps" image={img} imageAlt="" ctaHref="/custom-stamps/" ctaLabel="See Our Custom Stamp Options">
-//     body copy (slot)
-//   </ProductRow>
+// Alternating image / text product row. Put several inside <ProductRows>.
+// `reverse` puts the picture on the right on desktop. Both columns are equal.
+// The photo fills its cell edge to edge (object-fit: cover). The row height comes from the text.
+// `tone` "card" / "card-alt" is the homepage boxed row. "plain" is a white row with no card.
 import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import Button from "./Button.astro";
@@ -14,26 +10,20 @@ import Button from "./Button.astro";
 interface Props {
   title: string;
   image?: ImageMetadata;
-  /** Decorative by default: the title names the product. */
   imageAlt?: string;
   headingLevel?: "h2" | "h3" | "h4";
-  /** Picture on the right (desktop). Both columns stay 50%. */
+  /** Picture on the right (desktop). */
   reverse?: boolean;
-  /** Unused. Row height follows the taller of the photo and the text. */
-  minHeight?: number;
-  /** Text panel shade: the live site uses #e0e0e0 for most rows and #e4e4e4 for the last two. */
-  tone?: "card" | "card-alt";
-  /** Extra top padding override (px) for the text panel on desktop (first live row uses 30). */
-  padTop?: number;
+  /** Homepage boxed rows keep a grey panel. Other pages use plain white. */
+  tone?: "card" | "card-alt" | "plain";
   ctaHref?: string;
   ctaLabel?: string;
-  ctaWeight?: 600 | 700;
-  ctaTight?: boolean;
-  /** Kept for callers. Every product photo is shown whole (`object-fit: contain`). */
-  fit?: "cover" | "contain";
-  /** Upper-case title with a lighter weight (the Custom Stamps and Name Tags rows). */
-  upperTitle?: boolean;
-  titleWeight?: 500 | 600;
+  /** CSS object-position when the cover crop would cut the product. */
+  objectPosition?: string;
+  /** A product cut-out on white. Natural aspect, not a cover crop. */
+  cutout?: boolean;
+  /** Show the whole image width, anchored to the bottom of the cell. */
+  banner?: boolean;
 }
 const {
   title,
@@ -41,19 +31,16 @@ const {
   imageAlt = "",
   headingLevel: Heading = "h3",
   reverse = false,
-  tone = "card",
-  padTop,
+  tone = "plain",
   ctaHref,
   ctaLabel,
-  ctaWeight = 700,
-  ctaTight = false,
-  upperTitle = false,
-  titleWeight = 600,
+  objectPosition = "50% 50%",
+  cutout = false,
+  banner = false,
 } = Astro.props;
-const style = padTop ? `--pad-top:${padTop}px` : undefined;
 ---
 
-<article class:list={["row", { reverse, upper: upperTitle }]} data-tw={titleWeight} style={style}>
+<article class:list={["row", { reverse, cutout, banner }]} style={`--obj:${objectPosition}`}>
   <div class="media">
     {
       image && (
@@ -62,8 +49,8 @@ const style = padTop ? `--pad-top:${padTop}px` : undefined;
           alt={imageAlt}
           formats={["avif", "webp"]}
           fallbackFormat="webp"
-          widths={[303, 500, 606, 1000]}
-          sizes="(min-width: 1024px) 402px, (min-width: 400px) 303px, 90vw"
+          widths={[400, 606, 800, 1200]}
+          sizes="(min-width: 1024px) 450px, 100vw"
           quality={75}
         />
       )
@@ -72,7 +59,7 @@ const style = padTop ? `--pad-top:${padTop}px` : undefined;
   <div class:list={["copy", `tone-${tone}`]}>
     <Heading class="row-title">{title}</Heading>
     <div class="row-body"><slot /></div>
-    {ctaHref && ctaLabel && <Button href={ctaHref} weight={ctaWeight} tight={ctaTight} class="row-cta">{ctaLabel}</Button>}
+    {ctaHref && ctaLabel && <Button href={ctaHref} class="row-cta">{ctaLabel}</Button>}
   </div>
 </article>
 
@@ -80,39 +67,50 @@ const style = padTop ? `--pad-top:${padTop}px` : undefined;
   .row {
     display: block;
     margin: 0;
-  }
-  .media {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
     background: #fff;
   }
+  /* 4:3 reserves the phone box before the file arrives. The picture fills it. */
+  .media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: #fff;
+  }
+  .media :global(picture),
   .media :global(img) {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    height: auto;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--obj, 50% 50%);
   }
   .copy {
-    text-align: center;
+    padding: 8px 0 0;
+    text-align: left;
+    background: #fff;
+  }
+  .tone-card {
+    background: var(--color-ss-card);
+  }
+  .tone-card-alt {
+    background: var(--color-ss-card-alt);
   }
   .row-title {
-    margin: 21px 0 22px;
+    margin: 16px 0 12px;
     font-family: var(--font-heading);
     font-weight: 600;
     font-size: 20px;
-    line-height: 28px;
+    line-height: 1.3;
     color: #000;
   }
   .row-body {
-    margin: 0 0 21px;
+    margin: 0 0 16px;
     text-align: left;
     font-family: var(--font-heading);
     font-size: 18px;
-    line-height: 31.5px;
+    line-height: 1.65;
     color: var(--color-ss-ink);
   }
   .row-body :global(p) {
@@ -124,11 +122,64 @@ const style = padTop ? `--pad-top:${padTop}px` : undefined;
   .row-body :global(strong) {
     font-weight: 600;
   }
-  .upper .row-title {
-    text-transform: uppercase;
-  }
   .copy :global(.row-cta) {
+    align-self: flex-start;
+    width: auto;
     max-width: 100%;
+  }
+  /* One homepage photo: the whole width, sitting on the bottom of a taller cell.
+     The band above matches the grey at the top of the picture. */
+  .banner .media {
+    background: linear-gradient(90deg, #c1c1c1 0%, #ebebeb 50%, #d6d6d6 100%);
+  }
+  .banner .media :global(picture),
+  .banner .media :global(img) {
+    object-fit: contain;
+    object-position: center bottom;
+  }
+  /* Phones: a trimmed cut-out at its own shape, centred, no tall empty cell. */
+  .cutout .media {
+    aspect-ratio: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    background: transparent;
+  }
+  .cutout .media :global(picture) {
+    position: static;
+    inset: auto;
+    width: min(80%, 320px);
+    max-width: 80%;
+    height: auto;
+  }
+  .cutout .media :global(img) {
+    position: static;
+    inset: auto;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    object-fit: contain;
+  }
+
+  @media (max-width: 1023px) {
+    .copy.tone-card,
+    .copy.tone-card-alt {
+      box-sizing: border-box;
+      padding: 20px;
+    }
+    .copy.tone-card .row-title,
+    .copy.tone-card-alt .row-title {
+      margin-top: 0;
+    }
+    .copy.tone-card .row-body,
+    .copy.tone-card-alt .row-body {
+      margin-bottom: 16px;
+    }
+    /* The stamp banner is almost square. Match it so the full width shows. */
+    .banner .media {
+      aspect-ratio: 1024 / 992;
+    }
   }
 
   @media (min-width: 1024px) {
@@ -138,32 +189,56 @@ const style = padTop ? `--pad-top:${padTop}px` : undefined;
       align-items: stretch;
     }
     .media {
-      padding: 24px;
-    }
-    .row[data-tw="500"] .row-title {
-      font-weight: 500;
+      aspect-ratio: auto;
+      height: 100%;
+      min-height: 0;
     }
     .reverse .media {
       order: 2;
     }
     .copy {
       box-sizing: border-box;
-      padding: var(--pad-top, 50px) 50px 50px;
-      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 32px 40px;
     }
-    .tone-card {
-      background: var(--color-ss-card);
-    }
-    .tone-card-alt {
-      background: var(--color-ss-card-alt);
+    .tone-plain {
+      background: #fff;
     }
     .row-title {
-      margin: 4px 0 16px;
+      margin: 0 0 16px;
       font-size: 24px;
-      line-height: 33.6px;
+      line-height: 1.3;
     }
     .row-body {
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+    }
+    /* At least as tall as the banner photo, so the full width still shows
+       when the text column is the shorter one. A taller column leaves grey above. */
+    .banner .media {
+      height: auto;
+    }
+    .banner .media::before {
+      content: "";
+      display: block;
+      padding-top: calc(992 / 1024 * 100%);
+    }
+    /* Desktop: the text still sets the row. The cut-out sits centred, uncropped. */
+    .cutout .media {
+      display: block;
+      height: 100%;
+      overflow: hidden;
+    }
+    .cutout .media :global(picture),
+    .cutout .media :global(img) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
     }
   }
 </style>

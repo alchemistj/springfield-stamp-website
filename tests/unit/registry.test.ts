@@ -20,7 +20,7 @@ describe("route registry", () => {
   });
   it("contact description is the spec's", () => {
     expect(routes.find((r) => r.key === "contact")!.description).toBe(
-      "Contact Springfield Stamp & Engraving at 1416 S. Glenstone Ave., Springfield, MO. Call (417) 881-8828 or email orders@springfieldstamp.com.",
+      "Visit Springfield Stamp & Engraving at 1416 S. Glenstone Ave., Springfield, MO. Open Monday through Friday, 8:00am to 4:30pm. Call (417) 881-8828.",
     );
   });
 });

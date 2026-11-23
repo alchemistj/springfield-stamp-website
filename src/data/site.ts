@@ -10,7 +10,6 @@ export const site = {
   url: SITE_URL,
   phone: {
     display: "(417) 881-8828",
-    footer: "417-881-8828",
     tel: "tel:+14178818828",
     e164: "+14178818828",
   },
@@ -27,7 +26,7 @@ export const site = {
   geo: { latitude: 37.1883738, longitude: -93.2618564 },
   hours: {
     /** Contact page text, as shown on the live site. */
-    days: "Mon- Fri",
+    days: "Mon-Fri",
     times: "8:00am - 4:30pm",
     /** schema.org openingHours */
     schema: "Mo-Fr 08:00-16:30",
@@ -66,10 +65,14 @@ export const footer = {
   informationHeading: "INFORMATION",
   contactHeading: "CONTACT US",
   socialHeading: "SOCIAL",
+  description:
+    "A family-owned shop in Springfield, MO making custom stamps, name tags, signs, name plates and awards. Friendly service and fast turnaround.",
+  serviceArea: "Based in Springfield, MO. Call or email us to start an order.",
   links: [
     { label: "Custom Stamps", path: "/custom-stamps/" },
     { label: "Magnetic Name Tags", path: "/magnetic-name-tags/" },
     { label: "Notary Stamps", path: "/missouri-notary-stamp/" },
+    { label: "About", path: "/about/" },
     { label: "Contact Us", path: "/contact/" },
   ],
 } as const;

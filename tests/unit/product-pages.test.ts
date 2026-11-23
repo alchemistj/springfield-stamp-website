@@ -147,16 +147,21 @@ describe("page specifics", () => {
     expect(t).toContain("….whether you are from Portland, Maine or Portland, Oregon!...");
   });
 
-  it("notary: four priced products, Buy now! goes to #buy and #buy exists", () => {
+  it("notary: four priced products, three Call to Order links, journal still goes to #buy", () => {
     const html = read("/missouri-notary-stamp/");
     for (const price of ["$22", "$30", "$32", "$19.95"]) expect(text(html)).toContain(price);
-    expect(html.match(/href="#buy"/g)?.length).toBe(4);
+    expect(text(html).match(/Call to Order/g)?.length).toBe(3);
+    expect(html).toContain('href="#buy"');
+    expect(html).toContain("Buy now!");
     expect(html).toMatch(/id="buy"/);
   });
 
   it('name tags: the product-list sentence no longer says "custom stamps"', () => {
     const t = text(read("/magnetic-name-tags/"));
-    expect(t).not.toContain("custom stamps");
-    expect(t).toContain("We offer a wide variety of custom magnetic name tags to meet your unique needs, including:");
+    const needle = "We offer a wide variety of custom magnetic name tags to meet your unique needs, including:";
+    const at = t.indexOf(needle);
+    // The footer description (COPY 7) says "custom stamps" on every page. This check is the product sentence.
+    expect(at).toBeGreaterThan(-1);
+    expect(t.slice(at, at + needle.length)).not.toContain("custom stamps");
   });
 });

@@ -36,7 +36,6 @@
   --radius-pill: 100px;
   --radius-card: 20px;
   --shadow-header: 0 2px 30px rgba(0, 0, 0, 0.08);
-  --shadow-button: 0 8px 12px rgba(0, 0, 0, 0.13);
   /* One readable column (Rule 4). Backgrounds may be full-bleed; text stays in this column. */
   --content-max: 900px;
   --content-pad: 24px;
@@ -49,8 +48,8 @@
   /* Above-the-fold geometry, per breakpoint. Pages may override --hero-h on .atf. */
   --header-h: 96px;
   --gutter: var(--content-pad);
-  /* Sticky mobile call bar: 8px + 48px buttons + 8px + 1px border. Footer gets this much room below. */
-  --callbar-h: 65px;
+  /* Fallback until the call bar measures itself. The bar's script replaces this with its real height. */
+  --callbar-h: calc(65px + env(safe-area-inset-bottom, 0px));
 }
 
 @media (min-width: 1024px) {
@@ -62,7 +61,7 @@
 /* Keep the fixed call bar (phones only) from covering the footer's last lines. */
 @media (max-width: 1023.98px) {
   .site-footer {
-    padding-bottom: calc(var(--callbar-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: var(--callbar-h);
   }
 }
 
@@ -98,10 +97,14 @@ a {
   color: inherit;
 }
 
-/* Keep a short last line from sitting alone. Balance is for headings; pretty is for paragraphs. */
+/* One heading treatment: every H1, H2 and card title (H3) is uppercase, whatever the source case.
+   Buttons are not headings and are not uppercased. Grey magnetic headings keep their grey color. */
 h1,
 h2,
-h3,
+h3 {
+  text-transform: uppercase;
+  text-wrap: balance;
+}
 h4,
 h5,
 h6 {

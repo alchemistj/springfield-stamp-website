@@ -39,7 +39,10 @@ const atfStyle = [
   .filter(Boolean)
   .join(";");
 const GTAG_ID = "GT-WK5CGGGZ";
-const gtagInline = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","${GTAG_ID}");`;
+/* Stub stays in the head so gtag() calls made before the library loads are queued.
+   The library and config run on window load + 3s, or the first interaction, once. */
+const gtagStub = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}`;
+const gtagLoader = `(function(){var id="${GTAG_ID}";var done=false;function load(){if(done)return;done=true;var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+id;document.head.appendChild(s);gtag("js",new Date());gtag("config",id);["scroll","pointerdown","keydown","touchstart"].forEach(function(ev){window.removeEventListener(ev,load);});}window.addEventListener("load",function(){setTimeout(load,3000);});["scroll","pointerdown","keydown","touchstart"].forEach(function(ev){window.addEventListener(ev,load,{passive:true});});})();`;
 const fontCss = atfFontCss();
 ---
 
@@ -66,8 +69,8 @@ const fontCss = atfFontCss();
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <script type="application/ld+json" set:html={jsonLd(localBusinessSchema())} />
     <script type="application/ld+json" set:html={jsonLd(breadcrumbSchema(route))} />
-    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`}></script>
-    <script is:inline set:html={gtagInline} />
+    <script is:inline set:html={gtagStub} />
+    <script is:inline set:html={gtagLoader} />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

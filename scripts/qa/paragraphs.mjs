@@ -81,8 +81,10 @@ function collect({ maxLines, withReviews, minChars }) {
     .replace(/\b60 years\b/g, "50 years")
     .replace(/\bavaailable\b/g, "available")
     .replace("wide variety of custom stamps to meet your specific business needs", "wide variety of magnetic name tags to meet your specific business needs")
-    // The rebuild draws the phone emoji in its own span, so the space after it is not in the text node.
-    .replace(/([\u{1F300}-\u{1FAFF}])(?=\S)/gu, "$1 ");
+    // 2026-11-20: phone emoji removed (audit L7); words unchanged. Strip it, then the space it left.
+    .replace(/\p{Extended_Pictographic}/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
   const out = [];
   for (const p of document.querySelectorAll("p")) {
     if (p.closest(SKIP)) continue;

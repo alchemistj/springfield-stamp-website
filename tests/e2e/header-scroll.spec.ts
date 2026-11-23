@@ -52,12 +52,12 @@ for (const vp of viewports) {
 test("mobile menu stays open and the header stays visible while scrolling", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/", { waitUntil: "networkidle" });
-  await page.locator("details.nav-mobile summary").click();
-  await expect(page.locator("details.nav-mobile nav")).toBeVisible();
+  await page.locator("header .nav-toggle").click();
+  await expect(page.locator("#mobile-menu")).toBeVisible();
   await page.evaluate(() => window.scrollTo(0, 600));
   await page.waitForTimeout(350);
   const box = await headerBox(page);
   expect(box).not.toBeNull();
   expect(box!.y).toBeGreaterThanOrEqual(-1);
-  await expect(page.locator("details.nav-mobile nav")).toBeVisible();
+  await expect(page.locator("#mobile-menu")).toBeVisible();
 });

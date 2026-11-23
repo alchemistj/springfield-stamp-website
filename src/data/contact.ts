@@ -5,7 +5,7 @@
 import { site } from "./site";
 
 export const contact = {
-  h1: "CONTACT US",
+  h1: "Contact Us",
   intro: {
     lead: "In order for us to provide the best service possible, ",
     strong: "we prefer phone calls",
@@ -33,7 +33,7 @@ export const contact = {
     linkHref: "https://www.google.com/maps/search/?api=1&query=Springfield+Stamp+%26+Engraving%2C+1416+S+Glenstone+Ave%2C+Springfield%2C+MO+65804",
   },
   form: {
-    heading: "send us a message",
+    heading: "Send Us a Message",
     nameLabel: "Name",
     firstLabel: "First",
     lastLabel: "Last",

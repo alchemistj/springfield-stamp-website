@@ -1,21 +1,32 @@
 ---
-// Wrapper for a stack of <ProductRow>s. Desktop: one card, rounded on the outer corners only,
-// with the rows butted together. Mobile: separate full-width blocks, photo on top, 40px apart.
+// Wrapper for a stack of <ProductRow>s.
+// Homepage (`boxed`) keeps the joined grey card. Other pages stay separate plain rows.
+interface Props {
+  boxed?: boolean;
+}
+const { boxed = false } = Astro.props;
 ---
 
-<div class="rows"><slot /></div>
+<div class:list={["rows", { boxed }]}><slot /></div>
 
 <style>
   .rows {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    /* 32px keeps the next cut-out within 40px of the text above it on phones. */
+    gap: 32px;
+  }
+  .rows.boxed {
+    gap: 32px;
   }
   @media (min-width: 1024px) {
-    .rows {
+    .rows.boxed {
       gap: 0;
       border-radius: var(--radius-card);
       overflow: hidden;
+    }
+    .rows:not(.boxed) {
+      gap: 48px;
     }
   }
 </style>
