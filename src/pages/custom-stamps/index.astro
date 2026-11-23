@@ -160,8 +160,17 @@ const icons = { detail: stampGrey, turnaround, service: csGrey, community };
     font-size: 28px;
     line-height: 36.5px;
     color: var(--color-ss-ink);
-    /* Balance parks "CUSTOM" on its own line at 390. Greedy wrap keeps it with a neighbor. */
-    text-wrap: wrap;
+    /* Pretty keeps the last word with a neighbor. Balance parked "CUSTOM" alone. */
+    text-wrap: pretty;
+  }
+  /* At 390 the column is 342px and "Neighborhood CUSTOM" needs 355, so the
+     heading borrows 10px of the page pad. That lets pretty break as
+     Your Friendly / Neighborhood CUSTOM / STAMP Experts! */
+  @media (max-width: 420px) {
+    .h1 {
+      width: calc(100% + 20px);
+      margin-inline: -10px;
+    }
   }
   .intro + .intro {
     margin-top: 16px;
